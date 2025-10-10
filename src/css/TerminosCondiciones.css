@@ -1,0 +1,27 @@
+.terminos-wrap {
+  background-color: #f8f9fa;
+}
+
+.modal-subtitulo {
+  font-weight: 600;
+  color: var(--green);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.lista-modal {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.lista-modal li {
+  margin-bottom: 0.4rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+.about-box3 {
+  line-height: 1.7;
+  font-size: 15px;
+  color: #333;
+}

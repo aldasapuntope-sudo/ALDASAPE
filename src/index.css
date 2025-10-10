@@ -1,0 +1,165 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+:root{
+  --green:#00c657;
+  --green-dark:#00863b;
+  --muted:#ffffff;
+}
+
+*{box-sizing:border-box}
+body{
+  font-family: 'Poppins', sans-serif;
+  margin:0;
+  background:#fff;
+  color:#111827;
+}
+
+p {
+  text-align: justify;
+}
+/* Header */
+.navbar{background:#fff !important; border-bottom:1px solid #eee}
+.navbar .navbar-brand{font-weight:700; color:var(--green); font-size:1.15rem}
+.btn-green {
+    background: var(--green);
+    color: white;
+    border-radius: 10px;
+    padding: 13px 15px;
+    border: none;
+}
+.btn-green:hover{background:var(--green-dark)}
+
+/* Hero / slider */
+/*.hero-section{position:relative; height:520px; display:flex; align-items:center; justify-content:center; overflow:hidden}
+.hero-bg{position:absolute; inset:0; background-size:cover; background-position:center; transition:opacity .7s ease}*/
+
+.hero-section {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  background-color: var(--green); /* <-- fondo blanco visible detrás del clip-path */
+}
+
+
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  clip-path: ellipse(130% 85% at 50% 15%);
+  z-index: 1;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 2;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  max-width: 800px;
+  padding: 20px;
+}
+
+
+
+
+.hero-overlay{position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.4)); pointer-events:none}
+.hero-content{position:relative; z-index:5; text-align:center; color:#fff; width:100%; padding:0 15px}
+.hero-content h1{font-size:2.6rem; font-weight:700; margin-bottom:8px}
+.hero-content p{color:rgba(255,255,255,0.9); margin-bottom:14px}
+
+/* Search box */
+.search-box-wrapper{width:84%; max-width:980px; margin:0 auto; transform:translateY(30%); z-index:6}
+.search-box {
+    background: #fff;
+    border-radius: 0px 10px 10px 10px;
+    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.12);
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    align-items: center;
+}
+.search-box .form-select, .search-box .form-control{border:0; outline:0; box-shadow:none}
+.search-box .form-control::placeholder{color:#9ca3af}
+.search-tabs {
+    display: table-cell;
+    padding: 5px;
+    justify-content: flex-start;
+    background: white;
+    border-radius: 10px 10px 0px 0px;
+}
+.tab-btn{background:transparent; color:rgba(0,0,0,0.65); padding:8px 14px; border-radius:999px; border:1px solid transparent; cursor:pointer}
+/*.tab-btn.active{background:white; color:var(--green); border:1px solid rgba(0,0,0,0.06); box-shadow:0 6px 18px rgba(2,6,23,0.08)}*/
+.tab-btn.active {
+    background: #ffffff00;
+    color: var(--green);
+    border-radius: 0px;
+    box-shadow: 0 2px 0px rgb(25 135 84);
+}
+
+/* Home options */
+.home-options{padding:56px 0; background:#fff}
+.container-narrow{max-width:1100px; margin:0 auto}
+
+/* Cards hover */
+.card-option{transition:transform .22s ease, box-shadow .22s ease}
+.card-option:hover{transform:translateY(-6px); box-shadow:0 14px 34px rgba(2,6,23,0.12)}
+
+.breadcrumb-wrap-2 {
+    background-color: #fff;
+}
+
+.breadcrumb-wrap {
+  background-color: #eaf7f4;
+  padding: 30px 0;
+  border-bottom: 1px solid #deede9;
+  text-align: left; /* 🔹 Centra el texto del breadcrumb */
+}
+
+.breadcrumb {
+  display: inline-flex; /* 🔹 Evita que el ol ocupe todo el ancho */
+  justify-content: center;
+  background: none;
+  margin: 0;
+  padding: 0;
+}
+.breadcrumb-item a {
+  color: #555;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.breadcrumb-item a:hover {
+  color: #005e2c;
+}
+
+.breadcrumb-item.active {
+  color: var(--green);
+  font-weight: bold;
+}
+
+
+/* Footer */
+.footer{background:#fafafa; padding:28px 0; text-align:center; color:var(--muted)}
+
+
+.modal-header {
+    background: var(--green); ;
+    color: #ffffff;
+}
+
+/* Responsive */
+@media (max-width:768px){
+  .hero-content h1{font-size:1.7rem}
+  .search-box-wrapper{width:92%; transform:translateY(22%)}
+}

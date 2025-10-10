@@ -1,0 +1,128 @@
+.footer-area {
+  font-family: "Poppins", sans-serif;
+  color: #fff;
+  border-top: 5px solid #ffffff;
+}
+
+.footer-top-style {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+  position: relative;
+  z-index: 1;
+  padding: 82px 0 65px;
+}
+
+
+.footer-top-style::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: -1;
+}
+
+.footer-title {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: #fff;
+  position: relative;
+}
+
+.footer-title::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 3px;
+  background: var(--green);
+  margin-top: 6px;
+  border-radius: 2px;
+}
+
+.footer-link ul,
+.footer-location,
+.insta-link,
+.social-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-link ul li,
+.insta-link li,
+.footer-location li {
+  margin-bottom: 10px;
+}
+
+.footer-link a,
+.footer-location a,
+.insta-link a {
+  color: #ddd;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-link a:hover,
+.footer-location a:hover,
+.insta-link a:hover {
+  color: var(--green);
+}
+
+.footer-location li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.item-social .social-list {
+  display: flex;
+  gap: 10px;
+}
+
+.social-list a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--green);
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.social-list a:hover {
+  background: white;
+  color: var(--green);
+}
+
+.footer-bottom-style-2 {
+  background-color: #1d1d1d;
+  padding: 20px 0;
+  font-size: 0.95rem;
+}
+
+.copyright-area1 ul {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  list-style: none;
+  padding: 0;
+}
+
+.copyright-area1 a {
+  color: #aaa;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.copyright-area1 a:hover {
+  color: var(--green);
+}
+
+.footer-bottom p {
+  color: #aaa;
+  margin: 0;
+}

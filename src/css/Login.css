@@ -1,0 +1,52 @@
+.auth-page {
+  position: relative;
+  min-height: 100vh;
+  background: url('https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1600&q=80')
+    no-repeat center center/cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.auth-container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  /*max-width: 420px;*/
+      max-width: 600px;
+  padding: 20px;
+}
+
+.auth-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.auth-card h2 {
+  color: #1b5e20;
+}
+
+.input-group-text {
+  border-right: none;
+}
+
+/*.form-control {
+  border-left: none;
+}*/
+
+.btn-outline-light {
+  border-color: var(--green);
+  color: #000000;
+}
+
+.btn-outline-light:hover {
+  background-color: white;
+  color: #1b5e20;
+}

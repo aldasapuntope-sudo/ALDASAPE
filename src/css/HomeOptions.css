@@ -1,0 +1,76 @@
+.brand-wrap1 {
+  background-color: #fff;
+}
+
+.section-subtitle {
+    font-size: 14px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1.1px;
+    padding: 0px 0px 0px 15px;
+}
+
+.section-title {
+  font-size: 1.6rem;
+  line-height: 1.3;
+}
+
+/* Tarjeta principal */
+.brand-box2 {
+  transition: all 0.3s ease;
+}
+
+.brand-box2:hover {
+  transform: translateY(-5px);
+}
+
+.block-options-inmueble {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f9fa;
+  padding: 18px 20px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.block-options-inmueble:hover {
+  background: #e8f5ee;
+}
+
+.title-short-block .title-span-inner {
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.block-options-inmueble:hover .title-span-inner {
+  color: var(--green);
+  transform: translateX(6px);
+}
+
+/* Ícono */
+.icon-short-block svg {
+  color: var(--green);
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.block-options-inmueble:hover .icon-short-block svg {
+  transform: translateX(6px);
+}
+
+/* Animación de entrada */
+.fadeInUp {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.6s forwards ease-in-out;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

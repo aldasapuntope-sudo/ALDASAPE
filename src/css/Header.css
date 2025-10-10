@@ -1,0 +1,249 @@
+/* ====== ANIMACIÓN BASE ====== */
+.fade-up {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.25s ease-in-out;
+}
+.dropdown-menu.show.fade-up {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ====== MENÚ MEGA ====== */
+.mega-menu {
+  width: 100%;
+  left: 0;
+  top: 80%;
+  border: none;
+  border-radius: 0;
+}
+
+/* ====== HOVER EN ESCRITORIO ====== */
+@media (min-width: 992px) {
+  .navbar .dropdown:hover > .dropdown-menu {
+    display: block;
+    margin-top: 0;
+    opacity: 1;
+    transform: translateY(0);
+    animation: fadeInMenu 0.3s ease forwards;
+  }
+}
+
+/* ====== ANIMACIÓN DEL MENÚ ====== */
+@keyframes fadeInMenu {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ====== SUBMENÚS ====== */
+.dropdown-menu {
+  border: none;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  border-radius: 6px;
+  padding: 0.4rem 0;
+  background-color: #fff;
+  transition: all 0.3s ease;
+}
+
+/* ====== ITEM DE SUBMENÚ ====== */
+.dropdown-item {
+  position: relative;
+  padding: 10px 25px;
+  color: #333;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+/* Punto verde oculto */
+.dropdown-item::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%) scale(0);
+  width: 6px;
+  height: 6px;
+  background-color: var(--green); /* Verde Bootstrap */
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+/* Hover con animación */
+.dropdown-item:hover {
+  color: var(--green);
+  transform: translateX(8px);
+  background-color: rgba(25, 135, 84, 0.05);
+}
+
+.dropdown-item:hover::before {
+  transform: translateY(-50%) scale(1);
+  opacity: 1;
+}
+
+/* ====== ANIMACIÓN SECUENCIAL DE ITEMS ====== */
+.dropdown-menu.show .dropdown-item {
+  animation: fadeInItem 0.3s ease forwards;
+}
+
+.dropdown-menu.show .dropdown-item:nth-child(1) { animation-delay: 0.05s; }
+.dropdown-menu.show .dropdown-item:nth-child(2) { animation-delay: 0.1s; }
+.dropdown-menu.show .dropdown-item:nth-child(3) { animation-delay: 0.15s; }
+.dropdown-menu.show .dropdown-item:nth-child(4) { animation-delay: 0.2s; }
+.dropdown-menu.show .dropdown-item:nth-child(5) { animation-delay: 0.25s; }
+
+/* --- ICONO LOGIN --- */
+.login-icon-wrapper {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--green); /* verde Bootstrap */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.login-icon {
+  color: #6c757d; /* gris inicial */
+  transition: all 0.4s ease;
+  transform: translateY(0);
+}
+
+/* Animación al hover */
+.login-icon-wrapper:hover {
+  background-color: #e9f8f0;
+  border-color: var(--green);
+}
+
+.login-icon-wrapper:hover .login-icon {
+  color: var(--green);
+  transform: translateY(-4px); /* sube suavemente */
+}
+
+.btn-success.text-white {
+    background: var(--green);
+}
+
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--green); /* verde más oscuro */
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  transition: background-color 0.3s ease;
+}
+
+.icon-wrapper svg {
+  font-size: 12px;
+}
+
+.btn.btn-success.text-white:hover .icon-wrapper {
+  background-color: #005e2c; /* tono más oscuro al hacer hover */
+}
+
+/* Botón principal */
+.btn-publicar {
+  position: relative;
+  overflow: hidden;
+  background-color: #00c657; /* Verde base */
+  color: #fff;
+  font-weight: 600;
+  padding: 8px 18px;
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.3s ease;
+  z-index: 1;
+}
+
+/* Fondo animado (efecto pintura) */
+.btn-publicar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: #00c6576b; /* Verde más oscuro */
+  transition: left 0.4s ease;
+  z-index: 0; /* fondo debajo del texto */
+  color: white;
+}
+
+/* Efecto hover */
+.btn-publicar:hover::before {
+  left: 0;
+}
+
+/* Traemos texto e ícono al frente */
+.btn-publicar span,
+.btn-publicar svg {
+  position: relative;
+  z-index: 2; /* texto y ícono encima */
+}
+
+/* Ícono */
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #005e2c;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  z-index: 2;
+}
+
+/* Ícono interno */
+.icon-wrapper svg {
+  font-size: 12px;
+  color: #fff;
+}
+
+/* Hover: ícono crece ligeramente */
+.btn-publicar:hover .icon-wrapper {
+  transform: scale(1.1);
+  background-color: #004d23;
+}
+
+
+
+@keyframes bounceUp {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
+
+.login-icon-wrapper:hover .login-icon {
+  color: var(--green);
+  animation: bounceUp 0.5s ease forwards;
+}
+
+
+@keyframes fadeInItem {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

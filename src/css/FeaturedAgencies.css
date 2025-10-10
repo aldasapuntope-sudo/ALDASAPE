@@ -1,0 +1,40 @@
+.brand-wrap1 {
+  background-color: #f8fcfb;
+  position: relative;
+  overflow: hidden;
+}
+
+.brand-box1 .section-subtitle {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.brand-box1 .section-title {
+  font-size: 28px;
+  line-height: 1.3;
+  color: #212121;
+  margin: 10px 0;
+}
+
+.brand-box2 {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.brand-box2:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.brand-logo {
+  width: 100%;
+  max-width: 140px;
+  opacity: 0.9;
+  transition: all 0.3s ease;
+}
+
+.brand-logo:hover {
+  opacity: 1;
+  transform: scale(1.08);
+}
