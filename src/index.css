@@ -158,6 +158,113 @@ p {
     color: #ffffff;
 }
 
+
+/* Estilos para modo oscuro */
+body.dark-mode {
+  background-color: #1e1e2f;
+  color: #f1f1f1;
+}
+
+body.dark-mode .user_adminname {
+  color: white;
+}
+
+body.dark-mode button.nav-link{
+  color: black;
+}
+
+
+
+body.dark-mode .btn {
+  background: white;
+  color: #01408c;
+}
+body.dark-mode .bg-light {
+  background-color: #161b1e !important;
+}
+
+body.dark-mode .border-bottom {
+  border-bottom: 1px solid #444 !important;
+  border-radius: 6px 6px 0px 0px;
+  padding: 19px 0px 9px !important;
+  background: #161b1e !important;
+}
+
+body.dark-mode .header_top_bar.d-flex.justify-content-between.align-items-center.px-3.py-2.bg-light.border-bottom.with-sidebar {
+    background: #161b1e !important;
+}
+
+body.dark-mode .titlebienvenida{
+  color: black
+}
+body.dark-mode ul.breadcrumb.back-color-bd {
+    background: white !important;
+    color: black;
+}
+
+body.dark-mode ul.breadcrumb.back-color-bd  li {
+    color: black !important;
+}
+
+body.dark-mode ul.breadcrumb.back-color-bd  a {
+    color: black !important;
+}
+
+body.dark-mode .table {
+  background-color: #161b1e;
+  color: white;
+}
+
+body.dark-mode .table thead {
+  background-color: #3a3a50;
+}
+
+body.dark-mode h2{
+  color:white;
+}
+
+body.dark-mode .page-body{
+  background-color: #161b1e;
+}
+/*SIDERBAR*/
+/*body.dark-mode .sidebar-content{
+  background-color: #161b1e;
+}*/
+
+body.dark-mode .sidebar-wrapper.show{
+  background-color: #161b1e !important;
+}
+
+body.dark-mode .sidebar{
+  background-color: #161b1e;
+}
+
+body.dark-mode .menu-btn{
+    background-color: #252f35;
+    color: #ffffff;
+}
+
+body.dark-mode .submenu a {
+  color: white;
+}
+
+body.dark-mode .submenu li {
+    border-left: 1px solid white;
+    background: #252f35;
+}
+
+body.dark-mode .d-flex.flex-column.text-end span{
+    color: white !important;
+}
+
+body.dark-mode .salir-btn {
+    background-color: hsl(203deg 18% 18%) !important;
+    color: white;
+}
+
+.btn.btn-success {
+    background: var(--green);
+}
 /* Responsive */
 @media (max-width:768px){
   .hero-content h1{font-size:1.7rem}

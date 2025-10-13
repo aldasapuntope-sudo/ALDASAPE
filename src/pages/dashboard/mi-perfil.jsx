@@ -7,6 +7,7 @@ import Cargando from "../../components/cargando";
 import config from "../../config";
 import { actualizarPerfil, obtenerdatosperfil } from "./logica/obtenerdatosperfil";
 import { useNavigate } from "react-router-dom";
+import BreadcrumbALDASA from "../../cuerpos_dashboard/BreadcrumbAldasa";
 
 export default function MiPerfil() {
   const { usuario } = useUsuario();
@@ -33,11 +34,11 @@ export default function MiPerfil() {
       setTiposUsuario(await resTipo.json());
       setCondicionesFiscales(await resCond.json());
     } catch {
-      Swal.fire({
+      /*Swal.fire({
         icon: "error",
         title: "Error",
         text: "No se pudieron cargar los datos iniciales.",
-      });
+      });*/
     }
   }
 
@@ -240,176 +241,174 @@ export default function MiPerfil() {
     <>
       <Cargando visible={cargando} />
 
-      <div className="container my-5">
-        <div className="card shadow-lg border-0 rounded-4 overflow-hidden">
-          <div
-            className="card-header text-white text-center py-4"
-            style={{
-              background: "linear-gradient(90deg, rgb(5 200 81), rgb(83 217 135))",
-            }}
-          >
-            <h3 className="mb-0">Mi Perfil</h3>
-          </div>
+      <BreadcrumbALDASA />
 
-          <div className="card-body p-4">
-            <div className="text-center mb-4">
-              <img
-                src={imagenPerfil}
-                alt="Perfil"
-                className="rounded-circle shadow"
-                style={{ width: "120px", height: "120px", objectFit: "cover" }}
-              />
-            </div>
+      <div className="container mt-4">
+        <div class="containerunj">
+          
+          <div className="card border-0 rounded-4 overflow-hidden">
+            
 
-            <form onSubmit={formik.handleSubmit} className="row g-3">
+            <div className="card-body p-4">
+              <div className="text-center mb-4">
+                <img
+                  src={imagenPerfil}
+                  alt="Perfil"
+                  className="rounded-circle shadow"
+                  style={{ width: "120px", height: "120px", objectFit: "cover" }}
+                />
+              </div>
 
-              {/* 🔹 Tipo de Usuario */}
-              <div className="col-md-4">
-                <label className="form-label">Tipo de Usuario</label>
-                <select
-                    className={`form-select ${formik.touched.tipoUsuario && formik.errors.tipoUsuario ? "is-invalid" : ""}`}
-                    name="tipoUsuario"
-                    value={formik.values.tipoUsuario || ""}
-                    onChange={formik.handleChange}
-                    disabled={!incompleto}
-                >
-                    <option selected value="">Seleccione...</option>
-                    {tiposUsuario.map((t) => (
-                    <option key={t.id} value={t.id}>
-                        {t.nombre}
-                    </option>
-                    ))}
-                </select>
-                <div className="invalid-feedback">{formik.errors.tipoUsuario}</div>
+              <form onSubmit={formik.handleSubmit} className="row g-3">
+
+                {/* 🔹 Tipo de Usuario */}
+                <div className="col-md-4">
+                  <label className="form-label">Tipo de Usuario</label>
+                  <select
+                      className={`form-select ${formik.touched.tipoUsuario && formik.errors.tipoUsuario ? "is-invalid" : ""}`}
+                      name="tipoUsuario"
+                      value={formik.values.tipoUsuario || ""}
+                      onChange={formik.handleChange}
+                      disabled={!incompleto}
+                  >
+                      <option selected value="">Seleccione...</option>
+                      {tiposUsuario.map((t) => (
+                      <option key={t.id} value={t.id}>
+                          {t.nombre}
+                      </option>
+                      ))}
+                  </select>
+                  <div className="invalid-feedback">{formik.errors.tipoUsuario}</div>
+                  </div>
+
+
+                {/* 🔹 Condición Fiscal */}
+                <div className="col-md-4">
+                  <label className="form-label">Condición Fiscal</label>
+                  <select
+                      className={`form-select ${formik.touched.condicionFiscal && formik.errors.condicionFiscal ? "is-invalid" : ""}`}
+                      name="condicionFiscal"
+                      value={formik.values.condicionFiscal || ""}
+                      onChange={formik.handleChange}
+                      disabled={!incompleto} 
+                  >
+                      <option value="">Seleccione...</option>
+                      {condicionesFiltradas.map((c) => (
+                      <option key={c.id} value={c.id}>
+                          {c.nombre}
+                      </option>
+                      ))}
+                  </select>
+                  <div className="invalid-feedback">{formik.errors.condicionFiscal}</div>
                 </div>
 
 
-              {/* 🔹 Condición Fiscal */}
-              <div className="col-md-4">
-                <label className="form-label">Condición Fiscal</label>
-                <select
-                    className={`form-select ${formik.touched.condicionFiscal && formik.errors.condicionFiscal ? "is-invalid" : ""}`}
-                    name="condicionFiscal"
-                    value={formik.values.condicionFiscal || ""}
-                    onChange={formik.handleChange}
-                    disabled={!incompleto} 
-                >
-                    <option value="">Seleccione...</option>
-                    {condicionesFiltradas.map((c) => (
-                    <option key={c.id} value={c.id}>
-                        {c.nombre}
-                    </option>
-                    ))}
-                </select>
-                <div className="invalid-feedback">{formik.errors.condicionFiscal}</div>
-              </div>
+                {/* 🔹 Documento */}
+                <div className="col-md-4">
+                  <label className="form-label">Documento de Identidad</label>
+                  <div className="input-group">
+                      <input
+                      type="text"
+                      className={`form-control ${formik.touched.documento && formik.errors.documento ? "is-invalid" : ""}`}
+                      name="documento"
+                      value={formik.values.documento}
+                      onChange={formik.handleChange}
+                      disabled={!incompleto}
+                      />
+                      <button
+                      type="button"
+                      className="btn btn-outline-success"
+                      onClick={consultarDocumento}
+                      disabled={!incompleto}
+                      >
+                      Consultar
+                      </button>
+                      <div className="invalid-feedback">{formik.errors.documento}</div>
+                  </div>
+                </div>
 
 
-              {/* 🔹 Documento */}
-              <div className="col-md-4">
-                <label className="form-label">Documento de Identidad</label>
-                <div className="input-group">
-                    <input
+                {/* 🔹 Nombre */}
+                <div className="col-md-6">
+                  <label className="form-label">Nombre</label>
+                  <input
                     type="text"
-                    className={`form-control ${formik.touched.documento && formik.errors.documento ? "is-invalid" : ""}`}
-                    name="documento"
-                    value={formik.values.documento}
+                    className={`form-control ${formik.touched.nombre && formik.errors.nombre ? "is-invalid" : ""}`}
+                    name="nombre"
+                    value={formik.values.nombre}
+                    //value={formik.values.nombre}
                     onChange={formik.handleChange}
-                    disabled={!incompleto}
-                    />
-                    <button
-                    type="button"
-                    className="btn btn-outline-success"
-                    onClick={consultarDocumento}
-                    disabled={!incompleto}
-                    >
-                    Consultar
-                    </button>
-                    <div className="invalid-feedback">{formik.errors.documento}</div>
+                  />
+                  <div className="invalid-feedback">{formik.errors.nombre}</div>
                 </div>
-              </div>
 
+                {/* 🔹 Apellido o Razón Social */}
+                <div className="col-md-6">
+                  <label className="form-label">{esRuc ? "Razón Social" : "Apellido"}</label>
+                  <input
+                    type="text"
+                    className={`form-control ${formik.touched.apellido && formik.errors.apellido ? "is-invalid" : ""}`}
+                    name="apellido"
+                    value={formik.values.apellido}
+                    //value={formik.values.apellido}
+                    onChange={formik.handleChange}
+                  />
+                  <div className="invalid-feedback">{formik.errors.apellido}</div>
+                </div>
 
-              {/* 🔹 Nombre */}
-              <div className="col-md-6">
-                <label className="form-label">Nombre</label>
-                <input
-                  type="text"
-                  className={`form-control ${formik.touched.nombre && formik.errors.nombre ? "is-invalid" : ""}`}
-                  name="nombre"
-                  value={formik.values.nombre}
-                  //value={formik.values.nombre}
-                  onChange={formik.handleChange}
-                />
-                <div className="invalid-feedback">{formik.errors.nombre}</div>
-              </div>
+                {/* 🔹 Correo */}
+                <div className="col-md-6">
+                  <label className="form-label">Correo Electrónico</label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    name="email"
+                    value={formik.values.email || usuario?.email || ""}
+                    disabled
+                  />
+                </div>
 
-              {/* 🔹 Apellido o Razón Social */}
-              <div className="col-md-6">
-                <label className="form-label">{esRuc ? "Razón Social" : "Apellido"}</label>
-                <input
-                  type="text"
-                  className={`form-control ${formik.touched.apellido && formik.errors.apellido ? "is-invalid" : ""}`}
-                  name="apellido"
-                  value={formik.values.apellido}
-                  //value={formik.values.apellido}
-                  onChange={formik.handleChange}
-                />
-                <div className="invalid-feedback">{formik.errors.apellido}</div>
-              </div>
+                {/* 🔹 Teléfono fijo */}
+                <div className="col-md-6">
+                  <label className="form-label">Teléfono Fijo</label>
+                  <input
+                    type="text"
+                    className={`form-control ${formik.touched.telefono && formik.errors.telefono ? "is-invalid" : ""}`}
+                    name="telefono"
+                    value={formik.values.telefono}
+                    onChange={formik.handleChange}
+                  />
+                  <div className="invalid-feedback">{formik.errors.telefono}</div>
+                </div>
 
-              {/* 🔹 Correo */}
-              <div className="col-md-6">
-                <label className="form-label">Correo Electrónico</label>
-                <input
-                  type="email"
-                  className="form-control"
-                  name="email"
-                  value={formik.values.email || usuario?.email || ""}
-                  disabled
-                />
-              </div>
+                {/* 🔹 Teléfono móvil */}
+                <div className="col-md-6">
+                  <label className="form-label">Teléfono Móvil</label>
+                  <input
+                    type="text"
+                    className={`form-control ${formik.touched.movil && formik.errors.movil ? "is-invalid" : ""}`}
+                    name="movil"
+                    value={formik.values.movil}
+                    onChange={formik.handleChange}
+                  />
+                  <div className="invalid-feedback">{formik.errors.movil}</div>
+                </div>
 
-              {/* 🔹 Teléfono fijo */}
-              <div className="col-md-6">
-                <label className="form-label">Teléfono Fijo</label>
-                <input
-                  type="text"
-                  className={`form-control ${formik.touched.telefono && formik.errors.telefono ? "is-invalid" : ""}`}
-                  name="telefono"
-                  value={formik.values.telefono}
-                  onChange={formik.handleChange}
-                />
-                <div className="invalid-feedback">{formik.errors.telefono}</div>
-              </div>
-
-              {/* 🔹 Teléfono móvil */}
-              <div className="col-md-6">
-                <label className="form-label">Teléfono Móvil</label>
-                <input
-                  type="text"
-                  className={`form-control ${formik.touched.movil && formik.errors.movil ? "is-invalid" : ""}`}
-                  name="movil"
-                  value={formik.values.movil}
-                  onChange={formik.handleChange}
-                />
-                <div className="invalid-feedback">{formik.errors.movil}</div>
-              </div>
-
-              <div className="text-center mt-4">
-                <button
-                  type="submit"
-                  className="btn btn-primary px-4 py-2 rounded-3"
-                  style={{
-                    background: "linear-gradient(90deg, rgb(5 200 81), rgb(83 217 135))",
-                    border: "none",
-                    fontWeight: "600",
-                  }}
-                >
-                  {incompleto ? "Completar Registro" : "Guardar Cambios"}
-                </button>
-              </div>
-            </form>
+                <div className="text-center mt-4">
+                  <button
+                    type="submit"
+                    className="btn btn-primary px-4 py-2 rounded-3"
+                    style={{
+                      background: "linear-gradient(90deg, rgb(5 200 81), rgb(83 217 135))",
+                      border: "none",
+                      fontWeight: "600",
+                    }}
+                  >
+                    {incompleto ? "Completar Registro" : "Guardar Cambios"}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>

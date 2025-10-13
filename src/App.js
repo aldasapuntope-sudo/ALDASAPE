@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
   useNavigate,
+  Outlet,
 } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -17,12 +18,16 @@ import PoliticasPrivacidad from './pages/enlaces/PoliticasPrivacidad';
 import Preloader from './components/Preloader';
 import useInactividad from './hooks/useInactividad';
 import { UserProvider, useUsuario } from './context/UserContext';
-import Dashboard from './pages/dashboard';
+//import Dashboard from './pages/dashboard';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ThemeProvider } from './context/ThemeContext';
 import MiPerfil from './pages/dashboard/mi-perfil';
 import CerrarSesionModal from './components/modales/CerrarSesionModal';
-
+import DashboardLayout from './pages/dashboard';
+import Inicio from './pages/dashboard/Inicio';
+import NuevoAnuncio from './pages/dashboard/mis-anuncios/nuevo-anuncio';
+import initializeAxios from './interceptor';
+initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
 function RutaProtegida({ element: Elemento, requiereCompletarPerfil = false }) {
@@ -56,12 +61,14 @@ function RutaProtegida({ element: Elemento, requiereCompletarPerfil = false }) {
   }
 
   // ✅ Si el perfil está completo y trata de entrar a /mi-perfil → redirige a dashboard
-  if (!incompleto && requiereCompletarPerfil) {
+  /*if (!incompleto && requiereCompletarPerfil) {
     return <Navigate to="/dashboard" replace />;
   }
-
+*/
   return <Elemento />;
 }
+
+
 
 
 
@@ -71,18 +78,20 @@ function AppRoutes() {
   const [mostrarModal, setMostrarModal] = useState(false);
   const navigate = useNavigate();
 
+
+
   const abrirModalCerrarSesion = () => setMostrarModal(true);
 
   const confirmarCerrarSesion = () => {
-    localStorage.removeItem('usuario');
+    localStorage.removeItem("usuario");
     setUsuario(null);
-    window.location.href = '/';
+    window.location.href = "/";
   };
 
-  // 👇 Control de inactividad (30 minutos)
+  // 👇 Control de inactividad
   useInactividad(() => {
     if (usuario) {
-      setShowAlert(true);
+      setShowAlert(true); 
       logout();
     }
   }, 1800000);
@@ -90,55 +99,72 @@ function AppRoutes() {
   return (
     <>
       <Preloader />
-      <Header abrirModal={abrirModalCerrarSesion} />
-      <CerrarSesionModal
-        show={mostrarModal}
-        onConfirm={confirmarCerrarSesion}
-        onCancel={() => setMostrarModal(false)}
-      />
 
       <Routes>
-        {/* 🌐 Páginas públicas */}
+        {/* 🌐 Páginas públicas con Header y Footer */}
         <Route
-          path="/"
-          element={usuario ? <Navigate to="/dashboard" /> : <Home />}
-        />
-        <Route path="/terminos-condiciones" element={<TerminosCondiciones />} />
-        <Route path="/politicas-de-privacidad" element={<PoliticasPrivacidad />} />
+          element={
+            <>
+              <Header abrirModal={abrirModalCerrarSesion} />
+              <Outlet />
+              <Footer />
+            </>
+          }
+        >
+          <Route
+            path="/"
+            element={usuario ? <Navigate to="/dashboard" /> : <Home />}
+          />
+          <Route path="/terminos-condiciones" element={<TerminosCondiciones />} />
+          <Route path="/politicas-de-privacidad" element={<PoliticasPrivacidad />} />
 
-        {/* 🔐 Páginas de sesión */}
-        {!usuario && (
-          <>
-            <Route path="/login" element={<Login />} />
-            <Route path="/registro" element={<Register />} />
-            <Route path="/recover-password" element={<RecoverPassword />} />
-          </>
-        )}
+          {!usuario && (
+            <>
+              <Route path="/login" element={<Login />} />
+              <Route path="/registro" element={<Register />} />
+              <Route path="/recover-password" element={<RecoverPassword />} />
+            </>
+          )}
+        </Route>
 
-        {/* 🔒 Rutas privadas */}
+        {/* 🔒 Sección del Dashboard sin Header ni Footer */}
         {usuario && (
-          <>
+          <Route element={<DashboardLayout />}>
             <Route
               path="/dashboard"
-              element={<RutaProtegida element={Dashboard} />}
+              element={<RutaProtegida element={Inicio} />}
             />
-            <Route path="/mi-perfil" element={<MiPerfil />} />
             
-          </>
+            <Route
+              path="/mi-perfil"
+              element={<RutaProtegida element={MiPerfil} requiereCompletarPerfil />}
+            />
+
+            <Route
+              path="/nuevo-anuncio"
+              element={<RutaProtegida element={NuevoAnuncio} />}
+            />
+            
+          </Route>
         )}
 
         {/* ❌ Ruta no encontrada */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
 
-      <Footer />
+      {/* ⚠️ Modal de cierre de sesión */}
+      <CerrarSesionModal
+        show={mostrarModal}
+        onConfirm={confirmarCerrarSesion}
+        onCancel={() => setMostrarModal(false)}
+      />
 
       {/* ⚠️ Modal de alerta por inactividad */}
       {showAlert && (
         <div
           className="modal fade show"
           tabIndex="-1"
-          style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}
+          style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}
           aria-modal="true"
           role="dialog"
         >
@@ -171,6 +197,7 @@ function AppRoutes() {
     </>
   );
 }
+
 
 
 // 🔹 App principal

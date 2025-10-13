@@ -14,22 +14,27 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
   const nombre = usuario.usuarioaldasa.nombre || usuario.name || 'Usuario';
   const escuela = usuario.escuela || 'Aldasa';
 
+  //console.log(usuario);
   const imgSrc = usuario.imagen || usuario.usuarioaldasa.imagen || `${config.urlserver}image/animoji-1.png`;
 
   return (
     <div className="d-flex flex-row-reverse align-items-center me-1">
+      {/* Imagen a la derecha */}
       <Dropdown align="end">
         <Dropdown.Toggle as="div" id="dropdown-custom-components" style={{ cursor: 'pointer' }}>
           <Image
             src={imgSrc}
             alt="Usuario"
+            style={{ background: '#085a9b' }}
             roundedCircle
             height="40"
             width="40"
             className="ms-2"
           />
         </Dropdown.Toggle>
+
         <Dropdown.Menu>
+          
           <Dropdown.Item as={Link} to="/mi-perfil">Mi Perfil</Dropdown.Item>
           <Dropdown.Item onClick={() => window.location.reload()}>Recargar</Dropdown.Item>
           <Dropdown.Divider />
@@ -37,9 +42,16 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
         </Dropdown.Menu>
       </Dropdown>
 
+
+
+      {/* Nombre y escuela a la izquierda */}
       <div className="d-flex flex-column text-end">
-        <span style={{ fontWeight: '900', fontSize: '12px' }}>{nombre}</span>
-        <span style={{ color: '#9ea1a2', fontSize: '10px' }}>{escuela}</span>
+        <span style={{ color: '#252526', fontWeight: '900', fontSize: '12px' }}>
+          {nombre}
+        </span>
+        <span style={{ color: '#ffffffff', fontSize: '10px' }}>
+          {escuela}
+        </span>
       </div>
     </div>
   );

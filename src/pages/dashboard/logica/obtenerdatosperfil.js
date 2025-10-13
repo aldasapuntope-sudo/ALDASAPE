@@ -11,7 +11,7 @@ export const obtenerdatosperfil = async (codigo) => {
       return { datos: [], mensaje: res.data.mensaje || 'No se encontraron datos del alumno.' };
     }
   } catch (err) {
-    console.error('Error al obtener datos del alumno:', err);
+    console.error('Error al obtener datos:', err);
     return { datos: null, mensaje: 'Error al conectar con el servidor o token inválido.' }; // ✅ siempre retorna objeto
   }
 };
