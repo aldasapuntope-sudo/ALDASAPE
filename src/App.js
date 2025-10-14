@@ -27,6 +27,8 @@ import DashboardLayout from './pages/dashboard';
 import Inicio from './pages/dashboard/Inicio';
 import NuevoAnuncio from './pages/dashboard/mis-anuncios/nuevo-anuncio';
 import initializeAxios from './interceptor';
+import AnunciosActivos from './pages/dashboard/mis-anuncios/AnunciosActivos';
+import AnunciosRevision from './pages/dashboard/mis-anuncios/AnunciosRevision';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -144,7 +146,16 @@ function AppRoutes() {
               path="/nuevo-anuncio"
               element={<RutaProtegida element={NuevoAnuncio} />}
             />
-            
+
+            <Route
+              path="/anuncios-activos"
+              element={<RutaProtegida element={AnunciosActivos} />}
+            />
+            <Route
+              path="/anuncios-revision"
+              element={<RutaProtegida element={AnunciosRevision} />}
+            />
+
           </Route>
         )}
 

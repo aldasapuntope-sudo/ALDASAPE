@@ -6,8 +6,8 @@ import { useTheme } from '../context/ThemeContext';
 const nombresPersonalizados = {
   'mi-perfil': 'Mi Perfil',
   'nuevo-anuncio': 'Nuevo Anuncio',
-  reportestud: 'Reporte Estudiante',
-  silabus: 'Sílabus',
+  'anuncios-revision': 'Anuncios en Revisión',
+  'anuncios-activos': 'Anuncios Activos',
   detalle_guia: 'Detalle Guías',
   curso: 'Mis Cursos',
   detalle_curso: 'Detalle Curso',
@@ -97,12 +97,13 @@ const BreadcrumbALDASA = () => {
     : 'assets/images/favicon-aldasape.png';
 
   return (
+    
     <div className="container">
       <div className="row align-items-center justify-content-between">
         <div className="col-lg-8 col-md-6 col-sm-12">
-          <ul className="breadcrumb back-color-bd">
+          <ul className="breadcrumb back-color-bd  rounded-4 shadow-sm">
             {breadcrumbs}
-            <img alt="Logo UNJ" className="logounjcont" src={logo} />
+            <img alt="Logo ALDASA" className="logounjcont" src={logo} />
           </ul>
         </div>
         

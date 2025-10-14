@@ -71,15 +71,15 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
                   ? <FaChevronDown className="ms-auto" />
                   : <FaChevronRight className="ms-auto" />}
               </button>
-              {openMenu === 'administracion' && (
-                <ul className="submenu">
+              
+                <ul className={`submenu ${openMenu === 'administracion' ? 'open' : ''}`}>
                   <li
                     className={`submenu-link ${location.pathname.startsWith('/mi-perfil') ? 'active' : ''}`}
                   >
                     <Link to="/mi-perfil" onClick={toggleSidebar}>Mi Perfil</Link>
                   </li>
                 </ul>
-              )}
+              
             </div>
 
             {/* Mis anuncios */}
@@ -89,12 +89,12 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
             <div className="menu-group">
               <button className="menu-btn" onClick={() => toggleMenu('mis-anuncios')}>
                 <FaBookOpen className="me-2" /> Mis Anuncios
-                {openMenu === 'matricula'
+                {openMenu === 'mis-anuncios'
                   ? <FaChevronDown className="ms-auto" />
                   : <FaChevronRight className="ms-auto" />}
               </button>
-              {openMenu === 'mis-anuncios' && (
-                <ul className="submenu">
+              
+                <ul className={`submenu ${openMenu === 'mis-anuncios' ? 'open' : ''}`}>
                   <li
                     className={`submenu-link ${location.pathname.startsWith('/nuevo-anuncio') ? 'active' : ''}`}
                   >
@@ -111,7 +111,7 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
                     <Link to="/anuncios-revision" onClick={toggleSidebar}>Anuncios en revisión</Link>
                   </li>
                 </ul>
-              )}
+              
             </div>
 
             {/* Reportes */}

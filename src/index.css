@@ -148,13 +148,18 @@ p {
   font-weight: bold;
 }
 
+.btn-primary {
+  background: var(--green);
+  border: 0;
+}
+
 
 /* Footer */
 .footer{background:#fafafa; padding:28px 0; text-align:center; color:var(--muted)}
 
 
 .modal-header {
-    background: var(--green); ;
+    background: var(--green);
     color: #ffffff;
 }
 
