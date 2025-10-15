@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import '../../css/Login.css';
 import BotonGoogle from './componentes/LoginBotonGoogle';
 import Formulario from './componentes/LoginForm';
+import BotonFacebook from './componentes/BotonFacebook';
+
 
 export default function Login() {
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
@@ -25,13 +27,14 @@ export default function Login() {
           {/* Formulario de correo y contraseña */}
           <Formulario />
 
-          <div className="text-center my-3 text-white-50">o</div>
+          <div className="text-center my-3 text-black-50"></div>
 
           {/* Botón de Google */}
           <BotonGoogle setUsuario={setUsuario} />
           
-
-          <div className="text-center mt-3 text-white">
+          <div className="my-2 text-center text-black-50">o</div>
+          <BotonFacebook setUsuario={setUsuario} />
+          <div className="text-center mt-3 text-black">
             <small>¿No tienes una cuenta?</small> <br />
             <a href="/registro" className="text-success fw-semibold">Regístrate</a>
           </div>

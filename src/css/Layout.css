@@ -291,11 +291,16 @@
       background-color: var(--green) !important;
   }
 
-  button.accordion-button {
+  /*button.accordion-button {
     background: #d3f0fe !important;
     color: var(--green) !important;
     font-weight: bold;
-  }
+  }*/
+
+.accordion-btn-green {
+  background-color: var(--green) !important;
+  color: white !important;
+}
 
   .celda-nombres {
     max-width: 200px;  /* puedes ajustar este valor */

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { FaSave, FaBullhorn } from "react-icons/fa";
+
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Swal from "sweetalert2";
@@ -12,7 +14,12 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
   const [operaciones, setOperaciones] = useState([]);
   const [ubicaciones, setUbicaciones] = useState([]);
   const [caracteristicas, setCaracteristicas] = useState([]);
+  const [caracteristicasid, setCaracteristicasid] = useState([]);
   const [caracteristicasSeleccionadas, setCaracteristicasSeleccionadas] = useState({});
+  const [amenities, setAmenities] = useState([]);
+  const [amenitiesId, setAmenitiesId] = useState([]);
+  const [amenitiesSeleccionadas, setAmenitiesSeleccionadas] = useState({});
+
   const [imagen, setImagen] = useState(null);
   const [cargando, setCargando] = useState(false);
   const { usuario } = useUsuario();
@@ -70,6 +77,26 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
 
         formData.append("caracteristicas", JSON.stringify(seleccionadas));
 
+        const seleccionadasSecundarias = Object.entries(amenitiesSeleccionadas)
+        .filter(([_, data]) => data.checked)
+        .map(([id]) => ({
+          id: parseInt(id),
+        }));
+
+        if (seleccionadasSecundarias.length === 0) {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Debes seleccionar al menos una característica secundaria",
+          });
+          setCargando(false);
+          return;
+        }
+
+
+         formData.append("caracteristicas_secundarias", JSON.stringify(seleccionadasSecundarias));
+
+        
         const url = anuncio
           ? `${config.apiUrl}api/misanuncios/actualizar/${anuncio.id}`
           : `${config.apiUrl}api/misanuncios/registrar`;
@@ -84,6 +111,9 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
         const data = await response.json();
         console.log("📦 Respuesta:", data);
 
+        for (let [key, value] of formData.entries()) {
+  console.log(`${key}:`, value);
+}
         if (response.ok) {
           Swal.fire({
             icon: "success",
@@ -95,6 +125,7 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
           formik.resetForm();
           setImagen(null);
           setCaracteristicasSeleccionadas({});
+          setAmenitiesSeleccionadas({});
           onClose?.();
           onRefresh?.();
         } else {
@@ -122,8 +153,37 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
     cargarCombos();
   }, []);
 
-  // 🧩 Cargar selección de características según el anuncio
   useEffect(() => {
+  if (caracteristicas.length && caracteristicasid.length) {
+    const seleccionadas = {};
+
+    caracteristicas.forEach((c) => {
+      const existente = caracteristicasid.find(ci => ci.caracteristica_id === c.id);
+      seleccionadas[c.id] = {
+        checked: !!existente, // si existe, se marca
+        valor: existente?.valor || "", // si tiene valor, se llena
+      };
+    });
+
+    setCaracteristicasSeleccionadas(seleccionadas);
+  }
+}, [caracteristicas, caracteristicasid]);
+
+useEffect(() => {
+  if (amenities.length && amenitiesId.length) {
+    const seleccionadas = {};
+    amenities.forEach((a) => {
+      const existente = amenitiesId.find(ai => ai.amenity_id === a.id);
+      seleccionadas[a.id] = {
+        checked: !!existente, // marcado si existe
+      };
+    });
+    setAmenitiesSeleccionadas(seleccionadas);
+  }
+}, [amenities, amenitiesId]);
+
+  // 🧩 Cargar selección de características según el anuncio
+  /*seEffect(() => {
     if (caracteristicas.length && anuncio?.caracteristicas) {
       const seleccionadas = {};
       caracteristicas.forEach((c) => {
@@ -134,28 +194,45 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
       });
       setCaracteristicasSeleccionadas(seleccionadas);
     }
-  }, [caracteristicas, anuncio]);
+  }, [caracteristicas, anuncio]);*/
 
   async function cargarCombos() {
     setCargando(true);
     try {
-      const [resTipos, resOps, resUbic, resCarac] = await Promise.all([
+      const [resTipos, resOps, resUbic, resCarac, resAmenities] = await Promise.all([
         axios.get(`${config.apiUrl}api/misanuncios/tipos-propiedad`),
         axios.get(`${config.apiUrl}api/misanuncios/tipos-operacion`),
         axios.get(`${config.apiUrl}api/misanuncios/tipos-ubicaciones`),
         axios.get(`${config.apiUrl}api/misanuncios/caracteristicas-catalogo`),
+        axios.get(`${config.apiUrl}api/misanuncios/propiedad_amenities`),
       ]);
 
       setTipos(resTipos.data);
       setOperaciones(resOps.data);
       setUbicaciones(resUbic.data);
       setCaracteristicas(resCarac.data.data || resCarac.data);
+      setAmenities(resAmenities.data.data || resAmenities.data);
+
+      // Cargar características del anuncio si existe
+      if (anuncio && anuncio.id) {
+        const resCaracid = await axios.get(
+          `${config.apiUrl}api/misanuncios/caracteristicas-catalogo/${anuncio.id}`
+        );
+        setCaracteristicasid(resCaracid.data.data || resCaracid.data);
+
+        const resAmenitiesId = await axios.get(
+          `${config.apiUrl}api/misanuncios/propiedad_amenities/${anuncio.id}`
+        );
+        setAmenitiesId(resAmenitiesId.data.data || resAmenitiesId.data);
+      }
     } catch (error) {
       console.error("❌ Error cargando combos:", error);
     } finally {
       setCargando(false);
     }
   }
+
+
 
   // 🧩 Manejar check y valor
   const handleCheckChange = (id) => {
@@ -186,6 +263,19 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
       setImagen(URL.createObjectURL(file));
     }
   };
+
+  const handleAmenityCheckChange = (id) => {
+    setAmenitiesSeleccionadas((prev) => ({
+      ...prev,
+      [id]: {
+        ...prev[id],
+        checked: !prev[id]?.checked,
+      },
+    }));
+  };
+
+
+  
 
   return (
     <div className="card shadow-sm border-0 p-4">
@@ -296,54 +386,131 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
 
         {/* Características */}
         <div className="col-12 mt-3">
-          <label className="form-label fw-semibold">Características</label>
-          <div className="row">
-            {caracteristicas.map((carac) => {
-              console.log(carac);
-              const checked = caracteristicasSeleccionadas[carac.id]?.checked || false;
-              const valor = caracteristicasSeleccionadas[carac.id]?.valor || "";
-
-              return (
-                <div className="col-md-6 mb-2" key={carac.id}>
-                  <div
-                    className={`border rounded-3 p-2 d-flex align-items-center ${
-                      checked ? "border-success bg-light" : ""
-                    }`}
-                  >
-                    <div className="form-check me-2">
-                      <input
-                        type="checkbox"
-                        className="form-check-input"
-                        id={`carac-${carac.id}`}
-                        checked={checked}
-                        onChange={() => handleCheckChange(carac.id)}
-                      />
-                      <label htmlFor={`carac-${carac.id}`} className="form-check-label">
-                        {carac.nombre}
-                      </label>
-                    </div>
-
-                    {checked && (
-                      <input
-                        type="text"
-                        className="form-control form-control-sm ms-2"
-                        placeholder="Valor (opcional)"
-                        value={valor}
-                        onChange={(e) => handleValorChange(carac.id, e.target.value)}
-                        style={{ maxWidth: "150px" }}
-                      />
-                    )}
+          {/* Acordeón para Características */}
+          <div className="accordion" id="accordionCaracteristicas">
+            <div className="accordion-item">
+              <h2 className="accordion-header" id="headingCarac">
+                <button
+                  className="accordion-button collapsed accordion-btn-green"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseCarac"
+                  aria-expanded="false"
+                  aria-controls="collapseCarac"
+                >
+                  Características Principales
+                </button>
+              </h2>
+              <div
+                id="collapseCarac"
+                className="accordion-collapse collapse"
+                aria-labelledby="headingCarac"
+                data-bs-parent="#accordionCaracteristicas"
+              >
+                <div className="accordion-body">
+                  <div className="row">
+                    {caracteristicas.map((carac) => {
+                      const checked = caracteristicasSeleccionadas[carac.id]?.checked || false;
+                      const valor = caracteristicasSeleccionadas[carac.id]?.valor || "";
+                      return (
+                        <div className="col-md-6 mb-2" key={carac.id}>
+                          <div
+                            className={`border rounded-3 p-2 d-flex align-items-center ${
+                              checked ? "border-success bg-light" : ""
+                            }`}
+                          >
+                            <div className="form-check me-2">
+                              <input
+                                type="checkbox"
+                                className="form-check-input"
+                                id={`carac-${carac.id}`}
+                                checked={checked}
+                                onChange={() => handleCheckChange(carac.id)}
+                              />
+                              <label htmlFor={`carac-${carac.id}`} className="form-check-label">
+                                {carac.nombre}
+                              </label>
+                            </div>
+                            {checked && (
+                              <input
+                                type="text"
+                                className="form-control form-control-sm ms-2"
+                                placeholder="Valor (opcional)"
+                                value={valor}
+                                onChange={(e) => handleValorChange(carac.id, e.target.value)}
+                                style={{ maxWidth: "150px" }}
+                              />
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            </div>
+          </div>
+
+          {/* Acordeón para Amenities */}
+          <div className="accordion mt-3" id="accordionAmenities">
+            <div className="accordion-item">
+              <h2 className="accordion-header" id="headingAmen">
+                <button
+                  className="accordion-button collapsed accordion-btn-green"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseAmen"
+                  aria-expanded="false"
+                  aria-controls="collapseAmen"
+                >
+                  Características Secundarias
+                </button>
+              </h2>
+              <div
+                id="collapseAmen"
+                className="accordion-collapse collapse"
+                aria-labelledby="headingAmen"
+                data-bs-parent="#accordionAmenities"
+              >
+                <div className="accordion-body">
+                  <div className="row">
+                    {amenities.map((amenity) => {
+                      const checked = amenitiesSeleccionadas[amenity.id]?.checked || false;
+                      return (
+                        <div className="col-md-6 mb-2" key={amenity.id}>
+                          <div
+                            className={`border rounded-3 p-2 d-flex align-items-center ${
+                              checked ? "border-success bg-light" : ""
+                            }`}
+                          >
+                            <div className="form-check me-2">
+                              <input
+                                type="checkbox"
+                                className="form-check-input"
+                                id={`amenity-${amenity.id}`}
+                                checked={checked}
+                                onChange={() => handleAmenityCheckChange(amenity.id)}
+                              />
+                              <label htmlFor={`amenity-${amenity.id}`} className="form-check-label">
+                                {amenity.nombre}
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+
 
         {/* Botón */}
         <div className="col-12 mt-4 text-end">
           <button type="submit" className="btn btn-success px-4 py-2 fw-bold rounded-3">
-            {anuncio ? "💾 Guardar cambios" : "📢 Publicar anuncio"}
+            {anuncio ? <><FaSave /> Guardar cambios</> : <><FaBullhorn /> Publicar anuncio</>}
           </button>
         </div>
       </form>
