@@ -308,7 +308,9 @@
     word-wrap: break-word;
   }
 
-
+.fade.modal.show {
+    padding-left: 0px !important;
+}
 
   th.tablacursub {
     background: var(--green) !important;
@@ -358,7 +360,12 @@ button.position-absolute.top-0.end-0.m-2.rounded-circle.btn.btn-outline-success.
   
   /* Responsive */
   @media (max-width: 768px) {
-
+    .logounj {
+    width: 40% !important;
+    margin-bottom: 10px !important;
+    /* margin-top: 27px; */
+    margin-top: 4px;
+}
     ul.nav.nav-tabs {
       width: 100%;
       text-align: left;

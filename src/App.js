@@ -29,6 +29,12 @@ import NuevoAnuncio from './pages/dashboard/mis-anuncios/nuevo-anuncio';
 import initializeAxios from './interceptor';
 import AnunciosActivos from './pages/dashboard/mis-anuncios/AnunciosActivos';
 import AnunciosRevision from './pages/dashboard/mis-anuncios/AnunciosRevision';
+import config from './config';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import useVerificarPlan from './hooks/useVerificarPlan';
+import { RutaProtegidaPlan } from './pages/dashboard/logica/configuracioninterna';
+import Planes from './pages/dashboard/planes';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -69,6 +75,8 @@ function RutaProtegida({ element: Elemento, requiereCompletarPerfil = false }) {
 */
   return <Elemento />;
 }
+
+
 
 
 
@@ -141,10 +149,14 @@ function AppRoutes() {
               path="/mi-perfil"
               element={<RutaProtegida element={MiPerfil} requiereCompletarPerfil />}
             />
-
+            <Route path="/planes" element={<Planes />} />
             <Route
               path="/nuevo-anuncio"
-              element={<RutaProtegida element={NuevoAnuncio} />}
+              element={
+                <RutaProtegidaPlan>
+                  <NuevoAnuncio />
+                </RutaProtegidaPlan>
+              }
             />
 
             <Route

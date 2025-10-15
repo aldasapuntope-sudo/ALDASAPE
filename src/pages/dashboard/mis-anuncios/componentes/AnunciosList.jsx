@@ -8,15 +8,20 @@ import Cargando from "../../../../components/cargando";
 import AnuncioCard from "./AnuncioCard";
 import BreadcrumbALDASA from "../../../../cuerpos_dashboard/BreadcrumbAldasa";
 import NuevoAnuncio from "../nuevo-anuncio";
+import { CardSkeleton } from "../../../../components/TablaSkeleton";
+import useVerificarPlan from "../../../../hooks/useVerificarPlan";
+import Swal from "sweetalert2";
+
 
 const AnunciosList = ({ isPublish }) => {
+  const { tienePlan, cargando2 } = useVerificarPlan();
   const [anuncios, setAnuncios] = useState([]);
   const [cargando, setCargando] = useState(false);
   const [view, setView] = useState("cards");
   const [showModal, setShowModal] = useState(false);
   const [anuncioSeleccionado, setAnuncioSeleccionado] = useState(null);
   const { usuario } = useUsuario();
-
+  
   useEffect(() => {
     cargarDatos();
   }, [isPublish]);
@@ -27,8 +32,9 @@ const AnunciosList = ({ isPublish }) => {
       const res = await fetch(
         `${config.apiUrl}api/misanuncios/listar/${isPublish}/${usuario.usuarioaldasa.id}`
       );
+      
       const data = await res.json();
-
+      
       const anunciosAdaptados = (Array.isArray(data) ? data : data.data || []).map((a) => ({
         id: a.id,
         titulo: a.titulo,
@@ -50,6 +56,9 @@ const AnunciosList = ({ isPublish }) => {
               `${config.apiUrl}propiedades/`
             )
           : "https://aldasa.pe/wp-content/themes/theme_aldasape/img/comprar-inmueble.jpg",
+
+        caracteristicas: a.caracteristicas || [],
+        caracteristicas_secundarios: a.amenities || [],
       }));
 
       setAnuncios(anunciosAdaptados);
@@ -66,9 +75,31 @@ const AnunciosList = ({ isPublish }) => {
   };
 
   const handleNuevo = () => {
-    setAnuncioSeleccionado(null); // 👈 Vaciar selección para modo “nuevo”
-    setShowModal(true);
-  };
+  if (cargando) {
+    return Swal.fire({
+      icon: "info",
+      title: "Verificando...",
+      text: "Por favor espera mientras verificamos tu plan.",
+    });
+  }
+
+  if (!tienePlan) {
+    Swal.fire({
+      icon: "warning",
+      title: "Plan requerido",
+      text: "Debes adquirir un plan para poder publicar un anuncio.",
+      confirmButtonText: "Ver planes",
+    }).then(() => {
+      window.location.href = "/planes";
+    });
+    return;
+  }
+
+  // Si tiene plan, abre el modal
+  setAnuncioSeleccionado(null);
+  setShowModal(true);
+};
+
 
   const columns = [
     { name: "Título", selector: (row) => row.titulo, sortable: true },
@@ -164,7 +195,10 @@ const AnunciosList = ({ isPublish }) => {
 
             {/* 🔹 Cuerpo principal */}
             {cargando ? (
-              <Cargando visible={cargando} />
+              <>
+                <Cargando visible={cargando} />
+                <CardSkeleton cards={6} />
+              </>
             ) : anuncios.length === 0 ? (
               <Alert variant="info" className="text-center py-4 rounded-3 shadow-sm">
                 <p className="mb-0">

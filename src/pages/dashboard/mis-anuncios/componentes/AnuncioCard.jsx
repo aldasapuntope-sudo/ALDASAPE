@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaHeart,
   FaArrowsAltH,
@@ -12,11 +12,14 @@ import { Card } from "react-bootstrap";
 import config from "../../../../config";
 
 export default function AnuncioCard({ anuncio }) {
-    console.log(anuncio);
+
+ 
   const imagen = anuncio.imagen
     ? anuncio.imagen
     : "https://aldasa.pe/wp-content/themes/theme_aldasape/img/comprar-inmueble.jpg";
 
+
+  
   return (
     <Card className="property-box2 shadow-sm border-0 rounded-4 overflow-hidden h-100">
       {/* Imagen */}
@@ -60,6 +63,7 @@ export default function AnuncioCard({ anuncio }) {
       </div>
 
       {/* Contenido */}
+      <div class="item-category10 mt-2"><a href="single-listing1.html" class="text-success fw-semibold">{anuncio.tipo?.toUpperCase()}</a></div>
       <Card.Body className="p-3">
         {/*text-truncate */}
         <h5 className="mb-1" style={{textAlign: 'justify', width: '294px'}}>{anuncio.titulo}</h5>
@@ -69,19 +73,50 @@ export default function AnuncioCard({ anuncio }) {
         </div>
 
         <ul className="list-inline mb-0 small text-secondary">
-          <li className="list-inline-item me-3">
-            <FaBed className="text-success me-1" />
-            {anuncio.dormitorios} Dorms
-          </li>
-          <li className="list-inline-item me-3">
-            <FaBath className="text-success me-1" />
-            {anuncio.banos} Baños
-          </li>
-          <li className="list-inline-item">
-            <FaRulerCombined className="text-success me-1" />
-            {anuncio.area} m²
-          </li>
+          {anuncio.caracteristicas?.length > 0 &&
+            anuncio.caracteristicas.map((carac, index) => (
+              <li key={index} className="list-inline-item me-3">
+                <img
+                  src={`${config.urlserver}iconos/${carac.icono}`}
+                  alt={carac.nombre}
+                  width="20"
+                  height="20"
+                  className="me-1 align-text-bottom"
+                  onError={(e) => (e.target.style.display = "none")} // oculta si no carga
+                />
+                {carac.valor} {carac.unidad ? ` ${carac.unidad}` : ""} {carac.nombre}
+                
+              </li>
+            ))}
         </ul>
+
+        {/* Características secundarias / amenities */}
+        <div className="d-flex flex-wrap gap-2 mt-2" style={{float:'right'}}>
+          {anuncio.caracteristicas_secundarios?.length > 0 &&
+            anuncio.caracteristicas_secundarios.map((amenity, index) => (
+              <div
+                key={index}
+                className="d-flex align-items-center gap-1 px-2 py-1 rounded-pill"
+                style={{
+                  backgroundColor: "var(--green)",
+                  color: "white",
+                  fontSize: "0.8rem",
+                  fontWeight: "500",
+                }}
+              >
+                {amenity.icon_url && (
+                  <img
+                    src={amenity.icon_url}
+                    alt={amenity.nombre}
+                    width="18"
+                    height="18"
+                    style={{ filter: "invert(1)", opacity: 0.9 }}
+                  />
+                )}
+                <span>{amenity.nombre}</span>
+              </div>
+            ))}
+        </div>
       </Card.Body>
     </Card>
   );

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaSave, FaBullhorn } from "react-icons/fa";
 
 import { useFormik } from "formik";
@@ -23,7 +24,9 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
   const [imagen, setImagen] = useState(null);
   const [cargando, setCargando] = useState(false);
   const { usuario } = useUsuario();
+  const navigate = useNavigate();
 
+  
   // 🧩 Formik
   const formik = useFormik({
     initialValues: {
@@ -109,11 +112,8 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
         });
 
         const data = await response.json();
-        console.log("📦 Respuesta:", data);
+        
 
-        for (let [key, value] of formData.entries()) {
-  console.log(`${key}:`, value);
-}
         if (response.ok) {
           Swal.fire({
             icon: "success",
@@ -170,6 +170,12 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
 }, [caracteristicas, caracteristicasid]);
 
 useEffect(() => {
+  if (formik.values.tipo_id) {
+    cargarCaracteristicasPorTipo(formik.values.tipo_id);
+  }
+}, [formik.values.tipo_id]);
+
+useEffect(() => {
   if (amenities.length && amenitiesId.length) {
     const seleccionadas = {};
     amenities.forEach((a) => {
@@ -196,6 +202,31 @@ useEffect(() => {
     }
   }, [caracteristicas, anuncio]);*/
 
+  // 🔧 Cargar características y amenities según el tipo de propiedad seleccionado
+  async function cargarCaracteristicasPorTipo(tipoId) {
+    try {
+      setCargando(true);
+
+      // Trae características principales y secundarias relacionadas al tipo
+      const [resCarac, resAmenities] = await Promise.all([
+        axios.get(`${config.apiUrl}api/misanuncios/caracteristicas-catalogo/${tipoId}`),
+        axios.get(`${config.apiUrl}api/misanuncios/propiedad_amenities/${tipoId}`), // si amenities son generales
+      ]);
+
+      setCaracteristicas(resCarac.data.data || resCarac.data);
+      setAmenities(resAmenities.data.data || resAmenities.data);
+
+      // Reinicia las selecciones previas
+      setCaracteristicasSeleccionadas({});
+      setAmenitiesSeleccionadas({});
+    } catch (error) {
+      console.error("❌ Error al cargar características por tipo:", error);
+    } finally {
+      setCargando(false);
+    }
+  }
+
+
   async function cargarCombos() {
     setCargando(true);
     try {
@@ -203,15 +234,15 @@ useEffect(() => {
         axios.get(`${config.apiUrl}api/misanuncios/tipos-propiedad`),
         axios.get(`${config.apiUrl}api/misanuncios/tipos-operacion`),
         axios.get(`${config.apiUrl}api/misanuncios/tipos-ubicaciones`),
-        axios.get(`${config.apiUrl}api/misanuncios/caracteristicas-catalogo`),
-        axios.get(`${config.apiUrl}api/misanuncios/propiedad_amenities`),
+       // axios.get(`${config.apiUrl}api/misanuncios/caracteristicas-catalogo/${anuncio.tipo_id}`),
+       // axios.get(`${config.apiUrl}api/misanuncios/propiedad_amenities`),
       ]);
 
       setTipos(resTipos.data);
       setOperaciones(resOps.data);
       setUbicaciones(resUbic.data);
-      setCaracteristicas(resCarac.data.data || resCarac.data);
-      setAmenities(resAmenities.data.data || resAmenities.data);
+     // setCaracteristicas(resCarac.data.data || resCarac.data);
+     // setAmenities(resAmenities.data.data || resAmenities.data);
 
       // Cargar características del anuncio si existe
       if (anuncio && anuncio.id) {
