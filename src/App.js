@@ -35,6 +35,7 @@ import Swal from 'sweetalert2';
 import useVerificarPlan from './hooks/useVerificarPlan';
 import { RutaProtegidaPlan } from './pages/dashboard/logica/configuracioninterna';
 import Planes from './pages/dashboard/planes';
+import PropertyDetail from './components/propiedad_detalle/PropertyDetail';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -125,6 +126,7 @@ function AppRoutes() {
             path="/"
             element={usuario ? <Navigate to="/dashboard" /> : <Home />}
           />
+          <Route path="/anuncio/:slug" element={<PropertyDetail />} />
           <Route path="/terminos-condiciones" element={<TerminosCondiciones />} />
           <Route path="/politicas-de-privacidad" element={<PoliticasPrivacidad />} />
 

@@ -343,8 +343,40 @@
 }
 
 
-button.position-absolute.top-0.end-0.m-2.rounded-circle.btn.btn-outline-success.btn-sm {
+.boton-editar-card {
     margin-top: 238px !important;
+    z-index: 5;
+}
+
+.item-category-box1 {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    z-index: 5;
+}
+
+.property-box2 .item-category-box1 .item-category {
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 400;
+    font-family: "Ubuntu", sans-serif;
+    padding: 3px 20px;
+    display: inline-block;
+    background-color: var(--green);
+    border: none;
+    border-radius: 2px;
+    position: relative;
+}
+
+.property-box2 .item-category-box1::after {
+    content: "";
+    position: absolute;
+    top: -31px;
+    left: 50%;
+    background-image: url(https://aldasa.pe/wp-content/themes/theme_aldasape/img/listing-label.svg);
+    width: 51px;
+    height: 40px;
+    margin-left: -27.5px;
 }
 
   @media (min-width: 1200px) {

@@ -1,91 +1,120 @@
-import React from 'react';
-import {
-  FaHeart,
-  FaArrowsAltH,
-  FaMapMarkerAlt,
-  FaBed,
-  FaBath,
-  FaRulerCombined,
-} from 'react-icons/fa';
-import '../css/PropertyCard.css';
+import React from "react";
+import { FaMapMarkerAlt } from "react-icons/fa";
+import "../css/PropertyCard.css";
+import { Card } from "react-bootstrap";
+import config from "../config";
+import { useNavigate } from "react-router-dom";
 
-export default function PropertyCard({ prop }) {
-  const { title, category, type, price, location, img, details } = prop;
+export default function PropertyCard({ anuncio }) {
+  const navigate = useNavigate();
+
+  const imagen = anuncio.imagen
+    ? anuncio.imagen
+    : "https://aldasa.pe/wp-content/themes/theme_aldasape/img/comprar-inmueble.jpg";
+
+  // 🔹 Función para crear slug (nombre amigable)
+  const crearSlug = (texto) => {
+    return texto
+      ?.toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-") // reemplaza todo lo que no sea letra o número por guiones
+      .replace(/^-+|-+$/g, ""); // elimina guiones del inicio y fin
+  };
+
+  const handleClick = () => {
+    const slugTitulo = crearSlug(anuncio.titulo);
+    const slugUbicacion = crearSlug(anuncio.ubicacion);
+    // Redirige a /anuncio/23-titulo-ubicacion
+    navigate(`/anuncio/${anuncio.id}-${slugTitulo}-${slugUbicacion}`);
+  };
 
   return (
-    <div className="property-box2 shadow-sm">
-      <div className="item-img position-relative">
-        <a href="single-listing1.html">
-          <img src={img} alt={title} width="510" height="340" className="img-fluid" />
-        </a>
+    <Card
+      className="property-box2 shadow-sm border-0 rounded-2 overflow-hidden h-100 property-card-hover"
+      onClick={handleClick}
+      style={{ cursor: "pointer" }}
+    >
+      <div className="position-relative">
+        <img
+          src={imagen}
+          alt={anuncio.titulo}
+          className="w-100"
+          style={{ height: "230px", objectFit: "cover" }}
+        />
 
-        {/* Categoría superior */}
-        <div className="item-category-box1 position-absolute top-0 start-0 m-2">
-          <div className="item-category text-uppercase bg-success text-light px-2 py-1 rounded">
-            {type === 'comprar' ? 'Comprar' : 'Alquilar'}
-          </div>
+        <div className="item-category-box1">
+          <div className="item-category">{anuncio.operacion}</div>
         </div>
 
-        {/* Precio */}
-        <div className="rent-price position-absolute bottom-0 start-0 bg-dark bg-opacity-75 text-white px-3 py-2">
-          <div className="item-price">{price}</div>
-        </div>
-
-        {/* Íconos superiores */}
-        <div className="react-icon position-absolute top-0 end-0 m-2">
-          <ul className="list-unstyled d-flex gap-2">
-            <li>
-              <a href="favourite.html" title="Favoritos" className="text-white">
-                <i className="flaticon-heart"></i>
-              </a>
-            </li>
-            <li>
-              <a href="compare.html" title="Comparar" className="text-white">
-                <i className="flaticon-left-and-right-arrows"></i>
-              </a>
-            </li>
-          </ul>
+        <div className="position-absolute bottom-0 start-0 bg-dark bg-opacity-75 text-white px-3 py-2 rounded-end">
+          <strong>S/ {anuncio.precio}</strong>
         </div>
       </div>
 
-      {/* Contenido */}
       <div className="item-category10 mt-2">
-        <a href="single-listing1.html" className="text-success fw-semibold">
-          {category}
+        <a href="#" className="text-success fw-semibold">
+          {anuncio.tipo?.toUpperCase()}
         </a>
       </div>
 
-      <div className="item-content">
-        <div className="verified-area">
-          <h3 className="item-title">
-            <a href="single-listing1.html" className="text-dark text-decoration-none">
-              {title}
-            </a>
-          </h3>
-        </div>
-
-        <div className="location-area text-muted mb-2">
+      <Card.Body className="p-3">
+        <h5
+          className="mb-1 text-truncate"
+          style={{ textAlign: "justify", width: "294px" }}
+        >
+          {anuncio.titulo}
+        </h5>
+        <div className="text-muted small mb-2 d-flex align-items-center">
           <FaMapMarkerAlt className="text-success me-2" />
-          {location}
+          {anuncio.direccion
+            ? `${anuncio.direccion} - ${anuncio.ubicacion}`
+            : anuncio.ubicacion}
         </div>
 
-        <div className="item-categoery3">
-          <ul className="list-inline mb-0 small text-secondary">
-            <li className="list-inline-item me-3">
-              <FaBed className="text-success me-1 style1" />
-              Dormitorios: {details.dorms}
-            </li>
-            <li className="list-inline-item me-3">
-              <FaBath className="text-success me-1 style1" />
-              Baños: {details.baths}
-            </li>
-            <li className="list-inline-item">
-              <FaRulerCombined className="text-success me-1 style1" />
-              {details.area}
-            </li>
-          </ul>
+        <ul className="list-inline mb-0 small text-secondary">
+          {anuncio.caracteristicas?.length > 0 &&
+            anuncio.caracteristicas.map((carac, index) => (
+              <li key={index} className="list-inline-item me-3">
+                <img
+                  src={`${config.urlserver}iconos/${carac.icono}`}
+                  alt={carac.nombre}
+                  width="20"
+                  height="20"
+                  className="me-1 align-text-bottom"
+                  onError={(e) => (e.target.style.display = "none")}
+                />
+                {carac.valor} {carac.unidad ? ` ${carac.unidad}` : ""}{" "}
+                {carac.nombre}
+              </li>
+            ))}
+        </ul>
+
+        <div className="d-flex flex-wrap gap-2 mt-2" style={{ float: "right" }}>
+          {anuncio.caracteristicas_secundarios?.length > 0 &&
+            anuncio.caracteristicas_secundarios.map((amenity, index) => (
+              <div
+                key={index}
+                className="d-flex align-items-center gap-1 px-2 py-1 rounded-pill"
+                style={{
+                  backgroundColor: "var(--green)",
+                  color: "white",
+                  fontSize: "0.8rem",
+                  fontWeight: "500",
+                }}
+              >
+                {amenity.icon_url && (
+                  <img
+                    src={amenity.icon_url}
+                    alt={amenity.nombre}
+                    width="18"
+                    height="18"
+                    style={{ filter: "invert(1)", opacity: 0.9 }}
+                  />
+                )}
+                <span>{amenity.nombre}</span>
+              </div>
+            ))}
         </div>
-      </div>
-    </div>
+      </Card.Body>
+    </Card>
   );
 }

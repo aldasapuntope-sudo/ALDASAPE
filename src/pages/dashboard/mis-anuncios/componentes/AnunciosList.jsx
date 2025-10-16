@@ -14,7 +14,7 @@ import Swal from "sweetalert2";
 
 
 const AnunciosList = ({ isPublish }) => {
-  const { tienePlan, cargando2 } = useVerificarPlan();
+  const { planInfo, cargando2 } = useVerificarPlan();
   const [anuncios, setAnuncios] = useState([]);
   const [cargando, setCargando] = useState(false);
   const [view, setView] = useState("cards");
@@ -49,6 +49,7 @@ const AnunciosList = ({ isPublish }) => {
         banos: a.banos,
         dormitorios: a.dormitorios,
         precio: a.precio,
+        direccion: a.direccion,
         isPublish: a.is_active_publish,
         imagen: a.imagen_principal
           ? a.imagen_principal.replace(
@@ -75,30 +76,43 @@ const AnunciosList = ({ isPublish }) => {
   };
 
   const handleNuevo = () => {
-  if (cargando) {
-    return Swal.fire({
-      icon: "info",
-      title: "Verificando...",
-      text: "Por favor espera mientras verificamos tu plan.",
-    });
-  }
+    if (cargando) {
+      return Swal.fire({
+        icon: "info",
+        title: "Verificando...",
+        text: "Por favor espera mientras verificamos tu plan.",
+      });
+    }
 
-  if (!tienePlan) {
-    Swal.fire({
-      icon: "warning",
-      title: "Plan requerido",
-      text: "Debes adquirir un plan para poder publicar un anuncio.",
-      confirmButtonText: "Ver planes",
-    }).then(() => {
-      window.location.href = "/planes";
-    });
-    return;
-  }
+    if (!planInfo.tienePlan || !planInfo.activo) {
+      Swal.fire({
+        icon: "warning",
+        title: "Plan requerido",
+        text: "Debes adquirir o renovar tu plan para poder publicar un anuncio.",
+        confirmButtonText: "Ver planes",
+      }).then(() => {
+        window.location.href = "/planes";
+      });
+      return;
+    }
 
-  // Si tiene plan, abre el modal
-  setAnuncioSeleccionado(null);
-  setShowModal(true);
-};
+    if (planInfo.anunciosDisponibles <= 0) {
+      Swal.fire({
+        icon: "info",
+        title: "Límite alcanzado",
+        text: "Ya has publicado todos tus anuncios disponibles. Amplía tu plan o renueva para continuar.",
+        confirmButtonText: "Ver planes",
+      }).then(() => {
+        window.location.href = "/planes";
+      });
+      return;
+    }
+
+    // ✅ Si todo está bien, abre el modal
+    setAnuncioSeleccionado(null);
+    setShowModal(true);
+  };
+
 
 
   const columns = [
@@ -226,7 +240,7 @@ const AnunciosList = ({ isPublish }) => {
                       <Button
                         variant="outline-success"
                         size="sm"
-                        className="position-absolute top-0 end-0 m-2 rounded-circle"
+                        className="position-absolute top-0 end-0 m-2 rounded-circle boton-editar-card"
                         onClick={() => handleEditar(item)}
                       >
                         <FaEdit />

@@ -144,7 +144,7 @@ p {
 }
 
 .breadcrumb-item.active {
-  color: var(--green);
+  color: var(--green); 
   font-weight: bold;
 }
 
@@ -154,10 +154,6 @@ p {
 }
 
 
-.accordion-btn-green {
-  background-color: var(--green) !important;
-  color: white !important;
-}
 
 /* Footer */
 .footer{background:#fafafa; padding:28px 0; text-align:center; color:var(--muted)}

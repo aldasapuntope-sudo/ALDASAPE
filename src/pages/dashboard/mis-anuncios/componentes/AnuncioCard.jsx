@@ -69,7 +69,7 @@ export default function AnuncioCard({ anuncio }) {
         <h5 className="mb-1" style={{textAlign: 'justify', width: '294px'}}>{anuncio.titulo}</h5>
         <div className="text-muted small mb-2 d-flex align-items-center">
           <FaMapMarkerAlt className="text-success me-2" />
-          {anuncio.ubicacion}
+          {anuncio.direccion ? `${anuncio.direccion} - ${anuncio.ubicacion}` : anuncio.ubicacion}
         </div>
 
         <ul className="list-inline mb-0 small text-secondary">

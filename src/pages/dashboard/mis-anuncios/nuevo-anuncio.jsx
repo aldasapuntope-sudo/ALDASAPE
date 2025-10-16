@@ -36,6 +36,7 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
       titulo: anuncio?.titulo || "",
       descripcion: anuncio?.descripcion || "",
       precio: anuncio?.precio || "",
+      direccion: anuncio?.direccion || "",
       imagen_principal: null,
     },
     enableReinitialize: true,
@@ -43,7 +44,9 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
       tipo_id: Yup.string().required("Seleccione un tipo de propiedad"),
       operacion_id: Yup.string().required("Seleccione un tipo de operación"),
       ubicacion_id: Yup.string().required("Seleccione una ubicación"),
+      direccion: Yup.string().required("La Dirección es obligatorio"),
       titulo: Yup.string().required("El título es obligatorio"),
+
       descripcion: Yup.string().required("La descripción es obligatoria"),
       precio: Yup.number()
         .typeError("Debe ser un número")
@@ -324,7 +327,7 @@ useEffect(() => {
             <option value="">Selecciona</option>
             {tipos.map((t) => (
               <option key={t.id} value={t.id}>
-                {t.nombre}
+                {t.nombre.toUpperCase()}
               </option>
             ))}
           </select>
@@ -340,7 +343,7 @@ useEffect(() => {
             <option value="">Selecciona</option>
             {operaciones.map((o) => (
               <option key={o.id} value={o.id}>
-                {o.nombre}
+                {o.nombre.toUpperCase()}
               </option>
             ))}
           </select>
@@ -356,7 +359,7 @@ useEffect(() => {
             <option value="">Selecciona</option>
             {ubicaciones.map((u) => (
               <option key={u.id} value={u.id}>
-                {u.nombre}
+                {u.nombre.toUpperCase()}
               </option>
             ))}
           </select>
@@ -365,6 +368,15 @@ useEffect(() => {
           )}
         </div>
 
+         {/* Dirección */}
+        <div className="col-md-12">
+          <label className="form-label fw-semibold">Dirección</label>
+          <input type="text" className="form-control" {...formik.getFieldProps("direccion")} />
+          {formik.touched.direccion && formik.errors.direccion && (
+            <small className="text-danger">{formik.errors.direccion}</small>
+          )}
+        </div>
+        
         {/* Título */}
         <div className="col-md-12">
           <label className="form-label fw-semibold">Título</label>
