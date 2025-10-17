@@ -19,6 +19,7 @@ import FloorPlans from "./componentes/FloorPlans";
 import PropertyVideo from "./componentes/PropertyVideo";
 import Breadcrumb from "../Breadcrumb";
 import NotFound from "../NotFound";
+import PropertyTour360 from "./componentes/PropertyTour360";
 
 
 export default function PropertyDetail() {
@@ -84,6 +85,7 @@ export default function PropertyDetail() {
                         <MapLocation lat={-6.7714} lng={-79.8409} />
                         <FloorPlans anuncio={anuncio} />
                         <PropertyVideo anuncio={anuncio} />
+                        <PropertyTour360 anuncio={anuncio} />
                     </div>
 
                     
