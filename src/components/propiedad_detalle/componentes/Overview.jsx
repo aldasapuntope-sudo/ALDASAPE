@@ -18,6 +18,7 @@ export default function Overview({ anuncio }) {
             <div className="item-icon-box" key={index}>
               <div className="item-icon">
                 {carac.icono ? (
+                   /*<i className={carac.icono}></i>*/
                   <img
                     src={`${config.urlserver}iconos/${carac.icono}`}
                     alt={carac.nombre}

@@ -3,6 +3,7 @@ import PropertyCard from "./PropertyCard";
 import "../css/property.css";
 import config from "../config";
 import Cargando from "./cargando";
+import { CardSkeleton } from "./TablaSkeleton";
 
 
 export default function PropertyList() {
@@ -117,7 +118,10 @@ export default function PropertyList() {
 
         {/* Listado de propiedades */}
         {cargando ? (
-          <Cargando visible={true} />
+          <>
+            <Cargando visible={true} />
+            <CardSkeleton cards={6} />
+          </>
         ) : filtered.length === 0 ? (
           <p className="text-center text-muted py-4">No hay propiedades disponibles.</p>
         ) : (

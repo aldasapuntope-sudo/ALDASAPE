@@ -1,0 +1,247 @@
+@font-face {
+    font-family: "flaticon";
+    src: url("./flaticon.ttf?bc41d05ae6db11f9cc74dc44dad26119") format("truetype"),
+url("./flaticon.woff?bc41d05ae6db11f9cc74dc44dad26119") format("woff"),
+url("./flaticon.woff2?bc41d05ae6db11f9cc74dc44dad26119") format("woff2"),
+url("./flaticon.eot?bc41d05ae6db11f9cc74dc44dad26119#iefix") format("embedded-opentype"),
+url("./flaticon.svg?bc41d05ae6db11f9cc74dc44dad26119#flaticon") format("svg");
+}
+
+i[class^="flaticon-"]:before, i[class*=" flaticon-"]:before {
+    font-family: flaticon !important;
+    font-style: normal;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.flaticon-user:before {
+    content: "\f101";
+}
+.flaticon-user-1:before {
+    content: "\f102";
+}
+.flaticon-speech-bubble:before {
+    content: "\f103";
+}
+.flaticon-calendar:before {
+    content: "\f104";
+}
+.flaticon-chat:before {
+    content: "\f105";
+}
+.flaticon-next:before {
+    content: "\f106";
+}
+.flaticon-next-1:before {
+    content: "\f107";
+}
+.flaticon-share:before {
+    content: "\f108";
+}
+.flaticon-share-1:before {
+    content: "\f109";
+}
+.flaticon-left-and-right-arrows:before {
+    content: "\f10a";
+}
+.flaticon-heart:before {
+    content: "\f10b";
+}
+.flaticon-camera:before {
+    content: "\f10c";
+}
+.flaticon-video-player:before {
+    content: "\f10d";
+}
+.flaticon-maps-and-flags:before {
+    content: "\f10e";
+}
+.flaticon-check:before {
+    content: "\f10f";
+}
+.flaticon-envelope:before {
+    content: "\f110";
+}
+.flaticon-phone-call:before {
+    content: "\f111";
+}
+.flaticon-call:before {
+    content: "\f112";
+}
+.flaticon-clock:before {
+    content: "\f113";
+}
+.flaticon-play:before {
+    content: "\f114";
+}
+.flaticon-loupe:before {
+    content: "\f115";
+}
+.flaticon-user-2:before {
+    content: "\f116";
+}
+.flaticon-bed:before {
+    content: "\f117";
+}
+.flaticon-shower:before {
+    content: "\f118";
+}
+.flaticon-pencil:before {
+    content: "\f119";
+}
+.flaticon-two-overlapping-square:before {
+    content: "\f11a";
+}
+.flaticon-printer:before {
+    content: "\f11b";
+}
+.flaticon-comment:before {
+    content: "\f11c";
+}
+.flaticon-home:before {
+    content: "\f11d";
+}
+/*ICONOS INMOBILIARIA*/
+
+/* -------------------------------
+   ICONOS ADICIONALES INMOBILIARIA
+   ------------------------------- */
+
+/* 🔑 Vivienda y propiedad */
+.flaticon-house:before {
+    content: "\f120";
+}
+.flaticon-apartment:before {
+    content: "\f121";
+}
+.flaticon-building:before {
+    content: "\f122";
+}
+.flaticon-for-sale:before {
+    content: "\f123";
+}
+.flaticon-for-rent:before {
+    content: "\f124";
+}
+.flaticon-contract:before {
+    content: "\f125";
+}
+.flaticon-documents:before {
+    content: "\f126";
+}
+
+/* 🛏️ Dormitorio / habitaciones */
+.flaticon-bed:before {
+    content: "\f117"; /* ya tienes uno */
+}
+.flaticon-bedroom:before {
+    content: "\f127";
+}
+
+/* 🚿 Baños */
+.flaticon-bathroom:before {
+    content: "\f128";
+}
+.flaticon-shower:before {
+    content: "\f118"; /* ya tienes uno */
+}
+
+/* 🚗 Estacionamiento / garaje */
+.flaticon-garage:before {
+    content: "\f129";
+}
+.flaticon-car:before {
+    content: "\f12a";
+}
+
+/* 🍳 Cocina */
+.flaticon-kitchen:before {
+    content: "\f12b";
+}
+.flaticon-fridge:before {
+    content: "\f12c";
+}
+
+/* 🛋️ Amoblado */
+.flaticon-furniture:before {
+    content: "\f12d";
+}
+.flaticon-sofa:before {
+    content: "\f12e";
+}
+.flaticon-dining-table:before {
+    content: "\f12f";
+}
+
+/* 📐 Área / dimensiones */
+.flaticon-measure:before {
+    content: "\f130";
+}
+.flaticon-ruler:before {
+    content: "\f131";
+}
+.flaticon-square-meter:before {
+    content: "\f132";
+}
+
+/* 📍 Ubicación */
+.flaticon-location:before {
+    content: "\f10e"; /* ya tienes uno */
+}
+.flaticon-map-pin:before {
+    content: "\f133";
+}
+.flaticon-city:before {
+    content: "\f134";
+}
+
+/* 💰 Precio / inversión */
+.flaticon-price-tag:before {
+    content: "\f135";
+}
+.flaticon-money:before {
+    content: "\f136";
+}
+.flaticon-payment:before {
+    content: "\f137";
+}
+
+/* 🧱 Planos / construcción */
+.flaticon-blueprint:before {
+    content: "\f138";
+}
+.flaticon-crane:before {
+    content: "\f139";
+}
+.flaticon-tools:before {
+    content: "\f13a";
+}
+
+/* 🌳 Entorno / exteriores */
+.flaticon-garden:before {
+    content: "\f13b";
+}
+.flaticon-park:before {
+    content: "\f13c";
+}
+.flaticon-swimming-pool:before {
+    content: "\f13d";
+}
+
+/* 🔧 Servicios / mantenimiento */
+.flaticon-water:before {
+    content: "\f13e";
+}
+.flaticon-electricity:before {
+    content: "\f13f";
+}
+.flaticon-security-camera:before {
+    content: "\f140";
+}
+.flaticon-internet:before {
+    content: "\f141";
+}

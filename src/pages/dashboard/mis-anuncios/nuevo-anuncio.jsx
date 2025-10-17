@@ -26,6 +26,35 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
   const { usuario } = useUsuario();
   const navigate = useNavigate();
 
+  // 🖼️ IMÁGENES ADICIONALES
+  const [imagenesSecundarias, setImagenesSecundarias] = useState([]);
+  const addImagenSecundaria = () => setImagenesSecundarias([...imagenesSecundarias, null]);
+  const removeImagenSecundaria = (index) => {
+    const updated = imagenesSecundarias.filter((_, i) => i !== index);
+    setImagenesSecundarias(updated);
+  };
+  const handleImagenSecundariaChange = (e, index) => {
+    const updated = [...imagenesSecundarias];
+    updated[index] = e.target.files[0];
+    setImagenesSecundarias(updated);
+  };
+
+  // 📐 PLANOS
+  const [planos, setPlanos] = useState([]);
+  const addPlano = () => setPlanos([...planos, null]);
+  const removePlano = (index) => {
+    const updated = planos.filter((_, i) => i !== index);
+    setPlanos(updated);
+  };
+  const handlePlanoChange = (e, index) => {
+    const updated = [...planos];
+    updated[index] = e.target.files[0];
+    setPlanos(updated);
+  };
+
+  // 🎥 VIDEO
+  const [videoUrl, setVideoUrl] = useState("");
+
   
   // 🧩 Formik
   const formik = useFormik({
@@ -60,6 +89,8 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
         Object.entries(values).forEach(([key, value]) => {
           formData.append(key, value);
         });
+
+        
 
         formData.append("user_id", usuario?.usuarioaldasa?.id);
 
@@ -250,14 +281,15 @@ useEffect(() => {
       // Cargar características del anuncio si existe
       if (anuncio && anuncio.id) {
         const resCaracid = await axios.get(
-          `${config.apiUrl}api/misanuncios/caracteristicas-catalogo/${anuncio.id}`
+          `${config.apiUrl}api/misanuncios/caracteristicas-catalogoid/${anuncio.id}`
         );
-        setCaracteristicasid(resCaracid.data.data || resCaracid.data);
-
+        
+        setCaracteristicasid(resCaracid.data || resCaracid.data);
+        
         const resAmenitiesId = await axios.get(
-          `${config.apiUrl}api/misanuncios/propiedad_amenities/${anuncio.id}`
+          `${config.apiUrl}api/misanuncios/propiedad_amenitiesid/${anuncio.id}`
         );
-        setAmenitiesId(resAmenitiesId.data.data || resAmenitiesId.data);
+        setAmenitiesId(resAmenitiesId.data || resAmenitiesId.data);
       }
     } catch (error) {
       console.error("❌ Error cargando combos:", error);
@@ -427,127 +459,268 @@ useEffect(() => {
           )}
         </div>
 
-        {/* Características */}
-        <div className="col-12 mt-3">
-          {/* Acordeón para Características */}
-          <div className="accordion" id="accordionCaracteristicas">
-            <div className="accordion-item">
-              <h2 className="accordion-header" id="headingCarac">
-                <button
-                  className="accordion-button collapsed accordion-btn-green"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#collapseCarac"
-                  aria-expanded="false"
-                  aria-controls="collapseCarac"
-                >
-                  Características Principales
-                </button>
-              </h2>
-              <div
-                id="collapseCarac"
-                className="accordion-collapse collapse"
-                aria-labelledby="headingCarac"
-                data-bs-parent="#accordionCaracteristicas"
-              >
-                <div className="accordion-body">
-                  <div className="row">
-                    {caracteristicas.map((carac) => {
-                      const checked = caracteristicasSeleccionadas[carac.id]?.checked || false;
-                      const valor = caracteristicasSeleccionadas[carac.id]?.valor || "";
-                      return (
-                        <div className="col-md-6 mb-2" key={carac.id}>
-                          <div
-                            className={`border rounded-3 p-2 d-flex align-items-center ${
-                              checked ? "border-success bg-light" : ""
-                            }`}
-                          >
-                            <div className="form-check me-2">
-                              <input
-                                type="checkbox"
-                                className="form-check-input"
-                                id={`carac-${carac.id}`}
-                                checked={checked}
-                                onChange={() => handleCheckChange(carac.id)}
-                              />
-                              <label htmlFor={`carac-${carac.id}`} className="form-check-label">
-                                {carac.nombre}
-                              </label>
-                            </div>
-                            {checked && (
-                              <input
-                                type="text"
-                                className="form-control form-control-sm ms-2"
-                                placeholder="Valor (opcional)"
-                                value={valor}
-                                onChange={(e) => handleValorChange(carac.id, e.target.value)}
-                                style={{ maxWidth: "150px" }}
-                              />
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+   
 
-          {/* Acordeón para Amenities */}
-          <div className="accordion mt-3" id="accordionAmenities">
-            <div className="accordion-item">
-              <h2 className="accordion-header" id="headingAmen">
-                <button
-                  className="accordion-button collapsed accordion-btn-green"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#collapseAmen"
-                  aria-expanded="false"
-                  aria-controls="collapseAmen"
-                >
-                  Características Secundarias
-                </button>
-              </h2>
-              <div
-                id="collapseAmen"
-                className="accordion-collapse collapse"
-                aria-labelledby="headingAmen"
-                data-bs-parent="#accordionAmenities"
+      
+
+       {/* SECCIÓN DE ATRIBUTOS Y ARCHIVOS */}
+<div className="col-12 mt-3">
+  {/* 🖼️ Acordeón para Imágenes Adicionales */}
+  <div className="accordion mb-3" id="accordionImagenesAdicionales">
+    <div className="accordion-item">
+      <h2 className="accordion-header" id="headingImgsAdic">
+        <button
+          className="accordion-button collapsed accordion-btn-green"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseImgsAdic"
+          aria-expanded="false"
+          aria-controls="collapseImgsAdic"
+        >
+          Imágenes Adicionales
+        </button>
+      </h2>
+      <div
+        id="collapseImgsAdic"
+        className="accordion-collapse collapse"
+        aria-labelledby="headingImgsAdic"
+        data-bs-parent="#accordionImagenesAdicionales"
+      >
+        <div className="accordion-body">
+          {imagenesSecundarias.map((_, index) => (
+            <div key={index} className="mb-2 d-flex align-items-center">
+              <input
+                type="file"
+                accept="image/*"
+                className="form-control"
+                onChange={(e) => handleImagenSecundariaChange(e, index)}
+              />
+              <button
+                type="button"
+                className="btn btn-danger btn-sm ms-2"
+                onClick={() => removeImagenSecundaria(index)}
               >
-                <div className="accordion-body">
-                  <div className="row">
-                    {amenities.map((amenity) => {
-                      const checked = amenitiesSeleccionadas[amenity.id]?.checked || false;
-                      return (
-                        <div className="col-md-6 mb-2" key={amenity.id}>
-                          <div
-                            className={`border rounded-3 p-2 d-flex align-items-center ${
-                              checked ? "border-success bg-light" : ""
-                            }`}
-                          >
-                            <div className="form-check me-2">
-                              <input
-                                type="checkbox"
-                                className="form-check-input"
-                                id={`amenity-${amenity.id}`}
-                                checked={checked}
-                                onChange={() => handleAmenityCheckChange(amenity.id)}
-                              />
-                              <label htmlFor={`amenity-${amenity.id}`} className="form-check-label">
-                                {amenity.nombre}
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
+                Eliminar
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            className="btn btn-outline-success btn-sm mt-2"
+            onClick={addImagenSecundaria}
+          >
+            + Agregar otra imagen
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/* ⚙️ Acordeón para Características Principales */}
+  <div className="accordion mb-3" id="accordionCaracteristicas">
+    <div className="accordion-item">
+      <h2 className="accordion-header" id="headingCarac">
+        <button
+          className="accordion-button collapsed accordion-btn-green"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseCarac"
+          aria-expanded="false"
+          aria-controls="collapseCarac"
+        >
+          Características Principales
+        </button>
+      </h2>
+      <div
+        id="collapseCarac"
+        className="accordion-collapse collapse"
+        aria-labelledby="headingCarac"
+        data-bs-parent="#accordionCaracteristicas"
+      >
+        <div className="accordion-body">
+          <div className="row">
+            {caracteristicas.map((carac) => {
+              const checked = caracteristicasSeleccionadas[carac.id]?.checked || false;
+              const valor = caracteristicasSeleccionadas[carac.id]?.valor || "";
+              return (
+                <div className="col-md-6 mb-2" key={carac.id}>
+                  <div
+                    className={`border rounded-3 p-2 d-flex align-items-center ${
+                      checked ? "border-success bg-light" : ""
+                    }`}
+                  >
+                    <div className="form-check me-2">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        id={`carac-${carac.id}`}
+                        checked={checked}
+                        onChange={() => handleCheckChange(carac.id)}
+                      />
+                      <label htmlFor={`carac-${carac.id}`} className="form-check-label">
+                        {carac.nombre}
+                      </label>
+                    </div>
+                    {checked && (
+                      <input
+                        type="text"
+                        className="form-control form-control-sm ms-2"
+                        placeholder="Valor (opcional)"
+                        value={valor}
+                        onChange={(e) => handleValorChange(carac.id, e.target.value)}
+                        style={{ maxWidth: "150px" }}
+                      />
+                    )}
                   </div>
                 </div>
-              </div>
-            </div>
+              );
+            })}
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  {/* 🏘️ Acordeón para Características Secundarias */}
+  <div className="accordion mb-3" id="accordionAmenities">
+    <div className="accordion-item">
+      <h2 className="accordion-header" id="headingAmen">
+        <button
+          className="accordion-button collapsed accordion-btn-green"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseAmen"
+          aria-expanded="false"
+          aria-controls="collapseAmen"
+        >
+          Características Secundarias
+        </button>
+      </h2>
+      <div
+        id="collapseAmen"
+        className="accordion-collapse collapse"
+        aria-labelledby="headingAmen"
+        data-bs-parent="#accordionAmenities"
+      >
+        <div className="accordion-body">
+          <div className="row">
+            {amenities.map((amenity) => {
+              const checked = amenitiesSeleccionadas[amenity.id]?.checked || false;
+              return (
+                <div className="col-md-6 mb-2" key={amenity.id}>
+                  <div
+                    className={`border rounded-3 p-2 d-flex align-items-center ${
+                      checked ? "border-success bg-light" : ""
+                    }`}
+                  >
+                    <div className="form-check me-2">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        id={`amenity-${amenity.id}`}
+                        checked={checked}
+                        onChange={() => handleAmenityCheckChange(amenity.id)}
+                      />
+                      <label htmlFor={`amenity-${amenity.id}`} className="form-check-label">
+                        {amenity.nombre}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/* 📐 Acordeón para Planos */}
+  <div className="accordion mb-3" id="accordionPlanos">
+    <div className="accordion-item">
+      <h2 className="accordion-header" id="headingPlanos">
+        <button
+          className="accordion-button collapsed accordion-btn-green"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapsePlanos"
+          aria-expanded="false"
+          aria-controls="collapsePlanos"
+        >
+          Planos
+        </button>
+      </h2>
+      <div
+        id="collapsePlanos"
+        className="accordion-collapse collapse"
+        aria-labelledby="headingPlanos"
+        data-bs-parent="#accordionPlanos"
+      >
+        <div className="accordion-body">
+          {planos.map((_, index) => (
+            <div key={index} className="mb-2 d-flex align-items-center">
+              <input
+                type="file"
+                accept="image/*"
+                className="form-control"
+                onChange={(e) => handlePlanoChange(e, index)}
+              />
+              <button
+                type="button"
+                className="btn btn-danger btn-sm ms-2"
+                onClick={() => removePlano(index)}
+              >
+                Eliminar
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            className="btn btn-outline-success btn-sm mt-2"
+            onClick={addPlano}
+          >
+            + Agregar otro plano
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/* 🎥 Acordeón para Video */}
+  <div className="accordion mb-3" id="accordionVideo">
+    <div className="accordion-item">
+      <h2 className="accordion-header" id="headingVideo">
+        <button
+          className="accordion-button collapsed accordion-btn-green"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseVideo"
+          aria-expanded="false"
+          aria-controls="collapseVideo"
+        >
+          Video
+        </button>
+      </h2>
+      <div
+        id="collapseVideo"
+        className="accordion-collapse collapse"
+        aria-labelledby="headingVideo"
+        data-bs-parent="#accordionVideo"
+      >
+        <div className="accordion-body">
+          <input
+            type="url"
+            className="form-control"
+            placeholder="https://youtube.com/..."
+            value={videoUrl}
+            onChange={(e) => setVideoUrl(e.target.value)}
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 
         {/* Botón */}
