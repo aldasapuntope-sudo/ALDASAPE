@@ -82,7 +82,7 @@ export default function PropertyDetail() {
 
                         <Amenities anuncio={anuncio} />
 
-                        <MapLocation lat={-6.7714} lng={-79.8409} />
+                        <MapLocation anuncio={anuncio} />
                         <FloorPlans anuncio={anuncio} />
                         <PropertyVideo anuncio={anuncio} />
                         <PropertyTour360 anuncio={anuncio} />

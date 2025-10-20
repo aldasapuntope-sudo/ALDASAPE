@@ -89,6 +89,7 @@ export default function AnuncioCard({ anuncio }) {
               </li>
             ))}
         </ul>
+        
 
         {/* Características secundarias / amenities */}
         <div className="d-flex flex-wrap gap-2 mt-2" style={{float:'right'}}>
@@ -104,15 +105,16 @@ export default function AnuncioCard({ anuncio }) {
                   fontWeight: "500",
                 }}
               >
-                {amenity.icon_url && (
+                {/*amenity.icon_url && (
                   <img
-                    src={amenity.icon_url}
+                    src={`${config.urlserver}iconos/${amenity.icon_url}`}
+                   // src={amenity.icon_url}
                     alt={amenity.nombre}
                     width="18"
                     height="18"
                     style={{ filter: "invert(1)", opacity: 0.9 }}
                   />
-                )}
+                )*/}
                 <span>{amenity.nombre}</span>
               </div>
             ))}

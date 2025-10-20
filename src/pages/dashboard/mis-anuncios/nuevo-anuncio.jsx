@@ -147,6 +147,7 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
 
         const data = await response.json();
         
+        console.log(data);
 
         if (response.ok) {
           Swal.fire({
@@ -166,7 +167,7 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
           Swal.fire({
             icon: "error",
             title: "Error",
-            text: data.message || "No se pudo guardar el anuncio",
+            text: data.mensaje || "No se pudo guardar el anuncio",
           });
         }
       } catch (error) {

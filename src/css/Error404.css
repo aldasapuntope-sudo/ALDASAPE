@@ -14,12 +14,12 @@
   .error-code {
     font-size: 120px;
     font-weight: bold;
-    color: #0077b6;
+    color: var(--green);
   }
   
   .error-message {
     font-size: 28px;
-    color: #023e8a;
+    color: var(--green);
     margin: 20px 0 10px;
   }
   
@@ -31,7 +31,7 @@
   
   .btn-home {
     padding: 10px 20px;
-    background-color: #0077b6;
+    background-color: var(--green);
     color: white;
     text-decoration: none;
     border-radius: 5px;

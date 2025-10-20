@@ -13,12 +13,14 @@ import {
   FaChalkboardTeacher
 } from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
+import { useUsuario } from '../context/UserContext';
 
 const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
+  const { usuario } = useUsuario();
   const [openMenu, setOpenMenu] = useState(null);
   const [modo, setModo] = useState('gestion'); // gestion o evaluacion
   const location = useLocation();
-
+ 
   const { darkMode } = useTheme();
   const logo = darkMode
     ? 'assets/images/logo-aldasape-color.png'
@@ -71,16 +73,64 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
                   ? <FaChevronDown className="ms-auto" />
                   : <FaChevronRight className="ms-auto" />}
               </button>
-              
-                <ul className={`submenu ${openMenu === 'administracion' ? 'open' : ''}`}>
-                  <li
-                    className={`submenu-link ${location.pathname.startsWith('/mi-perfil') ? 'active' : ''}`}
-                  >
-                    <Link to="/mi-perfil" onClick={toggleSidebar}>Mi Perfil</Link>
-                  </li>
-                </ul>
-              
+
+              <ul className={`submenu ${openMenu === 'administracion' ? 'open' : ''}`}>
+                {/* Siempre visible para todos */}
+                <li
+                  className={`submenu-link ${location.pathname.startsWith('/mi-perfil') ? 'active' : ''}`}
+                >
+                  <Link to="/mi-perfil" onClick={toggleSidebar}>Mi Perfil</Link>
+                </li>
+
+                {/* Solo visible si el usuario es Administrador (perfil_id = 1) */}
+                {usuario?.usuarioaldasa?.perfil_id === 1 && (
+                  <>
+                    <li
+                      className={`submenu-link ${location.pathname.startsWith('/usuarios') ? 'active' : ''}`}
+                    >
+                      <Link to="/usuarios" onClick={toggleSidebar}>Usuarios</Link>
+                    </li>
+
+                    <li
+                      className={`submenu-link ${location.pathname.startsWith('/adm-planes') ? 'active' : ''}`}
+                    >
+                      <Link to="/adm-planes" onClick={toggleSidebar}>Planes</Link>
+                    </li>
+
+                    <li
+                      className={`submenu-link ${location.pathname.startsWith('/adm-tdocumento') ? 'active' : ''}`}
+                    >
+                      <Link to="/adm-tdocumento" onClick={toggleSidebar}>Tipo documentos</Link>
+                    </li>
+
+                    <li
+                      className={`submenu-link ${location.pathname.startsWith('/propiedades') ? 'active' : ''}`}
+                    >
+                      <Link to="/propiedades" onClick={toggleSidebar}>Propiedades</Link>
+                    </li>
+
+                    <li
+                      className={`submenu-link ${location.pathname.startsWith('/caracteristicas') ? 'active' : ''}`}
+                    >
+                      <Link to="/caracteristicas" onClick={toggleSidebar}>Características</Link>
+                    </li>
+
+                    <li
+                      className={`submenu-link ${location.pathname.startsWith('/amenities') ? 'active' : ''}`}
+                    >
+                      <Link to="/amenities" onClick={toggleSidebar}>Comodidades</Link>
+                    </li>
+
+                    <li
+                      className={`submenu-link ${location.pathname.startsWith('/reportes') ? 'active' : ''}`}
+                    >
+                      <Link to="/reportes" onClick={toggleSidebar}>Reportes Generales</Link>
+                    </li>
+                  </>
+                )}
+              </ul>
             </div>
+
 
             {/* Mis anuncios */}
             

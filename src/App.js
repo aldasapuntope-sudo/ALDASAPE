@@ -36,6 +36,8 @@ import useVerificarPlan from './hooks/useVerificarPlan';
 import { RutaProtegidaPlan } from './pages/dashboard/logica/configuracioninterna';
 import Planes from './pages/dashboard/planes';
 import PropertyDetail from './components/propiedad_detalle/PropertyDetail';
+import PlanesList from './pages/dashboard/administracion/planes';
+import TiposDocumentoList from './pages/dashboard/administracion/TiposDocumentoList';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -152,6 +154,25 @@ function AppRoutes() {
               element={<RutaProtegida element={MiPerfil} requiereCompletarPerfil />}
             />
             <Route path="/planes" element={<Planes />} />
+            
+            <Route
+              path="/adm-planes"
+              element={
+                <RutaProtegidaPlan>
+                  <PlanesList />
+                </RutaProtegidaPlan>
+              }
+            />
+            <Route
+              path="/adm-tdocumento"
+              element={
+                <RutaProtegidaPlan>
+                  <TiposDocumentoList />
+                </RutaProtegidaPlan>
+              }
+            />
+
+            
             <Route
               path="/nuevo-anuncio"
               element={

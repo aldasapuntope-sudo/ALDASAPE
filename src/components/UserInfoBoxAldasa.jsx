@@ -9,6 +9,7 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
   const { usuario } = useUsuario();
 
   if (!usuario) return null;
+  console.log(usuario);
   //console.log(usuario);
 
   const nombre = usuario.usuarioaldasa.nombre || usuario.name || 'Usuario';

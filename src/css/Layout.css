@@ -262,8 +262,16 @@
     color: #003580;
   }
 
+  .modal-dialog.modal-lg.modal-dialog-centered {
+    z-index: 100000;
+  }
+
+  .modal-dialog.modal-md.modal-dialog-centered {
+    z-index: 100000;
+  }
+  
   .modal-header {
-      background: var(--green);
+      background: var(--green) !important;
       font-weight: bold;
   }
 

@@ -101,7 +101,7 @@ export default function PropertyCard({ anuncio }) {
                   fontWeight: "500",
                 }}
               >
-                {amenity.icon_url && (
+                {/*amenity.icon_url && (
                   <img
                     src={amenity.icon_url}
                     alt={amenity.nombre}
@@ -109,7 +109,7 @@ export default function PropertyCard({ anuncio }) {
                     height="18"
                     style={{ filter: "invert(1)", opacity: 0.9 }}
                   />
-                )}
+                )*/}
                 <span>{amenity.nombre}</span>
               </div>
             ))}

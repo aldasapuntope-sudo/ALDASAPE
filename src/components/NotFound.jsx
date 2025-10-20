@@ -7,7 +7,7 @@ import '../css/Error404.css';
 export default function NotFound() {
   return (
     <div className="error-container">
-    <img alt="Logo UNJ" draggable="false" src="assets/images/logo-aldasape-color.png"></img>
+    <img alt="Logo UNJ" draggable="false" src="/assets/images/logo-aldasape-color.png" style={{width: '10%'}}></img>
       <div className="error-code">404</div>
       <div className="error-message">¡Oops! Página no encontrada</div>
       <p className="error-description">
