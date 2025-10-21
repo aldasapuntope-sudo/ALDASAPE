@@ -228,6 +228,7 @@
   .table th,
   .table td {
     vertical-align: middle;
+    text-align: center;
   }
 
   button.nav-link.active {

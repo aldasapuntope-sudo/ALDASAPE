@@ -14,40 +14,65 @@ export default function PlanForm({ plan, onClose }) {
   });
 
   useEffect(() => {
-    if (plan) setFormData(plan);
+    if (plan) {
+      setFormData({
+        nombre: plan.nombre || "",
+        descripcion: plan.descripcion || "",
+        precio: plan.precio || "",
+        duracion_dias: plan.duracion_dias || "",
+        is_active: plan.is_active ?? 1,
+      });
+    }
   }, [plan]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       if (plan) {
-        await axios.put(`${config.apiUrl}planes/${plan.id}`, formData);
-        Swal.fire("Actualizado", "El plan fue actualizado correctamente", "success");
+        await axios.put(
+          `${config.apiUrl}api/administracion/aplanes/${plan.id}`,
+          formData
+        );
+        Swal.fire("✅ Actualizado", "El plan fue actualizado correctamente", "success");
       } else {
-        await axios.post(`${config.apiUrl}planes`, formData);
-        Swal.fire("Guardado", "El plan fue creado correctamente", "success");
+        await axios.post(
+          `${config.apiUrl}api/administracion/rplanes`,
+          formData
+        );
+        Swal.fire("✅ Guardado", "El plan fue creado correctamente", "success");
       }
+
       onClose(true);
     } catch (error) {
-      Swal.fire("Error", "Ocurrió un error al guardar", "error");
+      console.error(error);
+      Swal.fire("❌ Error", "Ocurrió un error al guardar el plan", "error");
     }
   };
 
   return (
     <div className="modal show fade d-block" tabIndex="-1" role="dialog">
       <div className="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div className="modal-content shadow-lg">
-          <div className="modal-header bg-primary text-white">
-            <h5 className="modal-title">
-              {plan ? "Editar Plan" : "Agregar Plan"}
+        <div className="modal-content shadow-lg border-0 rounded-3">
+          <div className="modal-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 className="modal-title mb-0">
+              {plan ? "Editar Plan" : "Agregar Nuevo Plan"}
             </h5>
-            <button type="button" className="btn-close" onClick={() => onClose(false)}>
-              
+            <button
+              type="button"
+              className="btn btn-light btn-sm rounded-circle"
+              onClick={() => onClose(false)}
+              title="Cerrar"
+            >
+              <FaTimes />
             </button>
           </div>
 
@@ -55,7 +80,7 @@ export default function PlanForm({ plan, onClose }) {
             <div className="modal-body">
               <div className="row">
                 <div className="col-md-6 mb-3">
-                  <label>Nombre</label>
+                  <label className="form-label fw-semibold">Nombre</label>
                   <input
                     type="text"
                     name="nombre"
@@ -63,11 +88,12 @@ export default function PlanForm({ plan, onClose }) {
                     value={formData.nombre}
                     onChange={handleChange}
                     required
+                    placeholder="Ej: Plan Básico"
                   />
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label>Precio (S/)</label>
+                  <label className="form-label fw-semibold">Precio (S/)</label>
                   <input
                     type="number"
                     name="precio"
@@ -76,23 +102,25 @@ export default function PlanForm({ plan, onClose }) {
                     value={formData.precio}
                     onChange={handleChange}
                     required
+                    placeholder="Ej: 49.90"
                   />
                 </div>
 
                 <div className="col-md-12 mb-3">
-                  <label>Descripción</label>
-                  <input
-                    type="text"
+                  <label className="form-label fw-semibold">Descripción</label>
+                  <textarea
                     name="descripcion"
                     className="form-control"
+                    rows="2"
                     value={formData.descripcion}
                     onChange={handleChange}
                     required
-                  />
+                    placeholder="Describe brevemente el plan..."
+                  ></textarea>
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label>Duración (días)</label>
+                  <label className="form-label fw-semibold">Duración (días)</label>
                   <input
                     type="number"
                     name="duracion_dias"
@@ -100,11 +128,12 @@ export default function PlanForm({ plan, onClose }) {
                     value={formData.duracion_dias}
                     onChange={handleChange}
                     required
+                    placeholder="Ej: 30"
                   />
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label>Estado</label>
+                  <label className="form-label fw-semibold">Estado</label>
                   <select
                     name="is_active"
                     className="form-select"
@@ -122,7 +151,11 @@ export default function PlanForm({ plan, onClose }) {
               <button type="submit" className="btn btn-success">
                 {plan ? "Actualizar" : "Guardar"}
               </button>
-              <button type="button" className="btn btn-secondary" onClick={() => onClose(false)}>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => onClose(false)}
+              >
                 Cancelar
               </button>
             </div>

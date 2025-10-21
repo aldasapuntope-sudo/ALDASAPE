@@ -2,49 +2,49 @@ import React, { useState, useEffect } from "react";
 import { FaPlus, FaEdit, FaTrash, FaCheck } from "react-icons/fa";
 import axios from "axios";
 import Swal from "sweetalert2";
-import TipoDocumentoForm from "./componentes/TipoDocumentoForm";
+import CaracteristicaForm from "./componentes/CaracteristicaForm";
 import config from "../../../config";
 import Cargando from "../../../components/cargando";
 import DataTableBase from "./componentes/DataTableBase";
 
-export default function TiposDocumentoList() {
-  const [tipos, setTipos] = useState([]);
+export default function CaracteristicaList() {
+  const [caracteristicas, setCaracteristicas] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const [selectedTipo, setSelectedTipo] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
   const [cargando, setCargando] = useState(false);
 
-  const fetchTipos = async () => {
+  const fetchCaracteristicas = async () => {
     setCargando(true);
     try {
-      const res = await axios.get(`${config.apiUrl}api/administracion/ltipodocumento`);
-      setTipos(res.data);
+      const res = await axios.get(`${config.apiUrl}api/administracion/lcaracteristicas`);
+      setCaracteristicas(res.data);
     } catch (error) {
-      console.error("Error al cargar los tipos de documento:", error);
+      console.error("Error al cargar características:", error);
     } finally {
       setCargando(false);
     }
   };
 
   useEffect(() => {
-    fetchTipos();
+    fetchCaracteristicas();
   }, []);
 
   const handleAdd = () => {
-    setSelectedTipo(null);
+    setSelectedItem(null);
     setShowForm(true);
   };
 
-  const handleEdit = (tipo) => {
-    setSelectedTipo(tipo);
+  const handleEdit = (item) => {
+    setSelectedItem(item);
     setShowForm(true);
   };
 
   const handleChangeStatus = async (id, newStatus) => {
     const confirm = await Swal.fire({
-      title: newStatus ? "¿Activar Tipo de Documento?" : "¿Desactivar Tipo de Documento?",
+      title: newStatus ? "¿Activar Característica?" : "¿Desactivar Característica?",
       text: newStatus
-        ? "El tipo de documento se activará nuevamente."
-        : "El tipo de documento se desactivará y no estará disponible.",
+        ? "La característica se activará nuevamente."
+        : "La característica se desactivará.",
       icon: "question",
       showCancelButton: true,
       confirmButtonText: newStatus ? "Sí, activar" : "Sí, desactivar",
@@ -53,41 +53,65 @@ export default function TiposDocumentoList() {
 
     if (confirm.isConfirmed) {
       try {
-        await axios.put(`${config.apiUrl}api/administracion/etipodocumento/${id}/estado`, {
+        await axios.put(`${config.apiUrl}api/administracion/ecaracteristica/${id}/estado`, {
           is_active: newStatus,
         });
-        fetchTipos();
+        fetchCaracteristicas();
         Swal.fire(
           "Actualizado",
           newStatus
-            ? "El tipo de documento fue activado correctamente."
-            : "El tipo de documento fue desactivado correctamente.",
+            ? "La característica fue activada correctamente."
+            : "La característica fue desactivada correctamente.",
           "success"
         );
       } catch (error) {
-        Swal.fire("Error", "No se pudo actualizar el estado del tipo de documento.", "error");
+        Swal.fire("Error", "No se pudo actualizar el estado.", "error");
       }
     }
   };
 
   const handleCloseForm = (updated) => {
     setShowForm(false);
-    if (updated) fetchTipos();
+    if (updated) fetchCaracteristicas();
   };
 
-  // ✅ Columnas del DataTable
+  // ✅ Definición de columnas
   const columns = [
     {
       name: "#",
       selector: (row, i) => i + 1,
       width: "70px",
-      center: true,
+    },
+    {
+      name: "Icono",
+      selector: (row) =>
+        row.icono ? (
+          <img
+            src={`${config.urlserver}iconos/${row.icono}`}
+            alt="icono"
+            width="16"
+            height="16"
+          />
+        ) : (
+          <span>-</span>
+        ),
+      width: "90px",
     },
     {
       name: "Nombre",
       selector: (row) => row.nombre,
       sortable: true,
-      center: true,
+    },
+    {
+      name: "Unidad",
+      selector: (row) => row.unidad,
+    },
+    {
+      name: "Propiedad",
+      selector: (row) => (
+        
+        <span className="badge bg-success" style={{background: 'var(--green) !important' }}>{row.propiedad_titulo}</span>
+      ),
     },
     {
       name: "Estado",
@@ -96,13 +120,12 @@ export default function TiposDocumentoList() {
           {row.is_active ? "Activo" : "Inactivo"}
         </span>
       ),
-      center: true,
     },
   ];
 
   // ✅ Acciones
   const actions = (row) => (
-    <div className="text-center">
+    <>
       <button className="btn btn-sm btn-warning me-2" onClick={() => handleEdit(row)}>
         <FaEdit />
       </button>
@@ -121,32 +144,24 @@ export default function TiposDocumentoList() {
           <FaCheck />
         </button>
       )}
-    </div>
+    </>
   );
 
   return (
     <>
       <Cargando visible={cargando} />
       <div className="container mt-4">
-        {/* Encabezado */}
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h3 className="fw-bold">Tipos de Documento</h3>
+          <h3 className="fw-bold">Lista de Características</h3>
           <button className="btn btn-primary" onClick={handleAdd}>
             <FaPlus className="me-2" /> Agregar nuevo
           </button>
         </div>
 
-        {/* ✅ Tabla reutilizable */}
-        <DataTableBase
-          title=""
-          columns={columns}
-          data={tipos}
-          actions={actions}
-        />
+        <DataTableBase title="" columns={columns} data={caracteristicas} actions={actions} />
 
-        {/* ✅ Modal del formulario */}
         {showForm && (
-          <TipoDocumentoForm tipo={selectedTipo} onClose={handleCloseForm} />
+          <CaracteristicaForm Caracteristica={selectedItem} onClose={handleCloseForm} />
         )}
       </div>
     </>

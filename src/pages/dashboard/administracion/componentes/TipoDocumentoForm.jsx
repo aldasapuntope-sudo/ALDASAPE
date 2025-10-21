@@ -1,74 +1,97 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import config from "../../../../config";
 
 export default function TipoDocumentoForm({ tipo, onClose }) {
-  const [formData, setFormData] = useState({
-    nombre: "",
-    is_active: 1,
+  // ✅ Configuración Formik
+  const formik = useFormik({
+    initialValues: {
+      nombre: "",
+      is_active: 1,
+    },
+    validationSchema: Yup.object({
+      nombre: Yup.string()
+        .required("El nombre es obligatorio")
+        .max(255, "Máximo 255 caracteres"),
+    }),
+    onSubmit: async (values) => {
+      try {
+        if (tipo) {
+          await axios.put(
+            `${config.apiUrl}api/administracion/atipodocumento/${tipo.id}`,
+            values
+          );
+          Swal.fire("Actualizado", "El tipo de documento fue actualizado correctamente", "success");
+        } else {
+          await axios.post(`${config.apiUrl}api/administracion/rtipodocumento`, values);
+          Swal.fire("Guardado", "El tipo de documento fue creado correctamente", "success");
+        }
+        onClose(true);
+      } catch (error) {
+        console.error(error);
+        Swal.fire("Error", "Ocurrió un error al guardar el tipo de documento", "error");
+      }
+    },
   });
 
+  // ✅ Cargar datos si es edición
   useEffect(() => {
-    if (tipo) setFormData(tipo);
-  }, [tipo]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (tipo) {
-        await axios.put(`${config.urlApi}tipos-documento/${tipo.id}`, formData);
-        Swal.fire("Actualizado", "El tipo fue actualizado correctamente", "success");
-      } else {
-        await axios.post(`${config.urlApi}tipos-documento`, formData);
-        Swal.fire("Guardado", "El tipo fue creado correctamente", "success");
-      }
-      onClose(true);
-    } catch (error) {
-      Swal.fire("Error", "Ocurrió un error al guardar", "error");
+    if (tipo) {
+      formik.setValues({
+        nombre: tipo.nombre || "",
+        is_active: tipo.is_active ?? 1,
+      });
     }
-  };
+  }, [tipo]);
 
   return (
     <div className="modal show fade d-block" tabIndex="-1" role="dialog">
       <div className="modal-dialog modal-md modal-dialog-centered" role="document">
-        <div className="modal-content shadow-lg">
+        <div className="modal-content shadow-lg rounded-3 border-0">
+          {/* Header */}
           <div className="modal-header bg-primary text-white">
             <h5 className="modal-title">
               {tipo ? "Editar Tipo de Documento" : "Agregar Tipo de Documento"}
             </h5>
-            <button type="button" className="btn-close" onClick={() => onClose(false)}>
-            
+            <button type="button" className="btn-close text-white" onClick={() => onClose(false)}>
+              <FaTimes />
             </button>
           </div>
 
-          <form onSubmit={handleSubmit}>
+          {/* Formulario */}
+          <form onSubmit={formik.handleSubmit}>
             <div className="modal-body">
+              {/* Campo: Nombre */}
               <div className="mb-3">
-                <label>Nombre</label>
+                <label className="form-label fw-semibold">Nombre</label>
                 <input
                   type="text"
                   name="nombre"
-                  className="form-control"
-                  value={formData.nombre}
-                  onChange={handleChange}
-                  required
+                  className={`form-control ${
+                    formik.touched.nombre && formik.errors.nombre ? "is-invalid" : ""
+                  }`}
+                  value={formik.values.nombre}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  placeholder="Ej. DNI, Pasaporte, Carnet de extranjería"
                 />
+                {formik.touched.nombre && formik.errors.nombre && (
+                  <div className="invalid-feedback">{formik.errors.nombre}</div>
+                )}
               </div>
 
+              {/* Campo: Estado */}
               <div className="mb-3">
-                <label>Estado</label>
+                <label className="form-label fw-semibold">Estado</label>
                 <select
                   name="is_active"
                   className="form-select"
-                  value={formData.is_active}
-                  onChange={handleChange}
+                  value={formik.values.is_active}
+                  onChange={formik.handleChange}
                 >
                   <option value={1}>Activo</option>
                   <option value={0}>Inactivo</option>
@@ -76,11 +99,16 @@ export default function TipoDocumentoForm({ tipo, onClose }) {
               </div>
             </div>
 
+            {/* Footer */}
             <div className="modal-footer">
               <button type="submit" className="btn btn-success">
                 {tipo ? "Actualizar" : "Guardar"}
               </button>
-              <button type="button" className="btn btn-secondary" onClick={() => onClose(false)}>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => onClose(false)}
+              >
                 Cancelar
               </button>
             </div>
@@ -89,10 +117,7 @@ export default function TipoDocumentoForm({ tipo, onClose }) {
       </div>
 
       {/* Fondo del modal */}
-      <div
-        className="modal-backdrop fade show"
-        onClick={() => onClose(false)}
-      ></div>
+      <div className="modal-backdrop fade show" onClick={() => onClose(false)}></div>
     </div>
   );
 }

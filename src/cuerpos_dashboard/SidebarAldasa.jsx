@@ -104,15 +104,15 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
                     </li>
 
                     <li
-                      className={`submenu-link ${location.pathname.startsWith('/propiedades') ? 'active' : ''}`}
+                      className={`submenu-link ${location.pathname.startsWith('/adm-amenities') ? 'active' : ''}`}
                     >
-                      <Link to="/propiedades" onClick={toggleSidebar}>Propiedades</Link>
+                      <Link to="/adm-amenities" onClick={toggleSidebar}>Servicios</Link>
                     </li>
 
                     <li
-                      className={`submenu-link ${location.pathname.startsWith('/caracteristicas') ? 'active' : ''}`}
+                      className={`submenu-link ${location.pathname.startsWith('/adm-caracteristicas') ? 'active' : ''}`}
                     >
-                      <Link to="/caracteristicas" onClick={toggleSidebar}>Características</Link>
+                      <Link to="/adm-caracteristicas" onClick={toggleSidebar}>Características</Link>
                     </li>
 
                     <li
