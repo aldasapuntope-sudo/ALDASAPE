@@ -104,6 +104,13 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
                     </li>
 
                     <li
+                      className={`submenu-link ${location.pathname.startsWith('/adm-tpropiedades') ? 'active' : ''}`}
+                    >
+                      <Link to="/adm-tpropiedades" onClick={toggleSidebar}>Tipo de Propiedades</Link>
+                    </li>
+                   
+
+                    <li
                       className={`submenu-link ${location.pathname.startsWith('/adm-amenities') ? 'active' : ''}`}
                     >
                       <Link to="/adm-amenities" onClick={toggleSidebar}>Servicios</Link>
@@ -116,9 +123,9 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
                     </li>
 
                     <li
-                      className={`submenu-link ${location.pathname.startsWith('/amenities') ? 'active' : ''}`}
+                      className={`submenu-link ${location.pathname.startsWith('/adm-operaciones') ? 'active' : ''}`}
                     >
-                      <Link to="/amenities" onClick={toggleSidebar}>Comodidades</Link>
+                      <Link to="/adm-operaciones" onClick={toggleSidebar}>Operaciones</Link>
                     </li>
 
                     <li

@@ -6,6 +6,7 @@ import TipoDocumentoForm from "./componentes/TipoDocumentoForm";
 import config from "../../../config";
 import Cargando from "../../../components/cargando";
 import DataTableBase from "./componentes/DataTableBase";
+import BreadcrumbALDASA from "../../../cuerpos_dashboard/BreadcrumbAldasa";
 
 export default function TiposDocumentoList() {
   const [tipos, setTipos] = useState([]);
@@ -129,8 +130,9 @@ export default function TiposDocumentoList() {
       <Cargando visible={cargando} />
       <div className="container mt-4">
         {/* Encabezado */}
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <h3 className="fw-bold">Tipos de Documento</h3>
+        <BreadcrumbALDASA />
+        <div className="d-flex justify-content-between align-items-center mb-3 mt-3">
+          <h3 className="fw-bold"></h3>
           <button className="btn btn-primary" onClick={handleAdd}>
             <FaPlus className="me-2" /> Agregar nuevo
           </button>

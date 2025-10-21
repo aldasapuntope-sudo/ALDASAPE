@@ -40,6 +40,8 @@ import PlanesList from './pages/dashboard/administracion/planes';
 import TiposDocumentoList from './pages/dashboard/administracion/TiposDocumentoList';
 import AmenityList from './pages/dashboard/administracion/AmenityList';
 import CaracteristicaList from './pages/dashboard/administracion/CaracteristicaList';
+import OperacionesList from './pages/dashboard/administracion/OperacionesList';
+import TiposPropiedadList from './pages/dashboard/administracion/TiposPropiedadList';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -175,6 +177,27 @@ function AppRoutes() {
                 </RutaProtegidaPlan>
               }
             />
+
+            <Route
+              path="/adm-operaciones"
+              element={
+                <RutaProtegidaPlan>
+                  <OperacionesList />
+                </RutaProtegidaPlan>
+              }
+            />
+
+            <Route
+              path="/adm-tpropiedades"
+              element={
+                <RutaProtegidaPlan>
+                  <TiposPropiedadList />
+                </RutaProtegidaPlan>
+              }
+            />
+            
+            
+            
 
             <Route
               path="/adm-amenities"

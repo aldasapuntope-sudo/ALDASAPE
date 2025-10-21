@@ -2,51 +2,54 @@ import React, { useState, useEffect } from "react";
 import { FaPlus, FaEdit, FaTrash, FaCheck } from "react-icons/fa";
 import axios from "axios";
 import Swal from "sweetalert2";
-import AmenityForm from "./componentes/AmenityForm";
 import config from "../../../config";
 import Cargando from "../../../components/cargando";
 import DataTableBase from "./componentes/DataTableBase";
+import OperacionForm from "./componentes/OperacionForm";
 import BreadcrumbALDASA from "../../../cuerpos_dashboard/BreadcrumbAldasa";
 
-
-export default function ServicioList() {
-  const [amenities, setAmenities] = useState([]);
+export default function OperacionesList() {
+  const [operaciones, setOperaciones] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const [selectedServicio, setSelectedServicio] = useState(null);
+  const [selectedOperacion, setSelectedOperacion] = useState(null);
   const [cargando, setCargando] = useState(false);
 
-  const fetchAmenities = async () => {
+  // 🔹 Cargar operaciones
+  const fetchOperaciones = async () => {
     setCargando(true);
     try {
-      const res = await axios.get(`${config.apiUrl}api/administracion/lamenities`);
-      setAmenities(res.data);
+      const res = await axios.get(`${config.apiUrl}api/administracion/loperaciones`);
+      setOperaciones(res.data);
     } catch (error) {
-      console.error("Error al cargar amenities:", error);
+      console.error("Error al cargar las operaciones:", error);
     } finally {
       setCargando(false);
     }
   };
 
   useEffect(() => {
-    fetchAmenities();
+    fetchOperaciones();
   }, []);
 
+  // 🔹 Abrir modal para agregar
   const handleAdd = () => {
-    setSelectedServicio(null);
+    setSelectedOperacion(null);
     setShowForm(true);
   };
 
-  const handleEdit = (servicio) => {
-    setSelectedServicio(servicio);
+  // 🔹 Abrir modal para editar
+  const handleEdit = (operacion) => {
+    setSelectedOperacion(operacion);
     setShowForm(true);
   };
 
+  // 🔹 Cambiar estado activo/inactivo
   const handleChangeStatus = async (id, newStatus) => {
     const confirm = await Swal.fire({
-      title: newStatus ? "¿Activar Servicio?" : "¿Desactivar Servicio?",
+      title: newStatus ? "¿Activar operación?" : "¿Desactivar operación?",
       text: newStatus
-        ? "El Servicio se activará nuevamente."
-        : "El Servicio se desactivará y no estará disponible.",
+        ? "La operación se activará nuevamente."
+        : "La operación se desactivará y no estará disponible.",
       icon: "question",
       showCancelButton: true,
       confirmButtonText: newStatus ? "Sí, activar" : "Sí, desactivar",
@@ -55,46 +58,30 @@ export default function ServicioList() {
 
     if (confirm.isConfirmed) {
       try {
-        await axios.put(`${config.apiUrl}api/administracion/eamenities/${id}/estado`, {
+        await axios.put(`${config.apiUrl}api/administracion/eoperaciones/${id}/estado`, {
           is_active: newStatus,
         });
-        fetchAmenities();
+        fetchOperaciones();
         Swal.fire(
           "Actualizado",
-          newStatus
-            ? "El Servicio fue activado correctamente."
-            : "El Servicio fue desactivado correctamente.",
+          newStatus ? "La operación fue activada." : "La operación fue desactivada.",
           "success"
         );
       } catch (error) {
-        Swal.fire("Error", "No se pudo actualizar el estado del Servicio.", "error");
+        Swal.fire("Error", "No se pudo actualizar el estado de la operación.", "error");
       }
     }
   };
 
   const handleCloseForm = (updated) => {
     setShowForm(false);
-    if (updated) fetchAmenities();
+    if (updated) fetchOperaciones();
   };
 
-  // ✅ Definimos columnas
+  // ✅ Columnas del DataTable
   const columns = [
-    {
-      name: "#",
-      selector: (row, i) => i + 1,
-      width: "70px",
-    },
-    {
-      name: "Nombre",
-      selector: (row) => row.nombre,
-      sortable: true,
-    },
-    {
-      name: "Tipo de Propiedad",
-      selector: (row) => (
-        <span className="badge bg-success" style={{background: 'var(--green) !important' }}>{row.propiedad_titulo}</span>
-      ),
-    },
+    { name: "#", selector: (row, i) => i + 1, width: "70px", center: true },
+    { name: "Nombre", selector: (row) => row.nombre, sortable: true, center: true },
     {
       name: "Estado",
       selector: (row) => (
@@ -102,55 +89,47 @@ export default function ServicioList() {
           {row.is_active ? "Activo" : "Inactivo"}
         </span>
       ),
-      
+      center: true,
     },
   ];
 
-  // ✅ Definimos acciones
+  // ✅ Acciones
   const actions = (row) => (
-    <>
+    <div className="text-center">
       <button className="btn btn-sm btn-warning me-2" onClick={() => handleEdit(row)}>
         <FaEdit />
       </button>
       {row.is_active ? (
-        <button
-          className="btn btn-sm btn-danger"
-          onClick={() => handleChangeStatus(row.id, 0)}
-        >
-          <FaTrash /> 
+        <button className="btn btn-sm btn-danger" onClick={() => handleChangeStatus(row.id, 0)}>
+          <FaTrash />
         </button>
       ) : (
-        <button
-          className="btn btn-sm btn-success"
-          onClick={() => handleChangeStatus(row.id, 1)}
-        >
+        <button className="btn btn-sm btn-success" onClick={() => handleChangeStatus(row.id, 1)}>
           <FaCheck />
         </button>
       )}
-    </>
+    </div>
   );
 
   return (
     <>
       <Cargando visible={cargando} />
       <div className="container mt-4">
+        {/* Encabezado */}
         <BreadcrumbALDASA />
         <div className="d-flex justify-content-between align-items-center mb-3 mt-3">
           <h3 className="fw-bold"></h3>
           <button className="btn btn-primary" onClick={handleAdd}>
-            <FaPlus className="me-2" /> Agregar nuevo
-          </button>
+            <FaPlus className="me-2" /> Agregar nueva
+          </button> 
         </div>
 
-        <DataTableBase
-          title=""
-          columns={columns}
-          data={amenities}
-          actions={actions}
-        />
+        {/* Tabla reutilizable */}
+        <DataTableBase title="" columns={columns} data={operaciones} actions={actions} />
 
+        {/* Modal del formulario */}
         {showForm && (
-          <AmenityForm Servicio={selectedServicio} onClose={handleCloseForm} />
+          <OperacionForm Operacion={selectedOperacion} onClose={handleCloseForm} />
         )}
       </div>
     </>

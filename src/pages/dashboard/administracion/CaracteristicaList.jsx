@@ -6,6 +6,7 @@ import CaracteristicaForm from "./componentes/CaracteristicaForm";
 import config from "../../../config";
 import Cargando from "../../../components/cargando";
 import DataTableBase from "./componentes/DataTableBase";
+import BreadcrumbALDASA from "../../../cuerpos_dashboard/BreadcrumbAldasa";
 
 export default function CaracteristicaList() {
   const [caracteristicas, setCaracteristicas] = useState([]);
@@ -151,8 +152,9 @@ export default function CaracteristicaList() {
     <>
       <Cargando visible={cargando} />
       <div className="container mt-4">
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <h3 className="fw-bold">Lista de Características</h3>
+        <BreadcrumbALDASA />
+        <div className="d-flex justify-content-between align-items-center mb-3 mt-3">
+          <h3 className="fw-bold"></h3>
           <button className="btn btn-primary" onClick={handleAdd}>
             <FaPlus className="me-2" /> Agregar nuevo
           </button>

@@ -51,7 +51,7 @@ export default function DataTableBase({
       }));
 
   return (
-    <div className="card shadow-sm mt-3">
+    <div className="card shadow-sm border-0 rounded-4">
       <div className="card-body">
         {title && <h5 className="fw-bold mb-3 text-center">{title}</h5>}
 

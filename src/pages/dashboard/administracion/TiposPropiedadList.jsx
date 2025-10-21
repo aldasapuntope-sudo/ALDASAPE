@@ -1,51 +1,51 @@
 import React, { useState, useEffect } from "react";
 import { FaPlus, FaEdit, FaTrash, FaCheck } from "react-icons/fa";
 import axios from "axios";
-import config from "../../../config";
 import Swal from "sweetalert2";
-import PlanForm from "./componentes/PlanForm";
+import config from "../../../config";
 import Cargando from "../../../components/cargando";
 import DataTableBase from "./componentes/DataTableBase";
+import TiposPropiedadForm from "./componentes/TiposPropiedadForm";
 import BreadcrumbALDASA from "../../../cuerpos_dashboard/BreadcrumbAldasa";
 
-export default function PlanesList() {
-  const [planes, setPlanes] = useState([]);
+export default function TiposPropiedadList() {
+  const [tipos, setTipos] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [selectedTipo, setSelectedTipo] = useState(null);
   const [cargando, setCargando] = useState(false);
 
-  const fetchPlanes = async () => {
+  const fetchTipos = async () => {
     setCargando(true);
     try {
-      const res = await axios.get(`${config.apiUrl}api/administracion/lplanes`);
-      setPlanes(res.data);
+      const res = await axios.get(`${config.apiUrl}api/administracion/ltipospropiedad`);
+      setTipos(res.data);
     } catch (error) {
-      console.error("Error al cargar los planes:", error);
+      console.error("Error al cargar tipos de propiedad:", error);
     } finally {
       setCargando(false);
     }
   };
 
   useEffect(() => {
-    fetchPlanes();
+    fetchTipos();
   }, []);
 
   const handleAdd = () => {
-    setSelectedPlan(null);
+    setSelectedTipo(null);
     setShowForm(true);
   };
 
-  const handleEdit = (plan) => {
-    setSelectedPlan(plan);
+  const handleEdit = (tipo) => {
+    setSelectedTipo(tipo);
     setShowForm(true);
   };
 
   const handleChangeStatus = async (id, newStatus) => {
     const confirm = await Swal.fire({
-      title: newStatus ? "¿Activar plan?" : "¿Desactivar plan?",
+      title: newStatus ? "¿Activar Tipo de Propiedad?" : "¿Desactivar Tipo de Propiedad?",
       text: newStatus
-        ? "El plan se activará nuevamente."
-        : "El plan se desactivará y no estará disponible.",
+        ? "El tipo de propiedad se activará nuevamente."
+        : "El tipo de propiedad se desactivará y no estará disponible.",
       icon: "question",
       showCancelButton: true,
       confirmButtonText: newStatus ? "Sí, activar" : "Sí, desactivar",
@@ -54,54 +54,41 @@ export default function PlanesList() {
 
     if (confirm.isConfirmed) {
       try {
-        await axios.put(`${config.apiUrl}api/administracion/eplanes/${id}/estado`, {
+        await axios.put(`${config.apiUrl}api/administracion/etipospropiedad/${id}/estado`, {
           is_active: newStatus,
         });
-        fetchPlanes();
+        fetchTipos();
         Swal.fire(
           "Actualizado",
           newStatus
-            ? "El plan fue activado correctamente."
-            : "El plan fue desactivado correctamente.",
+            ? "El tipo de propiedad fue activado correctamente."
+            : "El tipo de propiedad fue desactivado correctamente.",
           "success"
         );
       } catch (error) {
-        Swal.fire("Error", "No se pudo actualizar el estado del plan.", "error");
+        Swal.fire("Error", "No se pudo actualizar el estado del tipo de propiedad.", "error");
       }
     }
   };
 
   const handleCloseForm = (updated) => {
     setShowForm(false);
-    if (updated) fetchPlanes();
+    if (updated) fetchTipos();
   };
 
-  // ✅ Definimos columnas para el DataTable
+  // Columnas del DataTable
   const columns = [
     {
       name: "#",
       selector: (row, i) => i + 1,
       width: "70px",
+      center: true,
     },
     {
       name: "Nombre",
       selector: (row) => row.nombre,
       sortable: true,
-    },
-    {
-      name: "Descripción",
-      selector: (row) => row.descripcion,
-      wrap: true,
-    },
-    {
-      name: "Precio (S/)",
-      selector: (row) => row.precio,
-      sortable: true,
-    },
-    {
-      name: "Duración (días)",
-      selector: (row) => row.duracion_dias,
-      sortable: true,
+      center: true,
     },
     {
       name: "Estado",
@@ -110,51 +97,48 @@ export default function PlanesList() {
           {row.is_active ? "Activo" : "Inactivo"}
         </span>
       ),
+      center: true,
     },
   ];
 
-  // ✅ Acciones del DataTable
+  // Acciones
   const actions = (row) => (
-    <>
+    <div className="text-center">
       <button className="btn btn-sm btn-warning me-2" onClick={() => handleEdit(row)}>
         <FaEdit />
       </button>
       {row.is_active ? (
-        <button
-          className="btn btn-sm btn-danger"
-          onClick={() => handleChangeStatus(row.id, 0)}
-        >
+        <button className="btn btn-sm btn-danger" onClick={() => handleChangeStatus(row.id, 0)}>
           <FaTrash />
         </button>
       ) : (
-        <button
-          className="btn btn-sm btn-success"
-          onClick={() => handleChangeStatus(row.id, 1)}
-        >
+        <button className="btn btn-sm btn-success" onClick={() => handleChangeStatus(row.id, 1)}>
           <FaCheck />
         </button>
       )}
-    </>
+    </div>
   );
 
   return (
     <>
       <Cargando visible={cargando} />
       <div className="container mt-4">
-        {/* Encabezado */}
+        {/* Header */}
         <BreadcrumbALDASA />
         <div className="d-flex justify-content-between align-items-center mb-3 mt-3">
-          <h4 class="mb-0 text-success fw-bold"></h4>
+          <h3 className="fw-bold"></h3>
           <button className="btn btn-primary" onClick={handleAdd}>
             <FaPlus className="me-2" /> Agregar nuevo
           </button>
         </div>
 
-        {/* ✅ Tabla reutilizable */}
-        <DataTableBase title="" columns={columns} data={planes} actions={actions} />
+        {/* Tabla */}
+        <DataTableBase title="" columns={columns} data={tipos} actions={actions} />
 
-        {/* ✅ Modal del formulario */}
-        {showForm && <PlanForm plan={selectedPlan} onClose={handleCloseForm} />}
+        {/* Modal */}
+        {showForm && (
+          <TiposPropiedadForm tipo={selectedTipo} onClose={handleCloseForm} />
+        )}
       </div>
     </>
   );
