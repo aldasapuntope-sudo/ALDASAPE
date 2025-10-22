@@ -8,12 +8,13 @@ export default function PropertyVideo({ anuncio }) {
   // 🟡 Si no hay videos
   if (!anuncio?.videos?.length) {
     return (
-      <div className="overview-area video-box1 mt-1">
+      <div></div>
+      /*<div className="overview-area video-box1 mt-1">
         <h3 className="item-title">Video del Inmueble</h3>
         <div className="alert alert-warning text-center" role="alert">
           No hay videos disponibles para este anuncio.
         </div>
-      </div>
+      </div>*/
     );
   }
 

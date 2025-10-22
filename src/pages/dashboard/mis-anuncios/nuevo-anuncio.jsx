@@ -20,6 +20,8 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
   const [amenities, setAmenities] = useState([]);
   const [amenitiesId, setAmenitiesId] = useState([]);
   const [amenitiesSeleccionadas, setAmenitiesSeleccionadas] = useState({});
+  const [planos, setPlanos] = useState([{ titulo: "", archivo: null }]);
+  const [planosExistentes, setPlanosExistentes] = useState([]);  
 
   const [imagen, setImagen] = useState(null);
   const [cargando, setCargando] = useState(false);
@@ -40,7 +42,7 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
   };
 
   // 📐 PLANOS
-  const [planos, setPlanos] = useState([]);
+
   const addPlano = () => setPlanos([...planos, null]);
   const removePlano = (index) => {
     const updated = planos.filter((_, i) => i !== index);
@@ -83,104 +85,108 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
         .required("El precio es obligatorio"),
     }),
     onSubmit: async (values) => {
-      setCargando(true);
-      try {
-        const formData = new FormData();
-        Object.entries(values).forEach(([key, value]) => {
-          formData.append(key, value);
-        });
+  setCargando(true);
+  try {
+    const formData = new FormData();
 
-        
+    // 1️⃣ Campos simples
+    Object.entries(values).forEach(([key, value]) => {
+      if (value !== null) formData.append(key, value);
+    });
 
-        formData.append("user_id", usuario?.usuarioaldasa?.id);
+    // 2️⃣ User
+    formData.append("user_id", usuario?.usuarioaldasa?.id);
 
-        // Características seleccionadas con valores
-        const seleccionadas = Object.entries(caracteristicasSeleccionadas)
-          .filter(([_, data]) => data.checked)
-          .map(([id, data]) => ({
-            id: parseInt(id),
-            valor: data.valor || "",
-          }));
+    // 3️⃣ Características principales con valores
+    const seleccionadas = Object.entries(caracteristicasSeleccionadas)
+      .filter(([_, data]) => data.checked)
+      .map(([id, data]) => ({
+        id: parseInt(id),
+        valor: data.valor || "",
+      }));
+    formData.append("caracteristicas", JSON.stringify(seleccionadas));
 
-        if (seleccionadas.length === 0) {
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Debes seleccionar al menos una característica",
-          });
-          setCargando(false);
-          return;
-        }
+    // 4️⃣ Características secundarias (amenities)
+    const seleccionadasSecundarias = Object.entries(amenitiesSeleccionadas)
+      .filter(([_, data]) => data.checked)
+      .map(([id]) => ({ id: parseInt(id) }));
+    formData.append("caracteristicas_secundarias", JSON.stringify(seleccionadasSecundarias));
 
-        formData.append("caracteristicas", JSON.stringify(seleccionadas));
+    // 5️⃣ Imagen principal
+    if (values.imagen_principal) {
+      formData.append("imagen_principal", values.imagen_principal);
+    }
 
-        const seleccionadasSecundarias = Object.entries(amenitiesSeleccionadas)
-        .filter(([_, data]) => data.checked)
-        .map(([id]) => ({
-          id: parseInt(id),
-        }));
+    // 6️⃣ Imágenes secundarias
+    imagenesSecundarias.forEach((img, index) => {
+      if (img) formData.append(`imagenes_secundarias[${index}]`, img);
+    });
 
-        if (seleccionadasSecundarias.length === 0) {
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Debes seleccionar al menos una característica secundaria",
-          });
-          setCargando(false);
-          return;
-        }
-
-
-         formData.append("caracteristicas_secundarias", JSON.stringify(seleccionadasSecundarias));
-
-        
-        const url = anuncio
-          ? `${config.apiUrl}api/misanuncios/actualizar/${anuncio.id}`
-          : `${config.apiUrl}api/misanuncios/registrar`;
-
-        if (anuncio) formData.append("_method", "PUT");
-
-        const response = await fetch(url, {
-          method: "POST",
-          body: formData,
-        });
-
-        const data = await response.json();
-        
-        console.log(data);
-
-        if (response.ok) {
-          Swal.fire({
-            icon: "success",
-            title: anuncio ? "Anuncio actualizado" : "Anuncio publicado",
-            text: anuncio
-              ? "Los cambios han sido guardados correctamente."
-              : "Tu propiedad ha sido publicada exitosamente.",
-          });
-          formik.resetForm();
-          setImagen(null);
-          setCaracteristicasSeleccionadas({});
-          setAmenitiesSeleccionadas({});
-          onClose?.();
-          onRefresh?.();
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: data.mensaje || "No se pudo guardar el anuncio",
-          });
-        }
-      } catch (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Error de conexión",
-          text: "No se pudo conectar con el servidor",
-        });
-        console.error(error);
-      } finally {
-        setCargando(false);
+    // 7️⃣ Planos (cada plano tiene titulo y archivo)
+    planos.forEach((plano, index) => {
+      if (plano?.archivo) {
+        formData.append(`planos[${index}][archivo]`, plano.archivo);
+        formData.append(`planos[${index}][titulo]`, plano.titulo || "");
       }
-    },
+    });
+
+    // 8️⃣ Video URL
+    if (videoUrl) formData.append("video_url", videoUrl);
+
+    // 9️⃣ Endpoint Laravel
+    const url = anuncio
+      ? `${config.apiUrl}api/misanuncios/actualizar/${anuncio.id}`
+      : `${config.apiUrl}api/misanuncios/registrar`;
+
+    if (anuncio) formData.append("_method", "PUT");
+
+    for (let pair of formData.entries()) {
+  console.log(pair[0] + ':', pair[1]);
+}
+
+    //  🔟 Enviar FormData
+    const response = await axios.post(url, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    // ✅ Respuesta
+    if (response.status === 200 || response.status === 201) {
+      Swal.fire({
+        icon: "success",
+        title: anuncio ? "Anuncio actualizado" : "Anuncio publicado",
+        text: anuncio
+          ? "Los cambios han sido guardados correctamente."
+          : "Tu propiedad ha sido publicada exitosamente.",
+      });
+      formik.resetForm();
+      setImagen(null);
+      setImagenesSecundarias([]);
+      setPlanos([]);
+      setCaracteristicasSeleccionadas({});
+      setAmenitiesSeleccionadas({});
+      onClose?.();
+      onRefresh?.();
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: response.data.mensaje || "No se pudo guardar el anuncio",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: error.response.data.mensaje ||"No se pudo conectar con el servidor",
+    });
+  } finally {
+    setCargando(false);
+  }
+},
+
   });
 
   // 🧩 Cargar combos al iniciar
@@ -281,6 +287,11 @@ useEffect(() => {
 
       // Cargar características del anuncio si existe
       if (anuncio && anuncio.id) {
+
+        const resPlanos = await axios.get(`${config.apiUrl}api/misanuncios/lplanos/${anuncio.id}`);
+        setPlanosExistentes(resPlanos.data || []);
+
+
         const resCaracid = await axios.get(
           `${config.apiUrl}api/misanuncios/caracteristicas-catalogoid/${anuncio.id}`
         );
@@ -341,6 +352,49 @@ useEffect(() => {
     }));
   };
 
+
+  const eliminarPlanoExistente = async (planoId) => {
+    Swal.fire({
+      title: "¿Eliminar plano?",
+      text: "Esta acción desactivará el plano seleccionado.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.delete(`${config.apiUrl}api/misanuncios/eplanos/${planoId}`);
+          if (response.data.success) {
+            // Actualiza la lista
+            setPlanosExistentes(planosExistentes.filter(p => p.id !== planoId));
+            Swal.fire({
+              title: "Eliminado",
+              text: "El plano fue eliminado correctamente.",
+              icon: "success",
+              timer: 1800,
+              showConfirmButton: false
+            });
+          } else {
+            Swal.fire({
+              title: "Error",
+              text: "No se pudo eliminar el plano. Inténtalo nuevamente.",
+              icon: "error"
+            });
+          }
+        } catch (error) {
+          console.error("Error al eliminar plano:", error);
+          Swal.fire({
+            title: "Error",
+            text: "Ocurrió un problema al eliminar el plano.",
+            icon: "error"
+          });
+        }
+      }
+    });
+  };
 
   
 
@@ -637,34 +691,87 @@ useEffect(() => {
   </div>
 
   {/* 📐 Acordeón para Planos */}
-  <div className="accordion mb-3" id="accordionPlanos">
-    <div className="accordion-item">
-      <h2 className="accordion-header" id="headingPlanos">
-        <button
-          className="accordion-button collapsed accordion-btn-green"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#collapsePlanos"
-          aria-expanded="false"
-          aria-controls="collapsePlanos"
-        >
-          Planos
-        </button>
-      </h2>
-      <div
-        id="collapsePlanos"
-        className="accordion-collapse collapse"
-        aria-labelledby="headingPlanos"
-        data-bs-parent="#accordionPlanos"
+  {/* 📐 Acordeón para Planos */}
+<div className="accordion mb-3" id="accordionPlanos">
+  <div className="accordion-item">
+    <h2 className="accordion-header" id="headingPlanos">
+      <button
+        className="accordion-button collapsed accordion-btn-green"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapsePlanos"
+        aria-expanded="false"
+        aria-controls="collapsePlanos"
       >
-        <div className="accordion-body">
-          {planos.map((_, index) => (
-            <div key={index} className="mb-2 d-flex align-items-center">
+        Planos
+      </button>
+    </h2>
+    <div
+      id="collapsePlanos"
+      className="accordion-collapse collapse"
+      aria-labelledby="headingPlanos"
+      data-bs-parent="#accordionPlanos"
+    >
+      <div className="accordion-body">
+
+        {/* 🔹 Planos existentes */}
+        {Array.isArray(planosExistentes) && planosExistentes.length > 0 && (
+          <div className="mb-4">
+            <h6 className="fw-bold">Planos existentes</h6>
+            <div className="row">
+              {planosExistentes.map((plano) => (
+                <div key={plano.id} className="col-md-4 mb-3 text-center">
+                  <div className="border rounded-3 p-2 shadow-sm">
+                    <p className="fw-semibold mb-1">{plano.titulo}</p>
+                    <img
+                      src={plano.archivo?.startsWith('http') ? plano.archivo : `${config.urlserver}${plano.imagen}`}
+                      alt={plano.titulo}
+                      className="img-fluid rounded mb-2"
+                      style={{ maxHeight: "150px", objectFit: "contain" }}
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-danger btn-sm"
+                      onClick={() => eliminarPlanoExistente(plano.id)}
+                    >
+                      Eliminar
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+
+        {/* 🔹 Agregar nuevos planos */}
+        <h6 className="fw-bold">Agregar nuevos planos</h6>
+        {planos.map((plano, index) => (
+          <div key={index} className="mb-3 border rounded-3 p-2">
+            <div className="mb-2">
+              <label className="form-label fw-semibold">Título del plano</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Ingrese título"
+                value={plano?.titulo || ""}
+                onChange={(e) => {
+                  const updated = [...planos];
+                  updated[index] = { ...updated[index], titulo: e.target.value };
+                  setPlanos(updated);
+                }}
+              />
+            </div>
+            <div className="d-flex align-items-center">
               <input
                 type="file"
                 accept="image/*"
                 className="form-control"
-                onChange={(e) => handlePlanoChange(e, index)}
+                onChange={(e) => {
+                  const updated = [...planos];
+                  updated[index] = { ...updated[index], archivo: e.target.files[0] };
+                  setPlanos(updated);
+                }}
               />
               <button
                 type="button"
@@ -674,18 +781,21 @@ useEffect(() => {
                 Eliminar
               </button>
             </div>
-          ))}
-          <button
-            type="button"
-            className="btn btn-outline-success btn-sm mt-2"
-            onClick={addPlano}
-          >
-            + Agregar otro plano
-          </button>
-        </div>
+          </div>
+        ))}
+
+        <button
+          type="button"
+          className="btn btn-outline-success btn-sm mt-2"
+          onClick={() => setPlanos([...planos, { titulo: "", archivo: null }])}
+        >
+          + Agregar otro plano
+        </button>
       </div>
     </div>
   </div>
+</div>
+
 
   {/* 🎥 Acordeón para Video */}
   <div className="accordion mb-3" id="accordionVideo">

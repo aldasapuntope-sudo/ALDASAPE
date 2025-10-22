@@ -15,17 +15,13 @@ export default function FloorPlans({ anuncio }) {
   const [fullscreenIndex, setFullscreenIndex] = useState(null);
   const [zoom, setZoom] = useState(1);
 
+  // Para arrastrar la imagen
+  const [isDragging, setIsDragging] = useState(false);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [startPos, setStartPos] = useState({ x: 0, y: 0 });
+
   if (!anuncio?.planos?.length) {
-    return (
-      <div className="overview-area floor-plan-box mt-1">
-        <h3 className="item-title">
-          Planos de <strong>{anuncio.tipo_propiedad}</strong>
-        </h3>
-        <div className="alert alert-warning text-center" role="alert">
-          No hay planos disponibles para este anuncio.
-        </div>
-      </div>
-    );
+    return <div></div>;
   }
 
   const planos = anuncio.planos;
@@ -33,9 +29,14 @@ export default function FloorPlans({ anuncio }) {
   const openFullscreen = (index) => {
     setFullscreenIndex(index);
     setZoom(1);
+    setOffset({ x: 0, y: 0 });
   };
 
-  const closeFullscreen = () => setFullscreenIndex(null);
+  const closeFullscreen = () => {
+    setFullscreenIndex(null);
+    setOffset({ x: 0, y: 0 });
+    setIsDragging(false);
+  };
 
   const handleZoomIn = () => setZoom((z) => Math.min(z + 0.25, 3));
   const handleZoomOut = () => setZoom((z) => Math.max(z - 0.25, 1));
@@ -54,15 +55,32 @@ export default function FloorPlans({ anuncio }) {
 
   const nextImage = () => {
     setZoom(1);
+    setOffset({ x: 0, y: 0 });
     setFullscreenIndex((prev) => (prev + 1) % planos.length);
   };
 
   const prevImage = () => {
     setZoom(1);
-    setFullscreenIndex((prev) =>
-      prev === 0 ? planos.length - 1 : prev - 1
-    );
+    setOffset({ x: 0, y: 0 });
+    setFullscreenIndex((prev) => (prev === 0 ? planos.length - 1 : prev - 1));
   };
+
+  // Drag handlers
+  const handleMouseDown = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+    setStartPos({ x: e.clientX - offset.x, y: e.clientY - offset.y });
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    setOffset({
+      x: e.clientX - startPos.x,
+      y: e.clientY - startPos.y,
+    });
+  };
+
+  const handleMouseUp = () => setIsDragging(false);
 
   return (
     <div className="overview-area floor-plan-box mt-1">
@@ -91,23 +109,20 @@ export default function FloorPlans({ anuncio }) {
                     {plano.caracteristicas?.length > 0 ? (
                       plano.caracteristicas.map((car, i) => (
                         <li key={i} className="list-inline-item">
-                            <img
-                                src={`${config.urlserver}iconos/${car.icono}`}
-                                //src={car.icono} // 👈 aquí va la URL del icono (por ejemplo http://localhost/iconos/sofa.png)
-                                alt={car.nombre}
-                                width="20"
-                                height="20"
-                                style={{ objectFit: "contain" }}
-                                />
+                          <img
+                            src={`${config.urlserver}iconos/${car.icono}`}
+                            alt={car.nombre}
+                            width="20"
+                            height="20"
+                            style={{ objectFit: "contain" }}
+                          />
                           <span>
                             {car.nombre}: <strong>{car.valor}</strong>
                           </span>
                         </li>
                       ))
                     ) : (
-                      <li className="list-inline-item ">
-                        Sin características
-                      </li>
+                      <li className="list-inline-item ">Sin características</li>
                     )}
                   </ul>
                 </div>
@@ -136,7 +151,7 @@ export default function FloorPlans({ anuncio }) {
                     src={
                       plano.imagen.startsWith("http")
                         ? plano.imagen
-                        : `${config.urlserver}planos/${plano.imagen}`
+                        : `${config.urlserver}${plano.imagen}`
                     }
                     alt={`${plano.titulo || "Plano"} ${anuncio.titulo}`}
                     className="img-fluid rounded shadow-sm"
@@ -149,11 +164,11 @@ export default function FloorPlans({ anuncio }) {
         ))}
       </div>
 
-      {/* 🖼️ Fullscreen Viewer */}
+      {/* Fullscreen Viewer */}
       {fullscreenIndex !== null && (
         <div
-            className="fullscreen-viewer"
-            style={{
+          className="fullscreen-viewer"
+          style={{
             position: "fixed",
             top: 0,
             left: 0,
@@ -165,25 +180,25 @@ export default function FloorPlans({ anuncio }) {
             alignItems: "center",
             flexDirection: "column",
             zIndex: 9999,
-            }}
-            onClick={closeFullscreen} // 👈 si haces clic en el fondo, se cierra
+          }}
+          onClick={closeFullscreen}
         >
-            <div
-            onClick={(e) => e.stopPropagation()} // 👈 evita que se cierre al hacer clic dentro
+          <div
+            onClick={(e) => e.stopPropagation()}
             style={{
-                position: "relative",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "100%",
-                height: "100%",
-                flexDirection: "column",
+              position: "relative",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+              height: "100%",
+              flexDirection: "column",
             }}
-            >
-            {/* 🔘 Botones superiores */}
+          >
+            {/* Botones superiores */}
             <div
-                className="fullscreen-controls"
-                style={{
+              className="fullscreen-controls"
+              style={{
                 position: "absolute",
                 top: 20,
                 right: 30,
@@ -191,99 +206,102 @@ export default function FloorPlans({ anuncio }) {
                 gap: "15px",
                 color: "#fff",
                 zIndex: 10000,
-                }}
+              }}
             >
-                <FaSearchPlus
+              <FaSearchPlus
                 title="Ampliar"
                 size={22}
                 style={{ cursor: "pointer" }}
                 onClick={handleZoomIn}
-                />
-                <FaMinus
+              />
+              <FaMinus
                 title="Reducir"
                 size={22}
                 style={{ cursor: "pointer" }}
                 onClick={handleZoomOut}
-                />
-                <FaDownload
+              />
+              <FaDownload
                 title="Descargar"
                 size={22}
                 style={{ cursor: "pointer" }}
                 onClick={() => handleDownload(planos[fullscreenIndex])}
-                />
-                <FaTimes
+              />
+              <FaTimes
                 title="Cerrar"
                 size={22}
                 style={{ cursor: "pointer" }}
                 onClick={closeFullscreen}
-                />
+              />
             </div>
 
-            {/* 🏷️ Título */}
+            {/* Título */}
             <div
-                style={{
+              style={{
                 position: "absolute",
                 top: 20,
                 left: 30,
                 color: "#fff",
                 fontWeight: "bold",
                 fontSize: "1.2rem",
-                }}
+              }}
             >
-                {planos[fullscreenIndex].titulo ||
+              {planos[fullscreenIndex].titulo ||
                 `Plano ${fullscreenIndex + 1} ${anuncio.titulo}`}
             </div>
 
-            {/* ⬅️➡️ Navegación */}
+            {/* Navegación */}
             {planos.length > 1 && (
-                <>
+              <>
                 <FaChevronLeft
-                    onClick={prevImage}
-                    size={40}
-                    color="#fff"
-                    style={{
+                  onClick={prevImage}
+                  size={40}
+                  color="#fff"
+                  style={{
                     position: "absolute",
                     left: 25,
                     cursor: "pointer",
                     zIndex: 10000,
-                    }}
+                  }}
                 />
                 <FaChevronRight
-                    onClick={nextImage}
-                    size={40}
-                    color="#fff"
-                    style={{
+                  onClick={nextImage}
+                  size={40}
+                  color="#fff"
+                  style={{
                     position: "absolute",
                     right: 25,
                     cursor: "pointer",
                     zIndex: 10000,
-                    }}
+                  }}
                 />
-                </>
+              </>
             )}
 
-            {/* 📸 Imagen con zoom */}
+            {/* Imagen con zoom y arrastre */}
             <img
-                src={
+              src={
                 planos[fullscreenIndex].imagen.startsWith("http")
-                    ? planos[fullscreenIndex].imagen
-                    : `${config.urlserver}planos/${planos[fullscreenIndex].imagen}`
-                }
-                alt="Plano"
-                style={{
-                transform: `scale(${zoom})`,
-                transition: "transform 0.3s ease",
+                  ? planos[fullscreenIndex].imagen
+                  : `${config.urlserver}${planos[fullscreenIndex].imagen}`
+              }
+              alt="Plano"
+              style={{
+                transform: `scale(${zoom}) translate(${offset.x / zoom}px, ${offset.y / zoom}px)`,
+                transition: isDragging ? "none" : "transform 0.3s ease",
                 maxWidth: "90%",
                 maxHeight: "85%",
                 objectFit: "contain",
-                cursor: "zoom-in",
+                cursor: isDragging ? "grabbing" : "grab",
                 borderRadius: "5px",
-                }}
+              }}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
             />
-            </div>
+          </div>
         </div>
-        )}
-
+      )}
     </div>
   );
 }

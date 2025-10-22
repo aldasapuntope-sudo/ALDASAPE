@@ -17,12 +17,13 @@ export default function PropertyTour360({ anuncio }) {
 
   if (!anuncio?.imagen360?.length) {
     return (
-      <div className="overview-area mt-1">
+      <div></div>
+      /*<div className="overview-area mt-1">
         <h3 className="item-title">Recorridos Virtuales 360°</h3>
         <div className="alert alert-warning text-center" role="alert">
           No hay recorridos virtuales disponibles para este inmueble.
         </div>
-      </div>
+      </div>*/
     );
   }
 
