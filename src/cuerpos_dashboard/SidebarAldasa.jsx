@@ -30,6 +30,8 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
     setOpenMenu(openMenu === menu ? null : menu);
   };
 
+  console.log(usuario?.usuarioaldasa.perfil_id);
+
   // Cargar modo desde localStorage
   useEffect(() => {
     const modoGuardado = localStorage.getItem('modo');

@@ -57,19 +57,26 @@ const Planes = () => {
 
     window.Culqi.open();
 
-    window.Culqi.success = function (token) {
-      console.log("Token Culqi:", token);
-      Swal.fire({
-        icon: "success",
-        title: "Pago realizado",
-        text: `Tu ${plan.nombre} se activará pronto.`,
-      });
-      // Aquí llamarías a tu backend para confirmar el pago
-    };
+    window.culqi = function () {
+  if (window.Culqi.token) {
+    const token = window.Culqi.token.id;
+    console.log("Token Culqi:", token);
 
-    window.Culqi.close = function () {
-      console.log("Checkout Culqui cerrado");
-    };
+    Swal.fire({
+      icon: "success",
+      title: "Pago realizado",
+      text: `Tu ${plan.nombre} se activará pronto.`,
+    });
+
+    // Aquí puedes enviar el token a tu backend para confirmar el pago
+    window.Culqi.close(); // ✅ Esto sí cierra el modal
+  } else if (window.Culqi.error) {
+    console.error("Error Culqi:", window.Culqi.error);
+    Swal.fire("Error", "No se pudo completar el pago.", "error");
+    window.Culqi.close();
+  }
+};
+
   };
 
   return (

@@ -135,7 +135,7 @@ export default function Register() {
       setCamposHabilitados(true);
 
       // Filtrar documentos disponibles según tipo
-      if (tipo === '1') {
+      if (tipo === '3') {
         // Particular → DNI y Carnet de Extranjería
         setCondicionesFiltradas(
           condicionesFiscales.filter(c =>

@@ -219,19 +219,24 @@ export default function MiPerfil() {
   }
 
   // 🔹 Filtrar condiciones según tipo de usuario
-  useEffect(() => {
-    if (formik.values.tipoUsuario) {
-      if (formik.values.tipoUsuario === "1") {
-        setCondicionesFiltradas(
-          condicionesFiscales.filter((c) => c.nombre.toLowerCase().includes("dni"))
-        );
-      } else {
-        setCondicionesFiltradas(
-          condicionesFiscales.filter((c) => c.nombre.toLowerCase().includes("ruc"))
-        );
-      }
+useEffect(() => {
+  if (formik.values.tipoUsuario && condicionesFiscales.length > 0) {
+    const esParticular = formik.values.tipoUsuario.toString() === "3";
+
+    const filtradas = condicionesFiscales.filter((c) =>
+      esParticular
+        ? c.nombre.toLowerCase().includes("dni")
+        : c.nombre.toLowerCase().includes("ruc")
+    );
+
+    setCondicionesFiltradas(filtradas);
+
+    // Si el usuario ya tenía un valor previo y no pertenece a las filtradas, lo limpiamos
+    if (!filtradas.some((c) => c.id === formik.values.condicionFiscal)) {
+      formik.setFieldValue("condicionFiscal", "");
     }
-  }, [formik.values.tipoUsuario, condicionesFiscales]);
+  }
+}, [formik.values.tipoUsuario, condicionesFiscales]);
 
   const imagenPerfil =
     datos.imagen ||
@@ -290,7 +295,7 @@ export default function MiPerfil() {
                       name="condicionFiscal"
                       value={formik.values.condicionFiscal || ""}
                       onChange={formik.handleChange}
-                      disabled={!incompleto} 
+                      disabled={!incompleto || !formik.values.tipoUsuario} // 👈 agregado aquí
                   >
                       <option value="">Seleccione...</option>
                       {condicionesFiltradas.map((c) => (
@@ -301,6 +306,7 @@ export default function MiPerfil() {
                   </select>
                   <div className="invalid-feedback">{formik.errors.condicionFiscal}</div>
                 </div>
+
 
 
                 {/* 🔹 Documento */}

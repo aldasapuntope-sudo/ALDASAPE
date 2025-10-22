@@ -161,61 +161,34 @@ function AppRoutes() {
             
             <Route
               path="/adm-planes"
-              element={
-                <RutaProtegidaPlan>
-                  <PlanesList />
-                </RutaProtegidaPlan>
-              }
+              element={<RutaProtegida element={PlanesList} />}
             />
 
-            
             <Route
               path="/adm-tdocumento"
-              element={
-                <RutaProtegidaPlan>
-                  <TiposDocumentoList />
-                </RutaProtegidaPlan>
-              }
+              element={<RutaProtegida element={TiposDocumentoList} />}
             />
 
             <Route
               path="/adm-operaciones"
-              element={
-                <RutaProtegidaPlan>
-                  <OperacionesList />
-                </RutaProtegidaPlan>
-              }
+              element={<RutaProtegida element={OperacionesList} />}
             />
 
             <Route
               path="/adm-tpropiedades"
-              element={
-                <RutaProtegidaPlan>
-                  <TiposPropiedadList />
-                </RutaProtegidaPlan>
-              }
+              element={<RutaProtegida element={TiposPropiedadList} />}
             />
             
-            
-            
-
             <Route
               path="/adm-amenities"
-              element={
-                <RutaProtegidaPlan>
-                  <AmenityList />
-                </RutaProtegidaPlan>
-              }
+              element={<RutaProtegida element={AmenityList} />}
             />
-
+            
             <Route
               path="/adm-caracteristicas"
-              element={
-                <RutaProtegidaPlan>
-                  <CaracteristicaList />
-                </RutaProtegidaPlan>
-              }
+              element={<RutaProtegida element={CaracteristicaList} />}
             />
+            
 
             
 
