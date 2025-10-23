@@ -59,7 +59,7 @@ export default function SearchFilter({ mode, setMode }) {
     const params = new URLSearchParams();
     if (q) params.append("q", q);
     if (tipo) params.append("tipo", tipo);
-    params.append("mode", mode);
+    params.append("mode", mode); // alquilar, comprar o proyectos
 
     navigate(`/buscar?${params.toString()}`);
     setShowDropdown(false);

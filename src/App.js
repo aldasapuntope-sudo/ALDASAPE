@@ -42,6 +42,7 @@ import AmenityList from './pages/dashboard/administracion/AmenityList';
 import CaracteristicaList from './pages/dashboard/administracion/CaracteristicaList';
 import OperacionesList from './pages/dashboard/administracion/OperacionesList';
 import TiposPropiedadList from './pages/dashboard/administracion/TiposPropiedadList';
+import BuscarPage from './components/buscar_detalle/BuscarPage';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -135,6 +136,8 @@ function AppRoutes() {
           <Route path="/anuncio/:slug" element={<PropertyDetail />} />
           <Route path="/terminos-condiciones" element={<TerminosCondiciones />} />
           <Route path="/politicas-de-privacidad" element={<PoliticasPrivacidad />} />
+          <Route path="/buscar" element={<BuscarPage />} />
+          
 
           {!usuario && (
             <>
