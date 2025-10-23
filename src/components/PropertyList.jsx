@@ -101,10 +101,10 @@ export default function PropertyList() {
                 Comprar
               </button>
               <button
-                className={`btn btn-outline-success ${filter === "alquilar" ? "active" : ""}`}
-                onClick={() => setFilter("alquilar")}
+                className={`btn btn-outline-success ${filter === "alquiler" ? "active" : ""}`}
+                onClick={() => setFilter("alquiler")}
               >
-                Alquilar
+                Alquiler
               </button>
               <button
                 className={`btn btn-outline-success ${filter === "venta" ? "active" : ""}`}

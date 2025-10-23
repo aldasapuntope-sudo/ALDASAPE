@@ -1,7 +1,6 @@
 import React from "react";
 
 export default function MapLocation({ anuncio }) {
-  console.log(anuncio);
   // Si no hay dirección, usar ubicación por defecto (Chiclayo)
   const defaultLocation = "Chiclayo, Perú";
 

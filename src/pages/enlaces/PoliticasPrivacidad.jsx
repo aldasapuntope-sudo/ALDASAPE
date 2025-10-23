@@ -6,8 +6,9 @@ import Breadcrumb from "../../components/Breadcrumb";
 export default function PoliticasPrivacidad() {
   return (
     <>
-        <Breadcrumb />
+        
         <section className="terminos-wrap py-5">
+            <Breadcrumb />
             <div className="container">
                 <motion.div
                 initial={{ opacity: 0, y: 30 }}

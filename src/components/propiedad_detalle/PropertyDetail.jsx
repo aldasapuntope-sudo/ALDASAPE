@@ -1,5 +1,5 @@
 // src/pages/PropertyDetail.jsx  (tu archivo actual)
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Card, Spinner } from "react-bootstrap";
@@ -20,6 +20,8 @@ import PropertyVideo from "./componentes/PropertyVideo";
 import Breadcrumb from "../Breadcrumb";
 import NotFound from "../NotFound";
 import PropertyTour360 from "./componentes/PropertyTour360";
+import ContactBox from "./componentes/ContactBox";
+import PropiedadesRelacionadas from "./componentes/PropiedadesRelacionadas";
 
 
 export default function PropertyDetail() {
@@ -28,6 +30,7 @@ export default function PropertyDetail() {
   const [anuncio, setAnuncio] = useState(null);
   const [loading, setLoading] = useState(true);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  const llamadaRealizada = useRef(false);
 
   useEffect(() => {
     if (!id) return;
@@ -42,6 +45,19 @@ export default function PropertyDetail() {
       .finally(() => setLoading(false));
   }, [id]);
 
+  useEffect(() => {
+    if (!anuncio?.id) return;
+
+    if (!llamadaRealizada.current) {
+      llamadaRealizada.current = true; // Evita segunda ejecución
+      axios.post(`${config.apiUrl}api/paginaprincipal/propiedades/visita/${anuncio.id}`)
+        .then(res => console.log("Visita registrada:", res.data))
+        .catch(err => console.error("Error al registrar visita:", err));
+    }
+  }, [anuncio?.id]);
+    
+
+  console.log(`${config.apiUrl}api/paginaprincipal/listardetalle/${id}`);
   if (loading) {
     return (
       <div className="d-flex justify-content-center py-5">
@@ -58,10 +74,13 @@ export default function PropertyDetail() {
     imagen: img.imagen.replace(/\\/g, ""),
   }));
 
+  console.log(anuncio);
+
   return (
     <>
-    <Breadcrumb />
+    
       <section className="single-listing-wrap1">
+        <Breadcrumb />
         <div className="container">
           <div className="single-property">
             <div className="content-wrapper">
@@ -91,7 +110,8 @@ export default function PropertyDetail() {
                     
                 </div>
                 <div className="col-lg-4 widget-break-lg sidebar-widget">
-                    
+                    <ContactBox anuncio={anuncio}/>
+                    <PropiedadesRelacionadas  tipoId={anuncio?.id_tipopropiedad} idpropiedad={anuncio?.id} operaciones={anuncio?.operaciones}  />
                 </div>
 
               </dv>

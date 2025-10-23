@@ -35,7 +35,7 @@ const Breadcrumb = () => {
   let pageName = titles[lastSegment] || formatSlug(lastSegment);
 
   return (
-    <div className="breadcrumb-wrap breadcrumb-wrap-2">
+    <div className="breadcrumb-wrap breadcrumb-wrap-2 mb-4">
       <div className="container">
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb bread-principal">

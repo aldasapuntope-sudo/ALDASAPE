@@ -33,6 +33,7 @@ const tiempoTranscurrido = (fecha) => {
 
 export default function PropertyHeading({ anuncio }) {
   const [tipoCambio, setTipoCambio] = useState(null);
+  
 
   // 🔄 Obtener tipo de cambio actual de la API de la SUNAT
   useEffect(() => {
@@ -121,7 +122,7 @@ export default function PropertyHeading({ anuncio }) {
                   className="me-2"
                   style={{ color: "var(--green)", fontSize: "19px" }}
                 />
-                Vistas: {anuncio?.vistas || "1,230"}
+                Vistas: {(anuncio?.visitas ?? 0) + 1}
               </li>
             </ul>
           </div>
