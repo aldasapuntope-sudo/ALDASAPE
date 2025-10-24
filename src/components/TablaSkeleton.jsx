@@ -30,6 +30,40 @@ export const TablaSkeleton = ({ filas = 5, columnas = 4 }) => (
   </div>
 );
 
+export default function SkeletonBuscarPage() {
+  return (
+    <section className="grid-wrap3 py-5">
+      <div className="container">
+        <div className="row gutters-40">
+          {/* COLUMNA IZQUIERDA: buscador (filtros, combos, acordeones) */}
+          <div className="col-lg-4 widget-break-lg sidebar-widget mb-4 mb-lg-0">
+            <div className="p-3 rounded-4 shadow-sm bg-light">
+              <h5 className="mb-3">
+                <span className="text-muted">
+                  <ComboSkeleton width="70%" height={24} />
+                </span>
+              </h5>
+
+              {/* Simulación de combos y filtros */}
+              <ComboSkeleton />
+              <ComboSkeleton />
+              <ComboSkeleton />
+
+              {/* Acordeones (por ejemplo filtros desplegables) */}
+              <AcordionSkeleton items={3} />
+            </div>
+          </div>
+
+          {/* COLUMNA DERECHA: listado de propiedades (tarjetas) */}
+          <div className="col-lg-8">
+            <CardSkeleton cards={3} />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // Combo (Select) Skeleton
 export const ComboSkeleton = ({ height = 38, width = '100%' }) => (
   <div className="form-group mt-3">

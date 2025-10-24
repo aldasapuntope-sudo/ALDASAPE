@@ -478,6 +478,13 @@
 
 
     .floating-menutoggle {
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      background-color: #01408c;
+      color: #fff;
+    }
+
+    /*.floating-menutoggle {
         position: fixed;
         z-index: 1050;
         top: 86px;
@@ -489,7 +496,7 @@
         background-color: #01408c;
         color: #fff;
         box-shadow: 0 2px 6px rgb(0 0 0 / 20%);
-    }
+    }*/
     
     .floating-menutoggle i {
       font-size: 18px;
