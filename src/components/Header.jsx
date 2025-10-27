@@ -123,10 +123,28 @@ export default function HeaderAldasa({ abrirModal }) {
             {!user ? (
               <>
               <button className="btn btn-outline-success">Inversiones TOP</button>
-                <NavLink to="/publicar" className="btn-publicar">
+                {/*<NavLink to="/publicar" className="btn-publicar">
                   <span className="icon-wrapper"><FaPlus /></span>
                   Publicar Anuncio
-                </NavLink>
+                </NavLink> */}
+                <button
+                  className="btn-publicar"
+                  onClick={() => {
+                    const usuarioGuardado = localStorage.getItem('usuario');
+                    if (usuarioGuardado) {
+                      // ✅ Usuario logueado: ir a nuevo-anuncio
+                      window.location.href = "/nuevo-anuncio";
+                    } else {
+                      // ❌ No logueado: guardar intención de redirección y enviar al login
+                      localStorage.setItem("redirectAfterLogin", "/nuevo-anuncio");
+                      window.location.href = "/login";
+                    }
+                  }}
+                >
+                  <span className="icon-wrapper"><FaPlus /></span>
+                  Publicar Anuncio
+                </button>
+
                 <NavLink to="/login" className="login-icon-wrapper ms-2">
                   <FaUser className="login-icon" size={18} />
                 </NavLink>

@@ -42,6 +42,10 @@ export default function BuscarPage() {
 
         setResultados(data);
         setFiltrados(data);
+
+        /*if (Object.keys(filtrosActuales.current).length > 0) {
+          manejarFiltro(filtrosActuales.current);
+        }*/
       } catch (error) {
         if (!cancelado) console.error("❌ Error al obtener propiedades:", error);
       } finally {
@@ -62,21 +66,38 @@ export default function BuscarPage() {
   // 📍 Filtrado local
   const manejarFiltro = (filtros) => {
     filtrosActuales.current = filtros;
+
+    // Si todos los filtros están vacíos, muestra todo
+    /*if (!filtros || Object.values(filtros).every(v => v === "" || v == null)) {
+      setFiltrados(resultados);
+      return;
+  }*/
     const busq = (filtros.busqueda || "").toLowerCase();
-    const tipoFilter = (filtros.tipo || "").toLowerCase();
+    //const tipoFilter = (filtros.tipo || "").toLowerCase();
     const categoriaFilter = (filtros.categoria || "").toLowerCase();
     const ciudadFilter = (filtros.ciudad || "").toLowerCase();
     const precioMin = filtros.precioMin ?? null;
     const precioMax = filtros.precioMax ?? null;
 
+
+
+
     const filtradosTemp = resultados.filter((prop) => {
       const titulo = (prop.titulo || "").toLowerCase();
       const descripcion = (prop.descripcion || "").toLowerCase();
       const ubicacion = (prop.ubicacion || "").toLowerCase();
-      const tipoProp = (prop.tipo_propiedad || "").toLowerCase();
+      //const tipoProp = (prop.tipo_propiedad || "").toLowerCase();
       const operacion = (prop.operaciones || prop.operacion || "").toLowerCase();
       const precio = parseFloat(prop.precio) || 0;
 
+      const tipoFilter = filtros.tipo?.toString().toLowerCase() || "";
+      const tipoPropId = prop.id_tipopropiedad?.toString().toLowerCase() || "";
+      const tipoProp = (prop.tipo_propiedad || "").toLowerCase();
+      const okTipo =
+        !tipoFilter ||
+        tipoPropId === tipoFilter ||
+        tipoProp === tipoFilter;
+        
       const okBusqueda =
         !busq ||
         titulo.includes(busq) ||
@@ -85,7 +106,7 @@ export default function BuscarPage() {
         ubicacion.includes(busq) ||
         operacion.includes(busq);
 
-      const okTipo = !tipoFilter || tipoProp === tipoFilter;
+      //const okTipo = !tipoFilter || tipoProp === tipoFilter;
       const okCategoria = !categoriaFilter || operacion === categoriaFilter;
       const okCiudad = !ciudadFilter || ubicacion.includes(ciudadFilter);
       const okPrecio =

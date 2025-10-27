@@ -1,10 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { FaPlay, FaCheck  } from "react-icons/fa";
+import { FaPlay, FaCheck } from "react-icons/fa";
+import axios from "axios";
 import "../css/AboutSection.css";
 
 export default function AboutSection() {
   const [showVideo, setShowVideo] = useState(false);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get("http://127.0.0.1:8000/api/paginaprincipal/quienes-somos");
+        setData(res.data[0]); // tomamos el primer registro
+      } catch (error) {
+        console.error("Error al obtener los datos:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="about-section text-center py-5">
+        <p className="text-muted fw-semibold">Cargando información...</p>
+      </section>
+    );
+  }
+
+  if (!data) {
+    return (
+      <section className="about-section text-center py-5">
+        <p className="text-danger fw-semibold">No se encontró la información.</p>
+      </section>
+    );
+  }
 
   return (
     <section className="about-section relative overflow-hidden py-5">
@@ -27,15 +60,13 @@ export default function AboutSection() {
               viewport={{ once: true }}
             >
               <div className="position-relative d-inline-block">
-                <div class="item-img1">
-                    <img
-                        src="/assets/images/portada-video-presentacion.webp"
-                        alt="Acerca de ALDASA.pe"
-                        className="img-fluid rounded-4 shadow-lg"
-                        />
-
+                <div className="item-img1">
+                  <img
+                    src={data.imagen_destacada || "/assets/images/placeholder.webp"}
+                    alt={data.titulo}
+                    className="img-fluid rounded-4 shadow-lg"
+                  />
                 </div>
-                
 
                 {/* Botón Play con efecto latido */}
                 <motion.button
@@ -57,7 +88,7 @@ export default function AboutSection() {
             </motion.div>
           </div>
 
-          {/* Texto */}
+          {/* Texto dinámico */}
           <div className="col-lg-6">
             <motion.div
               initial={{ opacity: 0, x: 80 }}
@@ -65,7 +96,8 @@ export default function AboutSection() {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <span className="section-subtitle text-success fw-semibold d-block mb-2"
+              <span
+                className="section-subtitle text-success fw-semibold d-block mb-2"
                 style={{
                   position: "relative",
                   paddingLeft: "25px",
@@ -79,30 +111,14 @@ export default function AboutSection() {
                 Te acompañamos en cada paso
               </span>
 
-              <h2 className="section-title fw-bold mb-3">¡Somos ALDASA.pe!</h2>
+              <h2 className="section-title fw-bold mb-3">{data.titulo}</h2>
 
-              <p className="text-muted mb-4">
-                Inmobiliarias y dueños directos de todo el país ofrecen las mejores
-                opciones de inmuebles para ti. Con más de 8 años en el mercado y
-                3.2 millones de avisos publicados, te ayudamos a encontrar el hogar
-                que siempre soñaste.
-              </p>
+              {/* El contenido HTML se renderiza directamente */}
+              <div
+                className="text-muted mb-4"
+                dangerouslySetInnerHTML={{ __html: data.contenido }}
+              />
 
-              <ul className="about-list-modern list-unstyled">
-                <li><FaCheck  className="text-success me-2" style={{ color: "var(--green) !important" }} />Búsqueda clara y rápida</li>
-                <li><FaCheck  className="text-success me-2" style={{ color: "var(--green) !important" }} />Tienes tu propia sección</li>
-                <li><FaCheck  className="text-success me-2" style={{ color: "var(--green) !important" }}/>Variedad de agentes</li>
-                <li><FaCheck  className="text-success me-2" style={{ color: "var(--green) !important" }}/>Variedad de inmuebles</li>
-              </ul>
-
-              <div className="about-button mt-4">
-                <a
-                    href="https://aldasa.pe/nosotros"
-                    className="item-btn"
-                >
-                    Más Información
-                </a>
-              </div>
             </motion.div>
           </div>
         </div>

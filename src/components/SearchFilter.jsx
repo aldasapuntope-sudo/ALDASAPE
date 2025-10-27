@@ -5,6 +5,7 @@ import config from "../config";
 
 export default function SearchFilter({ mode, setMode }) {
   const [tipos, setTipos] = useState([]);
+  const [operaciones, setOperaciones] = useState([]); // 🔹 NUEVO estado
   const [tipo, setTipo] = useState("");
   const [q, setQ] = useState("");
   const [resultados, setResultados] = useState([]);
@@ -16,10 +17,23 @@ export default function SearchFilter({ mode, setMode }) {
     axios
       .get(`${config.apiUrl}api/paginaprincipal/tipos-propiedad`)
       .then((res) => {
-        if (Array.isArray(res.data)) setTipos(res.data);
-        else if (res.data.data) setTipos(res.data.data);
+        const data = Array.isArray(res.data) ? res.data : res.data.data;
+        setTipos(data || []);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error("Error al cargar tipos de propiedad:", err));
+  }, []);
+
+  // 🔹 Cargar tipos de operación (alquilar, comprar, proyectos)
+  useEffect(() => {
+    axios
+      .get(`${config.apiUrl}api/paginaprincipal/tipos-operacion`)
+      .then((res) => {
+        const data = Array.isArray(res.data) ? res.data : res.data.data;
+        setOperaciones(data || []);
+        // Si no hay modo seleccionado, usar el primero de la lista
+        if (!mode && data.length > 0) setMode(data[0].nombre.toLowerCase());
+      })
+      .catch((err) => console.error("Error al cargar tipos de operación:", err));
   }, []);
 
   // 🔍 Buscar propiedades (considera tipo + texto)
@@ -35,7 +49,7 @@ export default function SearchFilter({ mode, setMode }) {
         .get(
           `${config.apiUrl}api/paginaprincipal/propiedades/buscar?q=${encodeURIComponent(
             q
-          )}&tipo=${tipo}`
+          )}&tipo=${tipo}&mode=${mode}`
         )
         .then((res) => {
           if (res.data && Array.isArray(res.data.data)) {
@@ -46,11 +60,11 @@ export default function SearchFilter({ mode, setMode }) {
             setShowDropdown(false);
           }
         })
-        .catch((err) => console.error(err));
+        .catch((err) => console.error("Error al buscar propiedades:", err));
     }, 400);
 
     return () => clearTimeout(delayDebounce);
-  }, [q, tipo]);
+  }, [q, tipo, mode]);
 
   // 🔹 Enviar búsqueda
   const handleSubmit = (e) => {
@@ -59,7 +73,7 @@ export default function SearchFilter({ mode, setMode }) {
     const params = new URLSearchParams();
     if (q) params.append("q", q);
     if (tipo) params.append("tipo", tipo);
-    params.append("mode", mode); // alquilar, comprar o proyectos
+    if (mode) params.append("mode", mode);
 
     navigate(`/buscar?${params.toString()}`);
     setShowDropdown(false);
@@ -77,20 +91,20 @@ export default function SearchFilter({ mode, setMode }) {
 
   return (
     <div style={{ position: "relative" }}>
-      {/* Tabs */}
+      {/* Tabs dinámicos de tipos de operación */}
       <div className="search-tabs mb-2">
-        {["alquilar", "comprar", "proyectos"].map((item) => (
+        {operaciones.map((item) => (
           <button
-            key={item}
-            className={`tab-btn ${mode === item ? "active" : ""}`}
-            onClick={() => setMode(item)}
+            key={item.id}
+            className={`tab-btn ${mode === item.nombre.toLowerCase() ? "active" : ""}`}
+            onClick={() => setMode(item.nombre.toLowerCase())}
           >
-            {item.charAt(0).toUpperCase() + item.slice(1)}
+            {item.nombre.charAt(0).toUpperCase() + item.nombre.slice(1)}
           </button>
         ))}
       </div>
 
-      {/* Formulario */}
+      {/* Formulario de búsqueda */}
       <form className="search-box" onSubmit={handleSubmit}>
         <select
           className="form-select"
@@ -114,7 +128,7 @@ export default function SearchFilter({ mode, setMode }) {
             onChange={(e) => setQ(e.target.value)}
             onFocus={() => resultados.length && setShowDropdown(true)}
             onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
-            disabled={!tipo} // ⚠️ Deshabilitado si no elige tipo
+            disabled={!tipo}
           />
 
           {/* Dropdown de sugerencias */}
@@ -167,7 +181,7 @@ export default function SearchFilter({ mode, setMode }) {
         <button
           className="btn btn-green"
           type="submit"
-          disabled={!tipo} // ⚠️ Deshabilitado si no elige tipo
+          disabled={!tipo}
         >
           Buscar
         </button>

@@ -42,6 +42,8 @@ export default function BuscadorAvanzado({
 }, []);
 
 
+
+
   // ✅ 2. Leer filtros desde la URL una sola vez
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -160,7 +162,7 @@ export default function BuscadorAvanzado({
               <option value="">Tipo de Propiedad</option>
               {tiposPropiedad.length > 0 ? (
                 tiposPropiedad.map((t) => (
-                  <option key={t.id} value={t.nombre.toLowerCase()}>
+                  <option key={t.id} value={t.id}>
                     {t.nombre}
                   </option>
                 ))

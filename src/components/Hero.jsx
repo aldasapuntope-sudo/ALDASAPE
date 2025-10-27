@@ -3,13 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import SearchFilter from './SearchFilter';
 
 const backgrounds = {
-  alquilar: '/assets/images/bg-buscador.webp',
-  comprar: '/assets/images/hero-comprar.jpg',
-  proyectos: '/assets/images/hero-proyectos.jpg'
+  alquiler: '/assets/images/bg-buscador.webp',
+  compra: '/assets/images/hero-comprar.png',
+  venta: '/assets/images/hero-proyectos.jpg'
 }
 
 export default function Hero(){
-  const [mode, setMode] = useState('alquilar'); // por defecto alquilar
+  const [mode, setMode] = useState('alquiler'); // por defecto alquilar
 
   return (
     <section className="hero-section">

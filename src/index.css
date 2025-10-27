@@ -42,7 +42,7 @@ p {
   justify-content: center;
   text-align: center;
   color: #fff;
-  background-color: var(--green); /* <-- fondo blanco visible detrás del clip-path */
+ /* background-color: var(--green); /* <-- fondo blanco visible detrás del clip-path */
 }
 
 
@@ -59,7 +59,7 @@ p {
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  /*background: rgba(0, 0, 0, 0.4);*/
   z-index: 2;
 }
 
@@ -73,11 +73,21 @@ p {
 
 
 
-.hero-overlay{position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.4)); pointer-events:none}
+.hero-overlay{
+  position:absolute; inset:0; 
+ /*background:linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.4)); */
+  pointer-events:none}
 .hero-content{position:relative; z-index:5; text-align:center; color:#fff; width:100%; padding:0 15px}
-.hero-content h1{font-size:2.6rem; font-weight:700; margin-bottom:8px}
+.hero-content h1{font-size:2.6rem; font-weight:700; margin-bottom:8px; color: var(--green);}
 .hero-content p{color:rgba(255,255,255,0.9); margin-bottom:14px}
 
+
+button.btn.btn-outline-success.active {
+    background: var(--green);
+}
+button.btn.btn-outline-success:hover {
+    background: var(--green);
+}
 /* Search box */
 .search-box-wrapper{width:84%; max-width:980px; margin:0 auto; transform:translateY(30%); z-index:6}
 .search-box {
@@ -282,4 +292,8 @@ body.dark-mode .salir-btn {
 @media (max-width:768px){
   .hero-content h1{font-size:1.7rem}
   .search-box-wrapper{width:92%; transform:translateY(22%)}
+
+  .search-box {
+      display: block;
+  }
 }

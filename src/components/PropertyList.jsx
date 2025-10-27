@@ -5,24 +5,37 @@ import config from "../config";
 import Cargando from "./cargando";
 import { CardSkeleton } from "./TablaSkeleton";
 
-
 export default function PropertyList() {
   const [filter, setFilter] = useState("all");
   const [anuncios, setAnuncios] = useState([]);
+  const [operaciones, setOperaciones] = useState([]); // 🔹 Tipos de operación desde la API
   const [cargando, setCargando] = useState(true);
 
-
   useEffect(() => {
-    cargarAnuncios();
+    cargarOperaciones(); // Cargar tipos de operación
+    cargarAnuncios(); // Cargar anuncios
   }, []);
 
+  // 🔹 Cargar tipos de operación desde la API
+  const cargarOperaciones = async () => {
+    try {
+      const res = await fetch(`${config.apiUrl}api/paginaprincipal/tipos-operacion`);
+      const data = await res.json();
+
+      const lista = Array.isArray(data) ? data : data.data || [];
+      setOperaciones(lista);
+    } catch (error) {
+      console.error("Error al cargar tipos de operación:", error);
+    }
+  };
+
+  // 🔹 Cargar anuncios
   const cargarAnuncios = async () => {
     try {
       setCargando(true);
       const res = await fetch(`${config.apiUrl}api/paginaprincipal/listaranuncios/1`);
       const data = await res.json();
 
-      // Adaptamos datos para la estructura del PropertyCard
       const adaptados = (Array.isArray(data) ? data : data.data || []).map((a) => ({
         id: a.id,
         titulo: a.titulo,
@@ -45,7 +58,6 @@ export default function PropertyList() {
               `${config.apiUrl}propiedades/`
             )
           : "https://aldasa.pe/wp-content/themes/theme_aldasape/img/comprar-inmueble.jpg",
-
         caracteristicas: a.caracteristicas || [],
         caracteristicas_secundarios: a.amenities || [],
       }));
@@ -58,6 +70,7 @@ export default function PropertyList() {
     }
   };
 
+  // 🔹 Filtro por tipo de operación
   const filtered =
     filter === "all" ? anuncios : anuncios.filter((p) => p.operacion === filter);
 
@@ -88,30 +101,26 @@ export default function PropertyList() {
 
           <div className="col-lg-6 col-md-7 col-sm-12 text-md-end mt-3 mt-md-0">
             <div className="isotope-classes-tab btn-group">
+              {/* 🔹 Botón "Todos" por defecto */}
               <button
                 className={`btn btn-outline-success ${filter === "all" ? "active" : ""}`}
                 onClick={() => setFilter("all")}
               >
                 Todos
               </button>
-              <button
-                className={`btn btn-outline-success ${filter === "comprar" ? "active" : ""}`}
-                onClick={() => setFilter("comprar")}
-              >
-                Comprar
-              </button>
-              <button
-                className={`btn btn-outline-success ${filter === "alquiler" ? "active" : ""}`}
-                onClick={() => setFilter("alquiler")}
-              >
-                Alquiler
-              </button>
-              <button
-                className={`btn btn-outline-success ${filter === "venta" ? "active" : ""}`}
-                onClick={() => setFilter("venta")}
-              >
-                Venta
-              </button>
+
+              {/* 🔹 Botones desde la API */}
+              {operaciones.map((op) => (
+                <button
+                  key={op.id}
+                  className={`btn btn-outline-success ${
+                    filter === op.nombre.toLowerCase() ? "active" : ""
+                  }`}
+                  onClick={() => setFilter(op.nombre.toLowerCase())}
+                >
+                  {op.nombre.charAt(0).toUpperCase() + op.nombre.slice(1)}
+                </button>
+              ))}
             </div>
           </div>
         </div>
@@ -123,7 +132,9 @@ export default function PropertyList() {
             <CardSkeleton cards={6} />
           </>
         ) : filtered.length === 0 ? (
-          <p className="text-center text-muted py-4">No hay propiedades disponibles.</p>
+          <p className="text-center text-muted py-4">
+            No hay propiedades disponibles.
+          </p>
         ) : (
           <div className="row">
             {filtered.map((p, i) => (
