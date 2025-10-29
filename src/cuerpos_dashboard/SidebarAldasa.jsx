@@ -135,6 +135,14 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
                     >
                       <Link to="/adm-paginas" onClick={toggleSidebar}>Gestionar Páginas</Link>
                     </li>
+
+                    <li
+                      className={`submenu-link ${location.pathname.startsWith('/adm-configuraciones') ? 'active' : ''}`}
+                    >
+                      <Link to="/adm-configuraciones" onClick={toggleSidebar}>Gestionar configuración</Link>
+                    </li>
+
+                    
                   </>
                 )}
               </ul>

@@ -6,18 +6,18 @@ import Breadcrumb from "../../components/Breadcrumb";
 import NotFound from "../../components/NotFound";
 import { SkeletonInformacion } from "../../components/TablaSkeleton";
 
-export default function TerminosCondiciones() {
+export default function Nosotros() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 🔗 Endpoint dinámico desde Laravel
-        const res = await axios.get("http://127.0.0.1:8000/api/paginaprincipal/terminos-condiciones");
-        setData(res.data[0]); // tomamos el primer registro
+        // 🔗 Endpoint para la sección "Nosotros"
+        const res = await axios.get("http://127.0.0.1:8000/api/paginaprincipal/nosotros");
+        setData(res.data[0]); // toma el primer registro del array
       } catch (error) {
-        console.error("Error al obtener Términos y Condiciones:", error);
+        console.error("Error al obtener información de Nosotros:", error);
       } finally {
         setLoading(false);
       }
@@ -30,12 +30,10 @@ export default function TerminosCondiciones() {
   }
 
   if (!data) {
-    return (
-      <NotFound />
-    );
+    return <NotFound />;
   }
-  
-  const decodeHTML = (html) => {
+
+    const decodeHTML = (html) => {
         const txt = document.createElement("textarea");
         txt.innerHTML = html;
         return txt.value;
@@ -43,7 +41,7 @@ export default function TerminosCondiciones() {
 
   return (
     <>
-      <section className="terminos-wrap py-5">
+      <section className="about-wrap2 py-5">
         <Breadcrumb />
         <div className="container">
           <motion.div
@@ -57,14 +55,15 @@ export default function TerminosCondiciones() {
               className="text-center fw-bold mb-4"
               style={{ color: "var(--green)" }}
             >
-              {data.titulo || "Términos y Condiciones"}
+              {data.titulo || "Nosotros"}
             </h2>
 
-            {/* ✅ Contenido con formato HTML desde base de datos */}
+            {/* ✅ Contenido HTML dinámico desde la base de datos */}
             <div
             className="contenido-html"
             dangerouslySetInnerHTML={{ __html: decodeHTML(data.contenido) }}
             ></div>
+
           </motion.div>
         </div>
       </section>

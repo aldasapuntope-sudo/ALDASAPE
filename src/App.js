@@ -44,6 +44,8 @@ import OperacionesList from './pages/dashboard/administracion/OperacionesList';
 import TiposPropiedadList from './pages/dashboard/administracion/TiposPropiedadList';
 import BuscarPage from './components/buscar_detalle/BuscarPage';
 import PaginasList from './pages/dashboard/administracion/PaginasList';
+import Nosotros from './pages/enlaces/Nosotros';
+import ConfiguracionesList from './pages/dashboard/administracion/ConfiguracionesList';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -136,6 +138,7 @@ function AppRoutes() {
           />
           <Route path="/anuncio/:slug" element={<PropertyDetail />} />
           <Route path="/terminos-condiciones" element={<TerminosCondiciones />} />
+          <Route path="/nosotros" element={<Nosotros />} />
           <Route path="/politicas-de-privacidad" element={<PoliticasPrivacidad />} />
           <Route path="/buscar" element={<BuscarPage />} />
           
@@ -197,6 +200,11 @@ function AppRoutes() {
             <Route
               path="/adm-paginas"
               element={<RutaProtegida element={PaginasList} />}
+            />
+
+            <Route
+              path="/adm-configuraciones"
+              element={<RutaProtegida element={ConfiguracionesList} />}
             />
 
             

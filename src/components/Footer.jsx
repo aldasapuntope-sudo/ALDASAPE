@@ -37,7 +37,13 @@ export default function Footer({ fondo = "imagen" }) {
               <div className="footer-logo-area footer-logo-area-2">
                 <div className="item-logo mb-3">
                   <img
-                    src={configuracion.logo || "/assets/images/default-logo.png"}
+                    src={
+                      configuracion.logo
+                        ? configuracion.logo.startsWith("http")
+                          ? configuracion.logo
+                          : `${config.urlserver}${configuracion.logo}`
+                        : "/assets/images/default-logo.png"
+                    }
                     width="157"
                     height="40"
                     alt="logo"
@@ -45,7 +51,7 @@ export default function Footer({ fondo = "imagen" }) {
                   />
                 </div>
                 <p>
-                  Es el espacio publicitario donde las inmobiliarias y dueños directos publican sus inmuebles, por ende no somos propietarios de los avisos en este portal.
+                  {configuracion.descripcioncorta}
                 </p>
                 <div className="item-social mt-3">
                   <ul className="social-list">
@@ -63,10 +69,10 @@ export default function Footer({ fondo = "imagen" }) {
               <div className="footer-link footer-link-style-2">
                 <h3 className="footer-title">Enlaces Directos</h3>
                 <ul>
-                  <li><a href="https://aldasa.pe/nosotros/">Nosotros</a></li>
-                  <li><Link to="/">Recién Publicados</Link></li>
-                  <li><Link to="/terminos-condiciones">Términos y condiciones</Link></li>
-                  <li><Link to="/politicas-de-privacidad">Políticas de Privacidad</Link></li>
+                  <li><Link to="/nosotros"  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>Nosotros</Link></li>
+                  <li><Link to="/buscar"  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>Recién Publicados</Link></li>
+                  <li><Link to="/terminos-condiciones"  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>Términos y condiciones</Link></li>
+                  <li><Link to="/politicas-de-privacidad"  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>Políticas de Privacidad</Link></li>
                   <li>
                     <a
                       href="#"
@@ -95,7 +101,7 @@ export default function Footer({ fondo = "imagen" }) {
                   {lugares.length > 0 ? (
                     lugares.map((lugar) => (
                       <li key={lugar.id}>
-                        <Link to={`/buscar?ciudad=${lugar.nombre}`}>{lugar.nombre}</Link>
+                        <Link to={`/buscar?ciudad=${lugar.nombre}`} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>{lugar.nombre}</Link>
                       </li>
                     ))
                   ) : (
@@ -131,12 +137,26 @@ export default function Footer({ fondo = "imagen" }) {
             <div className="col-12 text-center">
               <p className="mb-0 d-flex justify-content-center align-items-center flex-wrap gap-2">
                 <span>{new Date().getFullYear()} © Todos los derechos reservados.</span>
-                <Link to="/">
+                <Link to="/"
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
                   <img
-                    src={configuracion.logo_footer || "/assets/images/default-logo.png"}
+                    src={
+                      configuracion.logo_footer
+                        ? configuracion.logo_footer.startsWith("http")
+                          ? configuracion.logo_footer
+                          : `${config.urlserver}${configuracion.logo_footer}`
+                        : "/assets/images/default-logo.png"
+                    }
                     alt="Aldasa Logo"
-                    style={{ height: "30px", marginLeft: "8px", background: "#ffffff", padding: "0px 11px", borderRadius: "2px" }}
+                    style={{
+                      height: "30px",
+                      marginLeft: "8px",
+                      background: "#ffffff",
+                      padding: "0px 11px",
+                      borderRadius: "2px",
+                    }}
                   />
+
                 </Link>
               </p>
             </div>

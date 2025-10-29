@@ -37,6 +37,12 @@ export default function PoliticasPrivacidad() {
     );
   }
 
+  const decodeHTML = (html) => {
+        const txt = document.createElement("textarea");
+        txt.innerHTML = html;
+        return txt.value;
+    };
+
   return (
     <>
       <section className="terminos-wrap py-5">
@@ -58,8 +64,8 @@ export default function PoliticasPrivacidad() {
 
             {/* ✅ Contenido dinámico (HTML desde la base de datos) */}
             <div
-              className="contenido-html"
-              dangerouslySetInnerHTML={{ __html: data.contenido }}
+            className="contenido-html"
+            dangerouslySetInnerHTML={{ __html: decodeHTML(data.contenido) }}
             ></div>
           </motion.div>
         </div>
