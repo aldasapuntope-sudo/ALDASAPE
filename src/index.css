@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
+
 :root{
   --green:#00c657;
   --green-dark:#00863b;
@@ -142,6 +143,10 @@ button.btn.btn-outline-success:hover {
   border-bottom: 1px solid #deede9;
   text-align: left; 
 }*/
+
+.text-success {
+    color: var(--green) !important;
+}
 
 .breadcrumb {
   display: inline-flex; /* 🔹 Evita que el ol ocupe todo el ancho */

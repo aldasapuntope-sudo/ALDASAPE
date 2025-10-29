@@ -1,25 +1,43 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaFacebookF, FaInstagram, FaYoutube, FaWhatsapp, FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import config from "../config";
 import "../css/Footer.css";
+import { useUsuario } from "../context/UserContext";
 
 export default function Footer({ fondo = "imagen" }) {
-  const footerTopStyle = fondo === "imagen"
-    ? { backgroundImage: "url('/assets/images/footer-bg1.jpg')" }
-    : { backgroundColor: "#ffffff" };
+  const [lugares, setLugares] = useState([]);
+  const [configuracion, setConfiguracion] = useState({});
+  const { usuario } = useUsuario();
+
+  useEffect(() => {
+    axios.get(`${config.apiUrl}api/paginaprincipal/lugares-mas-buscados`)
+      .then(res => setLugares(res.data))
+      .catch(err => console.error("Error al cargar lugares:", err));
+
+    axios.get(`${config.apiUrl}api/paginaprincipal/obtener-configuraciones`)
+      .then(res => setConfiguracion(res.data))
+      .catch(err => console.error("Error al cargar configuraciones:", err));
+  }, []);
+
+  const footerTopStyle =
+    fondo === "imagen"
+      ? { backgroundImage: "url('/assets/images/footer-bg1.jpg')" }
+      : { backgroundColor: "#ffffff" };
+
   return (
     <footer className="footer-area">
-      {/* Sección superior con imagen de fondo */}
       <div className="footer-top footer-top-style" style={footerTopStyle}>
         <div className="container">
           <div className="row justify-content-between">
-            
+
             {/* Logo y descripción */}
             <div className="col-xl-3 col-lg-4 col-md-6 col-sm-6">
               <div className="footer-logo-area footer-logo-area-2">
                 <div className="item-logo mb-3">
                   <img
-                    src="https://aldasa.pe/wp-content/uploads/2024/09/logo-aldasape.png"
+                    src={configuracion.logo || "/assets/images/default-logo.png"}
                     width="157"
                     height="40"
                     alt="logo"
@@ -31,58 +49,58 @@ export default function Footer({ fondo = "imagen" }) {
                 </p>
                 <div className="item-social mt-3">
                   <ul className="social-list">
-                    <li>
-                      <a href="https://facebook.com" aria-label="Facebook" target="_blank" rel="noreferrer">
-                        <FaFacebookF />
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://instagram.com" aria-label="Instagram" target="_blank" rel="noreferrer">
-                        <FaInstagram />
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://youtube.com" aria-label="Youtube" target="_blank" rel="noreferrer">
-                        <FaYoutube />
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://web.whatsapp.com/" aria-label="WhatsApp" target="_blank" rel="noreferrer">
-                        <FaWhatsapp />
-                      </a>
-                    </li>
+                    {configuracion.facebook && <li><a href={configuracion.facebook} target="_blank" rel="noreferrer"><FaFacebookF /></a></li>}
+                    {configuracion.instagram && <li><a href={configuracion.instagram} target="_blank" rel="noreferrer"><FaInstagram /></a></li>}
+                    {configuracion.youtube && <li><a href={configuracion.youtube} target="_blank" rel="noreferrer"><FaYoutube /></a></li>}
+                    {configuracion.whatsapp && <li><a href={configuracion.whatsapp} target="_blank" rel="noreferrer"><FaWhatsapp /></a></li>}
                   </ul>
                 </div>
               </div>
             </div>
 
-            {/* Enlaces directos */}
+            {/* Enlaces */}
             <div className="col-xl-2 col-lg-2 col-md-6 col-sm-6">
               <div className="footer-link footer-link-style-2">
                 <h3 className="footer-title">Enlaces Directos</h3>
                 <ul>
                   <li><a href="https://aldasa.pe/nosotros/">Nosotros</a></li>
-                  <li><a href="#">Recién Publicados</a></li>
+                  <li><Link to="/">Recién Publicados</Link></li>
                   <li><Link to="/terminos-condiciones">Términos y condiciones</Link></li>
                   <li><Link to="/politicas-de-privacidad">Políticas de Privacidad</Link></li>
-                  <li><Link to="/mi-cuenta">Mi Cuenta</Link></li>
+                  <li>
+                    <a
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        
+                        if (usuario != null) {
+                          window.location.href = "/mi-perfil";
+                        } else {
+                          window.location.href = "/login";
+                        }
+                      }}
+                    >
+                      Mi Cuenta
+                    </a>
+                </li>
                 </ul>
               </div>
             </div>
 
-            {/* Lugares más buscados */}
+            {/* Lugares dinámicos */}
             <div className="col-xl-3 col-lg-3 col-md-6 col-sm-6">
               <div className="footer-insta">
                 <h3 className="footer-title">Lugares más buscados</h3>
                 <ul className="insta-link">
-                  <li><a href="https://aldasa.pe/venta-de-propiedades-en-lima">Lima</a></li>
-                  <li><a href="https://aldasa.pe/venta-de-propiedades-en-lambayeque">Lambayeque</a></li>
-                  <li><a href="https://aldasa.pe/venta-de-propiedades-en-chiclayo">Chiclayo</a></li>
-                  <li><a href="https://aldasa.pe/venta-de-propiedades-en-lima-surco">Surco</a></li>
-                  <li><a href="https://aldasa.pe/venta-de-propiedades-en-lima-san-isidro">San Isidro</a></li>
-                  <li><a href="https://aldasa.pe/venta-de-propiedades-en-lima-la-molina">La Molina</a></li>
-                  <li><a href="https://aldasa.pe/venta-de-propiedades-en-lima-san-miguel">San Miguel</a></li>
-                  <li><a href="https://aldasa.pe/venta-de-propiedades-en-lima-mardalena-del-mar">Magdalena</a></li>
+                  {lugares.length > 0 ? (
+                    lugares.map((lugar) => (
+                      <li key={lugar.id}>
+                        <Link to={`/buscar?ciudad=${lugar.nombre}`}>{lugar.nombre}</Link>
+                      </li>
+                    ))
+                  ) : (
+                    <li>Cargando...</li>
+                  )}
                 </ul>
               </div>
             </div>
@@ -92,17 +110,21 @@ export default function Footer({ fondo = "imagen" }) {
               <div className="footer-contact footer-contact-style-2">
                 <h3 className="footer-title">Contacto</h3>
                 <ul className="footer-location">
-                  <li><FaMapMarkerAlt /> Av. Santa Victoria 719 - Urb. Santa Victoria, Chiclayo, Perú</li>
-                  <li><a href="mailto:info@aldasa.pe"><FaEnvelope /> info@aldasa.pe</a></li>
-                  <li><FaPhoneAlt /> (+51) 999 999 999</li>
+                  <li><FaMapMarkerAlt /> {configuracion.direccion || "Dirección no disponible"}</li>
+                  {configuracion.correo && (
+                    <li><a href={`mailto:${configuracion.correo}`}><FaEnvelope /> {configuracion.correo}</a></li>
+                  )}
+                  {configuracion.telefono && (
+                    <li><FaPhoneAlt /> {configuracion.telefono}</li>
+                  )}
                 </ul>
               </div>
             </div>
+
           </div>
         </div>
       </div>
 
-      {/* Sección inferior */}
       <div className="footer-bottom footer-bottom-style-2">
         <div className="container">
           <div className="row justify-content-center align-items-center">
@@ -111,7 +133,7 @@ export default function Footer({ fondo = "imagen" }) {
                 <span>{new Date().getFullYear()} © Todos los derechos reservados.</span>
                 <Link to="/">
                   <img
-                    src="/assets/images/logo-aldasape-color.png"
+                    src={configuracion.logo_footer || "/assets/images/default-logo.png"}
                     alt="Aldasa Logo"
                     style={{ height: "30px", marginLeft: "8px", background: "#ffffff", padding: "0px 11px", borderRadius: "2px" }}
                   />
@@ -121,7 +143,6 @@ export default function Footer({ fondo = "imagen" }) {
           </div>
         </div>
       </div>
-
     </footer>
   );
 }

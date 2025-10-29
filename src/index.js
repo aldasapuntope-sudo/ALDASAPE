@@ -6,6 +6,7 @@ import './index.css';
 import App from './App';
 import { UserProvider } from './context/UserContext'; // ✅ nombre correcto
 import reportWebVitals from './reportWebVitals';
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

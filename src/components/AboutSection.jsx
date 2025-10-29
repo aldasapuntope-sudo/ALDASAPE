@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { FaPlay, FaCheck } from "react-icons/fa";
+import { FaPlay } from "react-icons/fa";
 import axios from "axios";
 import "../css/AboutSection.css";
+import config from "../config";
 
 export default function AboutSection() {
   const [showVideo, setShowVideo] = useState(false);
@@ -12,7 +13,9 @@ export default function AboutSection() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://127.0.0.1:8000/api/paginaprincipal/quienes-somos");
+        const res = await axios.get(
+          "http://127.0.0.1:8000/api/paginaprincipal/quienes-somos"
+        );
         setData(res.data[0]); // tomamos el primer registro
       } catch (error) {
         console.error("Error al obtener los datos:", error);
@@ -31,12 +34,15 @@ export default function AboutSection() {
     );
   }
 
+  // Si no hay datos, no mostrar nada
   if (!data) {
-    return (
-      <section className="about-section text-center py-5">
-        <p className="text-danger fw-semibold">No se encontró la información.</p>
-      </section>
-    );
+    return null;
+  }
+
+  function decodeHTML(html) {
+    const txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
   }
 
   return (
@@ -62,7 +68,13 @@ export default function AboutSection() {
               <div className="position-relative d-inline-block">
                 <div className="item-img1">
                   <img
-                    src={data.imagen_destacada || "/assets/images/placeholder.webp"}
+                    src={
+                      data.imagen_destacada
+                        ? data.imagen_destacada.startsWith("http")
+                          ? data.imagen_destacada
+                          : `${config.urlserver}${data.imagen_destacada}`
+                        : "/assets/images/placeholder.webp"
+                    }
                     alt={data.titulo}
                     className="img-fluid rounded-4 shadow-lg"
                   />
@@ -113,12 +125,10 @@ export default function AboutSection() {
 
               <h2 className="section-title fw-bold mb-3">{data.titulo}</h2>
 
-              {/* El contenido HTML se renderiza directamente */}
               <div
                 className="text-muted mb-4"
-                dangerouslySetInnerHTML={{ __html: data.contenido }}
+                dangerouslySetInnerHTML={{ __html: decodeHTML(data.contenido) }}
               />
-
             </motion.div>
           </div>
         </div>

@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import "../../css/TerminosCondiciones.css";
 import Breadcrumb from "../../components/Breadcrumb";
+import NotFound from "../../components/NotFound";
+import { SkeletonInformacion } from "../../components/TablaSkeleton";
 
 export default function TerminosCondiciones() {
   const [data, setData] = useState(null);
@@ -24,18 +26,12 @@ export default function TerminosCondiciones() {
   }, []);
 
   if (loading) {
-    return (
-      <section className="terminos-wrap py-5 text-center">
-        <p className="text-muted fw-semibold">Cargando contenido...</p>
-      </section>
-    );
+    return <SkeletonInformacion />;
   }
 
   if (!data) {
     return (
-      <section className="terminos-wrap py-5 text-center">
-        <p className="text-danger fw-semibold">No se encontró la información.</p>
-      </section>
+      <NotFound />
     );
   }
 

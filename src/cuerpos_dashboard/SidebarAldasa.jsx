@@ -131,9 +131,9 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
                     </li>
 
                     <li
-                      className={`submenu-link ${location.pathname.startsWith('/reportes') ? 'active' : ''}`}
+                      className={`submenu-link ${location.pathname.startsWith('/adm-paginas') ? 'active' : ''}`}
                     >
-                      <Link to="/reportes" onClick={toggleSidebar}>Reportes Generales</Link>
+                      <Link to="/adm-paginas" onClick={toggleSidebar}>Gestionar Páginas</Link>
                     </li>
                   </>
                 )}

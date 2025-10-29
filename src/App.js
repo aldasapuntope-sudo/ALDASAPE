@@ -43,6 +43,7 @@ import CaracteristicaList from './pages/dashboard/administracion/CaracteristicaL
 import OperacionesList from './pages/dashboard/administracion/OperacionesList';
 import TiposPropiedadList from './pages/dashboard/administracion/TiposPropiedadList';
 import BuscarPage from './components/buscar_detalle/BuscarPage';
+import PaginasList from './pages/dashboard/administracion/PaginasList';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -192,6 +193,11 @@ function AppRoutes() {
               element={<RutaProtegida element={CaracteristicaList} />}
             />
             
+
+            <Route
+              path="/adm-paginas"
+              element={<RutaProtegida element={PaginasList} />}
+            />
 
             
 
