@@ -41,7 +41,7 @@ export default function Nosotros() {
 
   return (
     <>
-      <section className="about-wrap2 py-5">
+      <section className="terminos-wrap py-5">
         <Breadcrumb />
         <div className="container">
           <motion.div

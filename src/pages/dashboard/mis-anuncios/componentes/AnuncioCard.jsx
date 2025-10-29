@@ -15,8 +15,8 @@ export default function AnuncioCard({ anuncio }) {
 
  
   const imagen = anuncio.imagen
-    ? anuncio.imagen
-    : "https://aldasa.pe/wp-content/themes/theme_aldasape/img/comprar-inmueble.jpg";
+  ? `${config.urlserver}${anuncio.imagen}`
+  : "https://aldasa.pe/wp-content/themes/theme_aldasape/img/comprar-inmueble.jpg";
 
 
   

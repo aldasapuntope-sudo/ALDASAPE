@@ -9,8 +9,9 @@ export default function PropertyCard({ anuncio }) {
   const navigate = useNavigate();
 
   const imagen = anuncio.imagen
-    ? anuncio.imagen
+    ? `${config.urlserver}${anuncio.imagen}`
     : "https://aldasa.pe/wp-content/themes/theme_aldasape/img/comprar-inmueble.jpg";
+
 
   // 🔹 Función para crear slug (nombre amigable)
   const crearSlug = (texto) => {

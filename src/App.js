@@ -46,6 +46,7 @@ import BuscarPage from './components/buscar_detalle/BuscarPage';
 import PaginasList from './pages/dashboard/administracion/PaginasList';
 import Nosotros from './pages/enlaces/Nosotros';
 import ConfiguracionesList from './pages/dashboard/administracion/ConfiguracionesList';
+import MensajesPage from './pages/dashboard/administracion/MensajesPage';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -227,6 +228,12 @@ function AppRoutes() {
               path="/anuncios-revision"
               element={<RutaProtegida element={AnunciosRevision} />}
             />
+
+            <Route
+              path="/mensajes"
+              element={<RutaProtegida element={MensajesPage} />}
+            />
+
 
           </Route>
         )}

@@ -5,6 +5,7 @@ import { Navigation, Thumbs } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
+import config from "../../../config";
 // opcional si luego quieres estilos personalizados
 
 export default function PropertyGallery({ imagenes = [] }) {
@@ -32,7 +33,7 @@ export default function PropertyGallery({ imagenes = [] }) {
           <SwiperSlide key={index}>
             <div className="feature-img1 zoom-image-hover">
               <img
-                src={img.imagen}
+                src={`${config.urlserver}${img.imagen}`}
                 alt={`imagen-${index}`}
                 width="100%"
                 height="auto"
@@ -62,7 +63,7 @@ export default function PropertyGallery({ imagenes = [] }) {
           <SwiperSlide key={index}>
             <div className="item-img">
               <img
-                src={img.imagen}
+                src={`${config.urlserver}${img.imagen}`}
                 alt={`thumb-${index}`}
                 width="100%"
                 height="auto"
@@ -73,6 +74,7 @@ export default function PropertyGallery({ imagenes = [] }) {
                   height: "90px",
                 }}
               />
+
             </div>
           </SwiperSlide>
         ))}
