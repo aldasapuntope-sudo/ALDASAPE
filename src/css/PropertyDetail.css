@@ -1240,3 +1240,63 @@ ul.ameniting-list {
 .single-listing-wrap2 .single-listing-box4 .item-img img {
   border-radius: 6px;
 }
+
+/* ===============================
+   🎯 Estilos para impresión
+   =============================== */
+@media print {
+  /* Oculta header y footer globales */
+  header,
+  footer,
+  nav,
+  .navbar,
+  .site-footer {
+    display: none !important;
+  }
+
+  /* Oculta botones de acción (compartir, favorito, imprimir) */
+  .side-button,
+  button,
+  .btn,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Oculta cualquier fondo oscuro o gradiente que no se vea bien al imprimir */
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Quita márgenes del body */
+  body,
+  html {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Asegura que el contenedor del detalle se vea bien */
+  .single-listing-wrap1 {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Evita que el contenido se divida mal entre páginas */
+  .single-property,
+  .content-wrapper {
+    page-break-inside: avoid;
+  }
+
+  /* Ajusta el texto e imágenes para impresión */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Elimina sombras, bordes innecesarios */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+}
+

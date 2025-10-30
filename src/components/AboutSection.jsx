@@ -4,6 +4,8 @@ import { FaPlay } from "react-icons/fa";
 import axios from "axios";
 import "../css/AboutSection.css";
 import config from "../config";
+import { SkeletonInformacion } from "./TablaSkeleton";
+
 
 export default function AboutSection() {
   const [showVideo, setShowVideo] = useState(false);
@@ -16,7 +18,7 @@ export default function AboutSection() {
         const res = await axios.get(
           "http://127.0.0.1:8000/api/paginaprincipal/quienes-somos"
         );
-        setData(res.data[0]); // tomamos el primer registro
+        setData(res.data[0]);
       } catch (error) {
         console.error("Error al obtener los datos:", error);
       } finally {
@@ -27,14 +29,9 @@ export default function AboutSection() {
   }, []);
 
   if (loading) {
-    return (
-      <section className="about-section text-center py-5">
-        <p className="text-muted fw-semibold">Cargando información...</p>
-      </section>
-    );
+    return <SkeletonInformacion />; // 👈 Aquí mostramos el skeleton mientras carga
   }
 
-  // Si no hay datos, no mostrar nada
   if (!data) {
     return null;
   }
@@ -80,7 +77,6 @@ export default function AboutSection() {
                   />
                 </div>
 
-                {/* Botón Play con efecto latido */}
                 <motion.button
                   className="play-btn-modern"
                   onClick={() => setShowVideo(true)}
@@ -129,6 +125,9 @@ export default function AboutSection() {
                 className="text-muted mb-4"
                 dangerouslySetInnerHTML={{ __html: decodeHTML(data.contenido) }}
               />
+              <div className="about-button">
+                <a href="nosotros" class="item-btn">Más Información</a>
+              </div>
             </motion.div>
           </div>
         </div>

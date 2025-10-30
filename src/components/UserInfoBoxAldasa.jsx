@@ -15,31 +15,34 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
   useEffect(() => {
     if (!usuario) return;
 
-    axios.get(`${config.apiUrl}api/misanuncios/mensajes-anuncio/${usuario.usuarioaldasa.id}`)
+    axios
+      .get(`${config.apiUrl}api/misanuncios/mensajes-anuncio/${usuario.usuarioaldasa.id}`)
       .then(res => {
-        const mensajesArray = res.data; // Array de mensajes
+        const mensajesArray = res.data;
         setMensajes(mensajesArray);
 
-        // Contar mensajes no leídos
         const noLeidos = mensajesArray.filter(msg => msg.is_active === 1).length;
         setMensajesNoLeidos(noLeidos);
       })
-      .catch(err => console.error("Error al cargar mensajes:", err));
+      .catch(err => console.error('Error al cargar mensajes:', err));
   }, [usuario]);
 
   if (!usuario) return null;
 
   const nombre = usuario.usuarioaldasa?.nombre || usuario.name || 'Usuario';
   const escuela = usuario.escuela || 'Aldasa';
-  const imgSrc = usuario.imagen || usuario.usuarioaldasa?.imagen || `${config.urlserver}image/animoji-1.png`;
+  const imgSrc =
+    usuario.imagen || usuario.usuarioaldasa?.imagen || `${config.urlserver}image/animoji-1.png`;
 
-  // Tomar solo los 3 últimos mensajes
   const ultimosMensajes = mensajes.slice(-3).reverse();
+
+  // 🔗 Navegar al mensaje seleccionado
+  const abrirMensaje = (msg) => {
+    navigate('/mensajes', { state: { mensajeSeleccionado: msg } });
+  };
 
   return (
     <div className="d-flex align-items-center me-1">
-
-      {/* Icono de Mensajes al lado izquierdo del nombre */}
       <Dropdown align="end" className="me-2">
         <Dropdown.Toggle as="div" style={{ cursor: 'pointer', position: 'relative', marginRight: '8px' }}>
           <FaEnvelope size={20} />
@@ -52,23 +55,34 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
 
         <Dropdown.Menu style={{ minWidth: '400px', maxHeight: '400px', overflowY: 'auto' }}>
           {ultimosMensajes.length > 0 ? (
-            ultimosMensajes.map(msg => (
-              <Dropdown.Item key={msg.id} className="p-2" onClick={() => console.log('Abrir chat con:', msg)}>
+            ultimosMensajes.map((msg) => (
+              <Dropdown.Item
+                key={msg.id}
+                className="p-2"
+                onClick={() => abrirMensaje(msg)}
+              >
                 <div className="d-flex">
-                  {/* Imagen de la propiedad */}
                   <div>
                     <img
-                      src={msg.propiedad_imagen ? `${config.urlserver}${msg.propiedad_imagen}` : `${config.urlserver}assets/images/default-property.png`}
+                      src={
+                        msg.propiedad_imagen
+                          ? `${config.urlserver}${msg.propiedad_imagen}`
+                          : `${config.urlserver}assets/images/default-property.png`
+                      }
                       alt={msg.propiedad_titulo || 'Propiedad'}
-                      style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '4px' }}
+                      style={{
+                        width: '60px',
+                        height: '60px',
+                        objectFit: 'cover',
+                        borderRadius: '4px',
+                      }}
                     />
-                    <div style={{ fontSize: '10px', marginTop: '2px', textAlign: 'center' }}>
-                      {msg.propiedad_titulo || 'Propiedad'}
-                    </div>
                   </div>
 
-                  {/* Contenido del mensaje */}
                   <div style={{ marginLeft: '10px', flex: 1 }}>
+                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'var(--green)' }}>
+                      {msg.propiedad_titulo || 'Propiedad'}
+                    </div>
                     <strong>{msg.nombre}</strong>
                     <div style={{ fontSize: '12px', color: '#555' }}>
                       {msg.mensaje.length > 80 ? msg.mensaje.substring(0, 80) + '...' : msg.mensaje}
@@ -84,13 +98,13 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
             <Dropdown.Item>No hay mensajes</Dropdown.Item>
           )}
 
-          {/* Botón ver más */}
           {mensajes.length > 3 && (
-            <div className="text-center mt-2">
+            <div className="about-button">
               <Button
                 variant="link"
-                style={{ fontSize: '12px' }}
+                style={{ fontSize: '12px', width: '100%', textDecoration: 'none' }}
                 onClick={() => navigate('/mensajes')}
+                className="item-btn"
               >
                 Ver más...
               </Button>
@@ -99,17 +113,11 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
         </Dropdown.Menu>
       </Dropdown>
 
-      {/* Nombre y escuela */}
       <div className="d-flex flex-column text-end me-2">
-        <span style={{ color: '#252526', fontWeight: '900', fontSize: '12px' }}>
-          {nombre}
-        </span>
-        <span style={{ color: '#ffffffff', fontSize: '10px' }}>
-          {escuela}
-        </span>
+        <span style={{ color: '#252526', fontWeight: '900', fontSize: '12px' }}>{nombre}</span>
+        <span style={{ color: '#ffffffff', fontSize: '10px' }}>{escuela}</span>
       </div>
 
-      {/* Imagen Usuario */}
       <Dropdown align="end">
         <Dropdown.Toggle as="div" id="dropdown-custom-components" style={{ cursor: 'pointer' }}>
           <Image
@@ -124,7 +132,9 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
         </Dropdown.Toggle>
 
         <Dropdown.Menu>
-          <Dropdown.Item as={Link} to="/mi-perfil">Mi Perfil</Dropdown.Item>
+          <Dropdown.Item as={Link} to="/mi-perfil">
+            Mi Perfil
+          </Dropdown.Item>
           <Dropdown.Item onClick={() => window.location.reload()}>Recargar</Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item onClick={abrirModal}>Cerrar sesión</Dropdown.Item>

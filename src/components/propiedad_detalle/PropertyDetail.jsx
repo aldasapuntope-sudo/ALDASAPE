@@ -22,6 +22,7 @@ import NotFound from "../NotFound";
 import PropertyTour360 from "./componentes/PropertyTour360";
 import ContactBox from "./componentes/ContactBox";
 import PropiedadesRelacionadas from "./componentes/PropiedadesRelacionadas";
+import { SkeletonInformacionPropiedaddetalle } from "../TablaSkeleton";
 
 
 export default function PropertyDetail() {
@@ -57,12 +58,10 @@ export default function PropertyDetail() {
   }, [anuncio?.id]);
     
 
-  console.log(`${config.apiUrl}api/paginaprincipal/listardetalle/${id}`);
+  
   if (loading) {
     return (
-      <div className="d-flex justify-content-center py-5">
-        <Spinner animation="border" variant="success" />
-      </div>
+      <SkeletonInformacionPropiedaddetalle />
     );
   }
 
@@ -74,53 +73,53 @@ export default function PropertyDetail() {
     imagen: img.imagen.replace(/\\/g, ""),
   }));
 
-  console.log(anuncio);
 
   return (
     <>
-    
-      <section className="single-listing-wrap1">
-        <Breadcrumb />
-        <div className="container">
-          <div className="single-property">
-            <div className="content-wrapper">
-              {/* Aquí usamos el componente */}
-              <PropertyHeading anuncio={anuncio} />
+      <div className="property-heading">
+        <section className="single-listing-wrap1">
+          <Breadcrumb />
+          <div className="container">
+            <div className="single-property">
+              <div className="content-wrapper">
+                {/* Aquí usamos el componente */}
+                <PropertyHeading anuncio={anuncio} />
 
-              <dv className="row">
-                <div className="col-lg-8">
-                    <PropertyGallery imagenes={imagenes} />
+                <dv className="row">
+                  <div className="col-lg-8">
+                      <PropertyGallery imagenes={imagenes} />
 
-                    <div className="single-listing-box1">
-                        <Overview anuncio={anuncio} />
+                      <div className="single-listing-box1">
+                          <Overview anuncio={anuncio} />
 
-                        <div className="overview-area listing-area mt-1">
-                          <h3 className="item-title mb-3">Sobre este anuncio</h3>
-                          <p>{anuncio.descripcion}</p>
-                        </div>
+                          <div className="overview-area listing-area mt-1">
+                            <h3 className="item-title mb-3">Sobre este anuncio</h3>
+                            <p>{anuncio.descripcion}</p>
+                          </div>
 
-                        <Amenities anuncio={anuncio} />
+                          <Amenities anuncio={anuncio} />
 
-                        <MapLocation anuncio={anuncio} />
-                        <FloorPlans anuncio={anuncio} />
-                        <PropertyVideo anuncio={anuncio} />
-                        <PropertyTour360 anuncio={anuncio} />
-                    </div>
+                          <MapLocation anuncio={anuncio} />
+                          <FloorPlans anuncio={anuncio} />
+                          <PropertyVideo anuncio={anuncio} />
+                          <PropertyTour360 anuncio={anuncio} />
+                      </div>
 
-                    
-                </div>
-                <div className="col-lg-4 widget-break-lg sidebar-widget">
-                    <ContactBox anuncio={anuncio}/>
-                    <PropiedadesRelacionadas  tipoId={anuncio?.id_tipopropiedad} idpropiedad={anuncio?.id} operaciones={anuncio?.operaciones}  />
-                </div>
+                      
+                  </div>
+                  <div className="col-lg-4 widget-break-lg sidebar-widget">
+                      <ContactBox anuncio={anuncio}/>
+                      <PropiedadesRelacionadas  tipoId={anuncio?.id_tipopropiedad} idpropiedad={anuncio?.id} operaciones={anuncio?.operaciones}  />
+                  </div>
 
-              </dv>
+                </dv>
 
-              {/* Aquí continúas con el resto del layout (overview, amenities, mapa...) */}
+                {/* Aquí continúas con el resto del layout (overview, amenities, mapa...) */}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </>
   );
 }

@@ -13,6 +13,7 @@ const nombresPersonalizados = {
   'adm-amenities': 'Lista de Servicios',
   'adm-caracteristicas': 'Lista de Características',
   'adm-tpropiedades': 'Lista Tipo Propiedades',
+  'adm-bitacora': 'Bitácora del Sistema',
   detalle_guia: 'Detalle Guías',
   curso: 'Mis Cursos',
   detalle_curso: 'Detalle Curso',

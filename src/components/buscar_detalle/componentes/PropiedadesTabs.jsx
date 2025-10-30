@@ -54,7 +54,11 @@ export default function PropiedadesTabs({ resultados }) {
                 <div className="property-box2 wow fadeInUp animated" data-wow-delay=".3s">
                   <div className="item-img">
                     <img
-                      src={propiedad.imagen_principal || "default.jpg"}
+                      src={
+                        propiedad.imagen_principal
+                          ? `${config.urlserver}${propiedad.imagen_principal}`
+                          : `${config.urlserver}uploads/default.jpg`
+                      }
                       alt={propiedad.titulo}
                       width="510"
                       height="340"
@@ -146,12 +150,17 @@ export default function PropiedadesTabs({ resultados }) {
                 <div className="property-box2 property-box4 wow fadeInUp animated" data-wow-delay=".6s">
                   <div className="item-img">
                     <img
-                      src={propiedad.imagen_principal || "default.jpg"}
+                      src={
+                        propiedad.imagen_principal
+                          ? `${config.urlserver}${propiedad.imagen_principal}`
+                          : `${config.urlserver}uploads/default.jpg`
+                      }
                       alt={propiedad.titulo}
                       width="250"
                       height="200"
                       className="img-fluid"
                     />
+                    
                     <div className="item-category-box1">
                       <div className="item-category">{propiedad.operaciones}</div>
                     </div>

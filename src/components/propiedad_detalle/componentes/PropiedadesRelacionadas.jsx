@@ -41,8 +41,12 @@ export default function PropiedadesRelacionadas({ tipoId, idpropiedad, operacion
       {/* Propiedad principal destacada */}
       <div className="item-img">
         <a href={generarSlug(principal)}>
-          <img
-            src={principal.imagen_principal}
+         <img
+            src={
+              principal.imagen_principal
+                ? `${config.urlserver}${principal.imagen_principal}`
+                : "/default.jpg"
+            }
             alt={principal.titulo}
             width="540"
             height="360"

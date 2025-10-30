@@ -79,7 +79,14 @@ p {
  /*background:linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.4)); */
   pointer-events:none}
 .hero-content{position:relative; z-index:5; text-align:center; color:#fff; width:100%; padding:0 15px}
-.hero-content h1{font-size:2.6rem; font-weight:700; margin-bottom:8px; color: var(--green);}
+.hero-content h1{
+  font-size:2.6rem; 
+  font-weight:700; 
+  margin-bottom:8px;
+  color: var(--green);
+  -webkit-text-stroke: 1px #ffffff;
+}
+
 .hero-content p{color:rgba(255,255,255,0.9); margin-bottom:14px}
 
 
@@ -90,7 +97,7 @@ button.btn.btn-outline-success:hover {
     background: var(--green);
 }
 /* Search box */
-.search-box-wrapper{width:84%; max-width:980px; margin:0 auto; transform:translateY(30%); z-index:6}
+.search-box-wrapper{width:100%; max-width:980px; margin:0 auto; transform:translateY(30%); z-index:6}
 .search-box {
     background: #fff;
     border-radius: 0px 10px 10px 10px;

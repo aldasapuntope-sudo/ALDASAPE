@@ -138,3 +138,33 @@ export const SkeletonInformacion = () => {
     </section>
   );
 };
+
+export const SkeletonInformacionPropiedaddetalle = () => {
+  return (
+    <section className="terminos-wrap py-5">
+      <div className="container">
+        <h2 className="mb-4">
+          <Skeleton height={35} width="60%" />
+        </h2>
+        <div className="mb-4">
+          <Skeleton height={200} className="rounded-3" />
+        </div>
+        <div className="mb-4">
+          <Skeleton count={4} height={20} style={{ marginBottom: 8 }} />
+        </div>
+        <h4 className="mb-3">
+          <Skeleton height={25} width="40%" />
+        </h4>
+        <Skeleton count={6} height={18} style={{ marginBottom: 6 }} />
+        <div className="mt-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="d-flex align-items-center mb-2">
+              <Skeleton circle width={14} height={14} className="me-2" />
+              <Skeleton height={16} width="70%" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
-import { FaRegSurprise } from "react-icons/fa";
-import { useLocation } from "react-router-dom";
+import { FaRegSurprise, FaTimes } from "react-icons/fa";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import config from "../../config";
 import PropiedadesRow from "./componentes/PropiedadesRow";
@@ -10,54 +10,40 @@ import SkeletonBuscarPage from "../TablaSkeleton";
 
 export default function BuscarPage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [resultados, setResultados] = useState([]);
   const [filtrados, setFiltrados] = useState([]);
   const [loading, setLoading] = useState(true);
   const filtrosActuales = useRef({});
 
-  // 🔎 Efecto principal: obtener datos desde el backend
+  // 🔎 Efecto principal: obtener propiedades desde el backend
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    console.log(params);
     const q = params.get("q") || "";
     const tipo = params.get("tipo") || "";
     const mode = params.get("mode") || "";
-
-    console.log("🔍 Parámetros enviados:", { q, tipo, mode });
 
     let cancelado = false;
 
     const obtenerDatos = async () => {
       try {
         setLoading(true);
-        console.log("⚙️ Solicitando datos al backend...");
         const res = await axios.get(
           `${config.apiUrl}api/paginaprincipal/propiedades/buscar?q=${q}&tipo=${tipo}&mode=${mode}`
         );
         if (cancelado) return;
 
-        console.log(`${config.apiUrl}api/paginaprincipal/propiedades/buscar?q=${q}&tipo=${tipo}&mode=${mode}`);
         const data = res.data?.data || [];
-        console.log(`📦 Respuesta backend (${data.length} items):`, data);
-
         setResultados(data);
         setFiltrados(data);
-
-        /*if (Object.keys(filtrosActuales.current).length > 0) {
-          manejarFiltro(filtrosActuales.current);
-        }*/
       } catch (error) {
         if (!cancelado) console.error("❌ Error al obtener propiedades:", error);
       } finally {
-        if (!cancelado) {
-          setLoading(false);
-          console.log("✅ Carga finalizada, loading = false");
-        }
+        if (!cancelado) setLoading(false);
       }
     };
 
     obtenerDatos();
-
     return () => {
       cancelado = true;
     };
@@ -67,37 +53,27 @@ export default function BuscarPage() {
   const manejarFiltro = (filtros) => {
     filtrosActuales.current = filtros;
 
-    // Si todos los filtros están vacíos, muestra todo
-    /*if (!filtros || Object.values(filtros).every(v => v === "" || v == null)) {
-      setFiltrados(resultados);
-      return;
-  }*/
     const busq = (filtros.busqueda || "").toLowerCase();
-    //const tipoFilter = (filtros.tipo || "").toLowerCase();
     const categoriaFilter = (filtros.categoria || "").toLowerCase();
     const ciudadFilter = (filtros.ciudad || "").toLowerCase();
     const precioMin = filtros.precioMin ?? null;
     const precioMax = filtros.precioMax ?? null;
 
-
-
-
     const filtradosTemp = resultados.filter((prop) => {
       const titulo = (prop.titulo || "").toLowerCase();
       const descripcion = (prop.descripcion || "").toLowerCase();
       const ubicacion = (prop.ubicacion || "").toLowerCase();
-      //const tipoProp = (prop.tipo_propiedad || "").toLowerCase();
       const operacion = (prop.operaciones || prop.operacion || "").toLowerCase();
       const precio = parseFloat(prop.precio) || 0;
 
       const tipoFilter = filtros.tipo?.toString().toLowerCase() || "";
       const tipoPropId = prop.id_tipopropiedad?.toString().toLowerCase() || "";
       const tipoProp = (prop.tipo_propiedad || "").toLowerCase();
+
       const okTipo =
         !tipoFilter ||
         tipoPropId === tipoFilter ||
         tipoProp === tipoFilter;
-        
       const okBusqueda =
         !busq ||
         titulo.includes(busq) ||
@@ -105,8 +81,6 @@ export default function BuscarPage() {
         tipoProp.includes(busq) ||
         ubicacion.includes(busq) ||
         operacion.includes(busq);
-
-      //const okTipo = !tipoFilter || tipoProp === tipoFilter;
       const okCategoria = !categoriaFilter || operacion === categoriaFilter;
       const okCiudad = !ciudadFilter || ubicacion.includes(ciudadFilter);
       const okPrecio =
@@ -116,11 +90,10 @@ export default function BuscarPage() {
       return okBusqueda && okTipo && okCategoria && okCiudad && okPrecio;
     });
 
-    console.log(`🧩 Filtrado aplicado: ${filtradosTemp.length} resultados`);
     setFiltrados(filtradosTemp);
   };
 
-  // 🔁 Reaplicar filtros cuando cambian los resultados
+  // 🔁 Reaplicar filtros al cambiar resultados
   useEffect(() => {
     if (resultados.length > 0) {
       if (Object.keys(filtrosActuales.current).length > 0) {
@@ -131,16 +104,23 @@ export default function BuscarPage() {
     }
   }, [resultados]);
 
-  // 💀 Si está cargando, muestra skeleton
-  if (loading) {
-    console.log("⏳ Mostrando SkeletonBuscarPage...");
-    return <SkeletonBuscarPage />;
-  }
+  // 🧹 Eliminar un filtro individualmente
+  const eliminarFiltro = (nombre) => {
+    const params = new URLSearchParams(location.search);
+    params.delete(nombre);
+    navigate(`/buscar?${params.toString()}`);
+  };
 
-  // 📦 Mostrar resultados
-  console.log("🎯 Resultados filtrados:", filtrados);
+  // 💀 Mostrar skeleton si está cargando
+  if (loading) return <SkeletonBuscarPage />;
 
+  // 🧩 Mostrar mensaje si no hay resultados
   if (!filtrados.length) {
+    const params = new URLSearchParams(location.search);
+    const filtrosActivos = Object.fromEntries(
+      Array.from(params.entries()).filter(([_, v]) => v && v.trim() !== "")
+    );
+
     return (
       <section className="grid-wrap3 py-5">
         <div className="container">
@@ -161,9 +141,39 @@ export default function BuscarPage() {
                 <h4 className="fw-bold mb-2 text-success">
                   ¡Ups! No encontramos propiedades
                 </h4>
-                <p className="text-muted mb-0">
+                <p className="text-muted mb-3">
                   Intenta ajustar los filtros o busca en otra ubicación.
                 </p>
+
+                {/* 🏷️ Filtros activos */}
+                {Object.keys(filtrosActivos).length > 0 && (
+                  <div className="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                    {Object.entries(filtrosActivos).map(([key, value]) => (
+                      <span
+                        key={key}
+                        className="badge bg-light text-dark border px-3 py-2 d-flex align-items-center"
+                        style={{
+                          borderRadius: "20px",
+                          gap: "6px",
+                          fontSize: "15px",
+                        }}
+                      >
+                        <strong className="text-success">
+                          {key.charAt(0).toUpperCase() + key.slice(1)}:
+                        </strong>{" "}
+                        {value}
+                        <FaTimes
+                          onClick={() => eliminarFiltro(key)}
+                          className="ms-2 cursor-pointer"
+                          size={14}
+                          color="#dc3545"
+                          style={{ cursor: "pointer" }}
+                          title="Eliminar filtro"
+                        />
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -172,6 +182,7 @@ export default function BuscarPage() {
     );
   }
 
+  // ✅ Mostrar resultados normales
   return (
     <section className="grid-wrap3">
       <div className="container">
@@ -179,7 +190,6 @@ export default function BuscarPage() {
           <div className="col-lg-4 widget-break-lg sidebar-widget">
             <BuscadorAvanzado onFiltrar={manejarFiltro} />
           </div>
-
           <div className="col-lg-8">
             <PropiedadesRow resultados={filtrados} />
           </div>

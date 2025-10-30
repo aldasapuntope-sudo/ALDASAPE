@@ -47,6 +47,7 @@ import PaginasList from './pages/dashboard/administracion/PaginasList';
 import Nosotros from './pages/enlaces/Nosotros';
 import ConfiguracionesList from './pages/dashboard/administracion/ConfiguracionesList';
 import MensajesPage from './pages/dashboard/administracion/MensajesPage';
+import BitacoraList from './pages/dashboard/administracion/BitacoraList';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -207,6 +208,13 @@ function AppRoutes() {
               path="/adm-configuraciones"
               element={<RutaProtegida element={ConfiguracionesList} />}
             />
+
+            <Route
+              path="/adm-bitacora"
+              element={<RutaProtegida element={BitacoraList} />}
+            />
+
+            
 
             
 

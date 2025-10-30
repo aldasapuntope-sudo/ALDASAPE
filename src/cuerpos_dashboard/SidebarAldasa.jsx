@@ -142,6 +142,12 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
                       <Link to="/adm-configuraciones" onClick={toggleSidebar}>Gestionar configuración</Link>
                     </li>
 
+                    <li
+                      className={`submenu-link ${location.pathname.startsWith('/adm-bitacora') ? 'active' : ''}`}
+                    >
+                      <Link to="/adm-bitacora" onClick={toggleSidebar}>Bitácora</Link>
+                    </li>
+
                     
                   </>
                 )}
