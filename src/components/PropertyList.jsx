@@ -50,6 +50,7 @@ export default function PropertyList() {
         banos: a.banos,
         dormitorios: a.dormitorios,
         precio: a.precio,
+        simbolo: a.moneda_simbolo,
         direccion: a.direccion,
         isPublish: a.is_active_publish,
         imagen: a.imagen_principal

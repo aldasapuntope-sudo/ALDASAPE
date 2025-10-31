@@ -11,6 +11,7 @@ import Cargando from "../../../components/cargando";
 import axios from "axios";
 
 const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
+  console.log(anuncio);
   const [tipos, setTipos] = useState([]);
   const [operaciones, setOperaciones] = useState([]);
   const [ubicaciones, setUbicaciones] = useState([]);
@@ -19,6 +20,8 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
   const [caracteristicasSeleccionadas, setCaracteristicasSeleccionadas] = useState({});
   const [amenities, setAmenities] = useState([]);
   const [amenitiesId, setAmenitiesId] = useState([]);
+  const [monedas, setMonedas] = useState([]);
+  const [simbolo, setSimbolo] = useState("");
   const [amenitiesSeleccionadas, setAmenitiesSeleccionadas] = useState({});
   const [planos, setPlanos] = useState([{ titulo: "", archivo: null }]);
   const [planosExistentes, setPlanosExistentes] = useState([]);  
@@ -30,7 +33,10 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
 
   // 🖼️ IMÁGENES ADICIONALES
   const [imagenesSecundarias, setImagenesSecundarias] = useState([]);
-  const addImagenSecundaria = () => setImagenesSecundarias([...imagenesSecundarias, null]);
+  /*const addImagenSecundaria = () => setImagenesSecundarias([...imagenesSecundarias, null]);*/
+  const addImagenSecundaria = () => 
+  setImagenesSecundarias([...imagenesSecundarias, { id: null, imagen: null }]);
+
   const removeImagenSecundaria = (index) => {
     const updated = imagenesSecundarias.filter((_, i) => i !== index);
     setImagenesSecundarias(updated);
@@ -56,18 +62,20 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
 
   // 🎥 VIDEO
   const [videoUrl, setVideoUrl] = useState("");
-
   
+
   // 🧩 Formik
   const formik = useFormik({
     initialValues: {
       tipo_id: anuncio?.tipo_id || "",
       operacion_id: anuncio?.operacion_id || "",
       ubicacion_id: anuncio?.ubicacion_id || "",
+      moneda_id: anuncio?.moneda_id || "",
       titulo: anuncio?.titulo || "",
       descripcion: anuncio?.descripcion || "",
       precio: anuncio?.precio || "",
       direccion: anuncio?.direccion || "",
+      video_url: anuncio?.videos?.[0]?.url || "",
       imagen_principal: null,
     },
     enableReinitialize: true,
@@ -75,9 +83,10 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
       tipo_id: Yup.string().required("Seleccione un tipo de propiedad"),
       operacion_id: Yup.string().required("Seleccione un tipo de operación"),
       ubicacion_id: Yup.string().required("Seleccione una ubicación"),
+      moneda_id: Yup.string().required("Seleccione una moneda"),
       direccion: Yup.string().required("La Dirección es obligatorio"),
       titulo: Yup.string().required("El título es obligatorio"),
-
+      
       descripcion: Yup.string().required("La descripción es obligatoria"),
       precio: Yup.number()
         .typeError("Debe ser un número")
@@ -140,9 +149,7 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
 
     if (anuncio) formData.append("_method", "PUT");
 
-    for (let pair of formData.entries()) {
-  console.log(pair[0] + ':', pair[1]);
-}
+
 
     //  🔟 Enviar FormData
     const response = await axios.post(url, formData, {
@@ -271,10 +278,11 @@ useEffect(() => {
   async function cargarCombos() {
     setCargando(true);
     try {
-      const [resTipos, resOps, resUbic, resCarac, resAmenities] = await Promise.all([
+      const [resTipos, resOps, resUbic, resMonedas, resCarac, resAmenities] = await Promise.all([
         axios.get(`${config.apiUrl}api/misanuncios/tipos-propiedad`),
         axios.get(`${config.apiUrl}api/misanuncios/tipos-operacion`),
         axios.get(`${config.apiUrl}api/misanuncios/tipos-ubicaciones`),
+        axios.get(`${config.apiUrl}api/misanuncios/monedas`),
        // axios.get(`${config.apiUrl}api/misanuncios/caracteristicas-catalogo/${anuncio.tipo_id}`),
        // axios.get(`${config.apiUrl}api/misanuncios/propiedad_amenities`),
       ]);
@@ -282,11 +290,28 @@ useEffect(() => {
       setTipos(resTipos.data);
       setOperaciones(resOps.data);
       setUbicaciones(resUbic.data);
+      setMonedas(resMonedas.data);
      // setCaracteristicas(resCarac.data.data || resCarac.data);
      // setAmenities(resAmenities.data.data || resAmenities.data);
 
       // Cargar características del anuncio si existe
       if (anuncio && anuncio.id) {
+        // Cargar planos, características, amenities e imágenes secundarias al mismo tiempo
+        const [resPlanos, resCaracid, resAmenitiesId, resImagenesSecundarias] = await Promise.all([
+          axios.get(`${config.apiUrl}api/misanuncios/lplanos/${anuncio.id}`),
+          axios.get(`${config.apiUrl}api/misanuncios/caracteristicas-catalogoid/${anuncio.id}`),
+          axios.get(`${config.apiUrl}api/misanuncios/propiedad_amenitiesid/${anuncio.id}`),
+          axios.get(`${config.apiUrl}api/misanuncios/limagenesecundarias/${anuncio.id}`), // 👈 NUEVA PETICIÓN
+        ]);
+
+        // Guardar los resultados en los estados correspondientes
+        setPlanosExistentes(resPlanos.data || []);
+        setCaracteristicasid(resCaracid.data || []);
+        setAmenitiesId(resAmenitiesId.data || []);
+        setImagenesSecundarias(resImagenesSecundarias.data || []); // 👈 NUEVO ESTADO
+      }
+
+      /*if (anuncio && anuncio.id) {
 
         const resPlanos = await axios.get(`${config.apiUrl}api/misanuncios/lplanos/${anuncio.id}`);
         setPlanosExistentes(resPlanos.data || []);
@@ -302,7 +327,7 @@ useEffect(() => {
           `${config.apiUrl}api/misanuncios/propiedad_amenitiesid/${anuncio.id}`
         );
         setAmenitiesId(resAmenitiesId.data || resAmenitiesId.data);
-      }
+      }*/
     } catch (error) {
       console.error("❌ Error cargando combos:", error);
     } finally {
@@ -351,6 +376,41 @@ useEffect(() => {
       },
     }));
   };
+
+  const eliminarImagenSecundaria = async (imagenId) => {
+    Swal.fire({
+      title: "¿Eliminar imagen?",
+      text: "Esta acción eliminará la imagen seleccionada.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.delete(`${config.apiUrl}api/misanuncios/eimagenesecundarias/${imagenId}`);
+          if (response.data.success) {
+            setImagenesSecundarias(imagenesSecundarias.filter((i) => i.id !== imagenId));
+            Swal.fire({
+              title: "Eliminada",
+              text: "La imagen fue eliminada correctamente.",
+              icon: "success",
+              timer: 1800,
+              showConfirmButton: false,
+            });
+          } else {
+            Swal.fire({ title: "Error", text: "No se pudo eliminar la imagen.", icon: "error" });
+          }
+        } catch (error) {
+          console.error("Error al eliminar imagen:", error);
+          Swal.fire({ title: "Error", text: "Ocurrió un problema al eliminar la imagen.", icon: "error" });
+        }
+      }
+    });
+  };
+
 
 
   const eliminarPlanoExistente = async (planoId) => {
@@ -486,14 +546,48 @@ useEffect(() => {
           )}
         </div>
 
+        {/* Moneda */}
+        <div className="col-md-6">
+          <label className="form-label fw-semibold">Moneda</label>
+          <select
+            className="form-select"
+            {...formik.getFieldProps("moneda_id")}
+            onChange={(e) => {
+              formik.handleChange(e);
+              const monedaSeleccionada = monedas.find(
+                (m) => m.id === parseInt(e.target.value)
+              );
+              setSimbolo(monedaSeleccionada ? monedaSeleccionada.simbolo : "");
+            }}
+          >
+            <option value="">Selecciona</option>
+            {monedas.map((m) => (
+              <option key={m.id} value={m.id}>
+                {m.simbolo} - {m.nombre}
+              </option>
+            ))}
+          </select>
+          {formik.touched.moneda_id && formik.errors.moneda_id && (
+            <small className="text-danger">{formik.errors.moneda_id}</small>
+          )}
+        </div>
+
         {/* Precio */}
         <div className="col-md-6">
-          <label className="form-label fw-semibold">Precio (S/)</label>
-          <input type="number" className="form-control" {...formik.getFieldProps("precio")} />
+          <label className="form-label fw-semibold">
+            Precio {simbolo && `(${simbolo})`}
+          </label>
+          <input
+            type="number"
+            className="form-control"
+            {...formik.getFieldProps("precio")}
+          />
           {formik.touched.precio && formik.errors.precio && (
             <small className="text-danger">{formik.errors.precio}</small>
           )}
         </div>
+
+
 
         {/* Imagen */}
         <div className="col-md-6">
@@ -542,23 +636,62 @@ useEffect(() => {
         data-bs-parent="#accordionImagenesAdicionales"
       >
         <div className="accordion-body">
-          {imagenesSecundarias.map((_, index) => (
-            <div key={index} className="mb-2 d-flex align-items-center">
-              <input
-                type="file"
-                accept="image/*"
-                className="form-control"
-                onChange={(e) => handleImagenSecundariaChange(e, index)}
-              />
-              <button
-                type="button"
-                className="btn btn-danger btn-sm ms-2"
-                onClick={() => removeImagenSecundaria(index)}
-              >
-                Eliminar
-              </button>
+
+          {/* 🔹 Imágenes existentes */}
+          {Array.isArray(imagenesSecundarias) && imagenesSecundarias.length > 0 && (
+            <div className="mb-4">
+              <h6 className="fw-bold">Imágenes adicionales existentes</h6>
+              <div className="row">
+                {imagenesSecundarias.map((img, index) => (
+                  <div key={img.id || index} className="col-md-3 mb-3 text-center">
+                    <div className="border rounded-3 p-2 shadow-sm">
+                      {img.imagen ? (
+                        <>
+                          <img
+                            src={
+                              img.imagen.startsWith("http")
+                                ? img.imagen
+                                : `${config.urlserver}${img.imagen}`
+                            }
+                            alt="Imagen secundaria"
+                            className="img-fluid rounded mb-2"
+                            style={{ height: "150px", objectFit: "cover" }}
+                          />
+                          <button
+                            type="button"
+                            className="btn btn-danger btn-sm"
+                            onClick={() => eliminarImagenSecundaria(img.id)}
+                          >
+                            Eliminar
+                          </button>
+                        </>
+                      ) : (
+                        <div className="d-flex align-items-center">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="form-control"
+                            onChange={(e) => handleImagenSecundariaChange(e, index)}
+                          />
+                          <button
+                            type="button"
+                            className="btn btn-danger btn-sm ms-2"
+                            onClick={() => removeImagenSecundaria(index)}
+                          >
+                            Eliminar
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          ))}
+          )}
+
+          {/* 🔹 Agregar nuevas imágenes */}
+          
+
           <button
             type="button"
             className="btn btn-outline-success btn-sm mt-2"
@@ -570,6 +703,7 @@ useEffect(() => {
       </div>
     </div>
   </div>
+
 
   {/* ⚙️ Acordeón para Características Principales */}
   <div className="accordion mb-3" id="accordionCaracteristicas">
@@ -797,6 +931,8 @@ useEffect(() => {
 </div>
 
 
+
+
   {/* 🎥 Acordeón para Video */}
   <div className="accordion mb-3" id="accordionVideo">
     <div className="accordion-item">
@@ -819,13 +955,15 @@ useEffect(() => {
         data-bs-parent="#accordionVideo"
       >
         <div className="accordion-body">
+          
           <input
             type="url"
             className="form-control"
             placeholder="https://youtube.com/..."
-            value={videoUrl}
-            onChange={(e) => setVideoUrl(e.target.value)}
+            {...formik.getFieldProps("video_url")}
           />
+         
+
         </div>
       </div>
     </div>

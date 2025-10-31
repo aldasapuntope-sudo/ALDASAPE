@@ -46,6 +46,7 @@ export default function PropertyDetail() {
       .finally(() => setLoading(false));
   }, [id]);
 
+  //console.log(anuncio);
   useEffect(() => {
     if (!anuncio?.id) return;
 

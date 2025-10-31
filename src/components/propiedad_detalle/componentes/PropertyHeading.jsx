@@ -179,19 +179,73 @@ export default function PropertyHeading({ anuncio }) {
           </div>
           <div className="col-lg-6 col-md-12">
             <div className="single-list-price text-end fs-4 fw-bold text-primary">
-              <div>
-                SOL = S/
-                {precioSoles.toLocaleString("es-PE", { minimumFractionDigits: 2 })}
-              </div>
-              {precioDolares ? (
-                <small className="text-muted">
-                  USD = ${precioDolares.toLocaleString("en-US", { minimumFractionDigits: 2 })}
-                </small>
-              ) : (
-                <small className="text-muted">Cargando tipo de cambio...</small>
-              )}
+              {(() => {
+                if (!anuncio?.precio) return <div>Precio no disponible</div>;
+
+                const precio = parseFloat(anuncio.precio);
+                const simbolo = anuncio?.moneda_simbolo || "";
+                const nombre = anuncio?.moneda_nombre?.toLowerCase() || "";
+
+                if (!tipoCambio) {
+                  return (
+                    <div>
+                      {nombre.toUpperCase()} = {simbolo}
+                      {precio.toLocaleString("es-PE", { minimumFractionDigits: 2 })}
+                      <br />
+                      <small className="text-muted">Cargando tipo de cambio...</small>
+                    </div>
+                  );
+                }
+
+                // 💵 Si la moneda es SOLES
+                if (nombre.includes("Sol") || simbolo === "S/") {
+                  const precioUSD = (precio / tipoCambio).toFixed(2);
+                  return (
+                    <>
+                      <div>
+                        SOL = S/
+                        {precio.toLocaleString("es-PE", { minimumFractionDigits: 2 })}
+                      </div>
+                      <small className="text-muted">
+                        USD = $
+                        {parseFloat(precioUSD).toLocaleString("en-US", {
+                          minimumFractionDigits: 2,
+                        })}
+                      </small>
+                    </>
+                  );
+                }
+
+                // 💲 Si la moneda es DÓLAR
+                if (nombre.includes("Dólar") || simbolo === "$") {
+                  const precioPEN = (precio * tipoCambio).toFixed(2);
+                  return (
+                    <>
+                      <div>
+                        USD = ${precio.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                      </div>
+                      <small className="text-muted">
+                        SOL = S/
+                        {parseFloat(precioPEN).toLocaleString("es-PE", {
+                          minimumFractionDigits: 2,
+                        })}
+                      </small>
+                    </>
+                  );
+                }
+
+                // 🌍 Otras monedas (por si acaso)
+                return (
+                  <div>
+                    {nombre.toUpperCase()} = {simbolo}
+                    {precio.toLocaleString("es-PE", { minimumFractionDigits: 2 })}
+                  </div>
+                );
+              })()}
             </div>
           </div>
+
+
         </div>
 
         {/* 🏠 Título y dirección */}

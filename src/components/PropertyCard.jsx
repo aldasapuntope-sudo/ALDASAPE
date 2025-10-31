@@ -29,10 +29,13 @@ export default function PropertyCard({ anuncio }) {
   };
 
   return (
-    <Card
+   <Card
       className="property-box2 shadow-sm border-0 rounded-2 overflow-hidden h-100 property-card-hover"
-      onClick={handleClick}
       style={{ cursor: "pointer" }}
+      onClick={() => {
+        handleClick();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }}
     >
       <div className="position-relative">
         <img
@@ -47,7 +50,7 @@ export default function PropertyCard({ anuncio }) {
         </div>
 
         <div className="position-absolute bottom-0 start-0 bg-dark bg-opacity-75 text-white px-3 py-2 rounded-end">
-          <strong>S/ {anuncio.precio}</strong>
+          <strong>{anuncio.simbolo} {anuncio.precio}</strong>
         </div>
       </div>
 

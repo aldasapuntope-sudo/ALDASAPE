@@ -71,8 +71,8 @@ export default function PropiedadesRelacionadas({ tipoId, idpropiedad, operacion
           {principal.direccion}
         </div>
         <div className="item-price">
-          ${Number(principal.precio).toLocaleString()}
-          <span>/mo</span>
+          {principal.moneda_simbolo} {Number(principal.precio).toLocaleString()}
+          
         </div>
       </div>
 
@@ -85,7 +85,7 @@ export default function PropiedadesRelacionadas({ tipoId, idpropiedad, operacion
           <div className="item-img">
             <a href={generarSlug(item)}>
               <img
-                src={item.imagen_principal}
+                src={`${config.urlserver}${item.imagen_principal}`}
                 alt={item.titulo}
                 width="120"
                 height="102"
@@ -101,8 +101,7 @@ export default function PropiedadesRelacionadas({ tipoId, idpropiedad, operacion
               {item.direccion}
             </div>
             <div className="item-price">
-              ${Number(item.precio).toLocaleString()}
-              <span>/mo</span>
+              {principal.moneda_simbolo} {Number(item.precio).toLocaleString()}
             </div>
           </div>
         </div>

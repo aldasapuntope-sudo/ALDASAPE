@@ -122,7 +122,7 @@ export default function FloorPlans({ anuncio }) {
                         </li>
                       ))
                     ) : (
-                      <li className="list-inline-item ">Sin características</li>
+                      <li className="list-inline-item "></li>
                     )}
                   </ul>
                 </div>

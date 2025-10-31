@@ -49,6 +49,7 @@ const AnunciosList = ({ isPublish }) => {
         banos: a.banos,
         dormitorios: a.dormitorios,
         precio: a.precio,
+        moneda_id: a.moneda_id,
         direccion: a.direccion,
         isPublish: a.is_active_publish,
         imagen: a.imagen_principal
@@ -60,6 +61,7 @@ const AnunciosList = ({ isPublish }) => {
 
         caracteristicas: a.caracteristicas || [],
         caracteristicas_secundarios: a.amenities || [],
+        videos: a.videos || [],
       }));
 
       setAnuncios(anunciosAdaptados);
