@@ -52,7 +52,7 @@ export default function TiposPropiedadForm({ tipo, onClose }) {
         <div className="modal-content shadow-lg rounded-3 border-0">
           {/* Header */}
           <div className="modal-header bg-primary text-white">
-            <h5 className="modal-title">
+            <h5 className="modal-title text-white">
               {tipo ? "Editar Tipo de Propiedad" : "Agregar Tipo de Propiedad"}
             </h5>
             <button type="button" className="btn-close text-white" onClick={() => onClose(false)}>

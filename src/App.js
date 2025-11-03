@@ -48,6 +48,8 @@ import Nosotros from './pages/enlaces/Nosotros';
 import ConfiguracionesList from './pages/dashboard/administracion/ConfiguracionesList';
 import MensajesPage from './pages/dashboard/administracion/MensajesPage';
 import BitacoraList from './pages/dashboard/administracion/BitacoraList';
+import UsuariosPlanesList from './pages/dashboard/administracion/UsuariosPlanesList';
+import ResetPassword from './pages/iniciosession/ResetPassword';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -150,6 +152,8 @@ function AppRoutes() {
               <Route path="/login" element={<Login />} />
               <Route path="/registro" element={<Register />} />
               <Route path="/recover-password" element={<RecoverPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              
             </>
           )}
         </Route>
@@ -172,6 +176,12 @@ function AppRoutes() {
               path="/adm-planes"
               element={<RutaProtegida element={PlanesList} />}
             />
+
+            <Route
+              path="/adm-usuarioplanes"
+              element={<RutaProtegida element={UsuariosPlanesList} />}
+            />
+            
 
             <Route
               path="/adm-tdocumento"

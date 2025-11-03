@@ -100,11 +100,16 @@ export default function ConfiguracionForm({ ConfigItem, onClose }) {
     <div className="modal show fade d-block" tabIndex="-1" role="dialog">
       <div className="modal-dialog modal-lg modal-dialog-centered">
         <div className="modal-content shadow-lg border-0 rounded-3">
-          <div className="modal-header bg-primary text-white">
-            <h5 className="modal-title">
+          <div className="modal-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 className="modal-title text-white">
               {ConfigItem ? "Editar Configuración" : "Nueva Configuración"}
             </h5>
-            <button className="btn btn-light btn-sm rounded-circle" onClick={() => onClose(false)}>
+            <button 
+              type="button"
+              className="btn btn-light btn-sm rounded-circle"
+              onClick={() => onClose(false)}
+              title="Cerrar"
+            >
               <FaTimes />
             </button>
           </div>

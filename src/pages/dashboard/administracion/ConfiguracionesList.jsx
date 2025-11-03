@@ -3,10 +3,10 @@ import { FaPlus, FaEdit, FaTrash, FaCheck } from "react-icons/fa";
 import axios from "axios";
 import Swal from "sweetalert2";
 import Cargando from "../../../components/cargando";
-import DataTableBase from "./componentes/DataTableBase";
 import BreadcrumbALDASA from "../../../cuerpos_dashboard/BreadcrumbAldasa";
 import config from "../../../config";
 import ConfiguracionForm from "./componentes/ConfiguracionForm";
+import DataTableBase from "./componentes/DataTableBase";
 
 export default function ConfiguracionesList() {
   const [configuraciones, setConfiguraciones] = useState([]);
@@ -75,6 +75,42 @@ export default function ConfiguracionesList() {
   };
 
   const columns = [
+  {
+    name: "#",
+    selector: (row, i) => i + 1,
+    width: "70px",
+  },
+  {
+    name: "Clave",
+    selector: (row) => row.clave,
+    sortable: true,
+  },
+  {
+    name: "Tipo",
+    selector: (row) => row.tipo,
+    wrap: true,
+  },
+  {
+    name: "Valor",
+    selector: (row) => {
+      const valor = row.valor || "";
+      return valor.length > 20 ? valor.substring(0, 20) + "..." : valor;
+    },
+    sortable: true,
+    wrap: true,
+  },
+  {
+    name: "Estado",
+    selector: (row) => (
+      <span className={`badge ${row.is_active ? "bg-success" : "bg-secondary"}`}>
+        {row.is_active ? "Activo" : "Inactivo"}
+      </span>
+    ),
+    center: true,
+  },
+];
+
+  /*const columns = [
     { name: "#", selector: (row, i) => i + 1, width: "70px", center: true },
     { name: "Clave", selector: (row) => row.clave, sortable: true },
     { name: "Tipo", selector: (row) => row.tipo, sortable: true, center: true },
@@ -88,7 +124,7 @@ export default function ConfiguracionesList() {
       ),
       center: true,
     },
-  ];
+  ];*/
 
   const actions = (row) => (
     <div className="text-center">
@@ -119,7 +155,7 @@ export default function ConfiguracionesList() {
       <div className="container mt-4">
         <BreadcrumbALDASA />
         <div className="d-flex justify-content-between align-items-center mb-3 mt-3">
-          <h3 className="fw-bold">Configuraciones</h3>
+          <h3 className="fw-bold"></h3>
           <button className="btn btn-primary" onClick={handleAdd}>
             <FaPlus className="me-2" /> Nueva configuración
           </button>

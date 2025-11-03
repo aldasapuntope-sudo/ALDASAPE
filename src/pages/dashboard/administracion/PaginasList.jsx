@@ -118,7 +118,7 @@ export default function PaginasList() {
       <div className="container mt-4">
         <BreadcrumbALDASA />
         <div className="d-flex justify-content-between align-items-center mb-3 mt-3">
-          <h3 className="fw-bold">Páginas</h3>
+          <h3 className="fw-bold"></h3>
           <button className="btn btn-primary" onClick={handleAdd}>
             <FaPlus className="me-2" /> Agregar nueva
           </button>

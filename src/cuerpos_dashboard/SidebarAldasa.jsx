@@ -30,7 +30,7 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
     setOpenMenu(openMenu === menu ? null : menu);
   };
 
-  console.log(usuario?.usuarioaldasa.perfil_id);
+  
 
   // Cargar modo desde localStorage
   useEffect(() => {
@@ -97,6 +97,12 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
                       className={`submenu-link ${location.pathname.startsWith('/adm-planes') ? 'active' : ''}`}
                     >
                       <Link to="/adm-planes" onClick={toggleSidebar}>Planes</Link>
+                    </li>
+
+                    <li
+                      className={`submenu-link ${location.pathname.startsWith('/adm-usuarioplanes') ? 'active' : ''}`}
+                    >
+                      <Link to="/adm-usuarioplanes" onClick={toggleSidebar}>Planes Usuarios</Link>
                     </li>
 
                     <li

@@ -63,7 +63,7 @@ export default function PlanForm({ plan, onClose }) {
       <div className="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div className="modal-content shadow-lg border-0 rounded-3">
           <div className="modal-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h5 className="modal-title mb-0">
+            <h5 className="modal-title text-white mb-0">
               {plan ? "Editar Plan" : "Agregar Nuevo Plan"}
             </h5>
             <button
