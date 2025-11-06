@@ -5,6 +5,7 @@ import "../../css/TerminosCondiciones.css";
 import Breadcrumb from "../../components/Breadcrumb";
 import NotFound from "../../components/NotFound";
 import { SkeletonInformacion } from "../../components/TablaSkeleton";
+import config from "../../config";
 
 export default function Nosotros() {
   const [data, setData] = useState(null);
@@ -14,7 +15,7 @@ export default function Nosotros() {
     const fetchData = async () => {
       try {
         // 🔗 Endpoint para la sección "Nosotros"
-        const res = await axios.get("http://127.0.0.1:8000/api/paginaprincipal/nosotros");
+        const res = await axios.get(`${config.apiUrl}api/paginaprincipal/nosotros`);
         setData(res.data[0]); // toma el primer registro del array
       } catch (error) {
         console.error("Error al obtener información de Nosotros:", error);

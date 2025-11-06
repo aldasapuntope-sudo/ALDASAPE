@@ -4,7 +4,7 @@ import { TablaSkeleton } from "../../../../components/TablaSkeleton";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import { FaFileExcel, FaFilePdf } from "react-icons/fa";
+import { FaFileExcel, FaFilePdf, FaSearch } from "react-icons/fa";
 
 export default function DataTableBase({
   title,
@@ -223,13 +223,19 @@ export default function DataTableBase({
 
           <div className="col-sm-6">
             <div>
-              <input
-                type="text"
-                className="form-control w-100"
-                placeholder="🔍 Buscar..."
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-              />
+              <div className="position-relative w-100">
+                <FaSearch
+                  className="position-absolute top-50 translate-middle-y text-muted"
+                  style={{ left: "10px", color: "var(--green) !important" }}
+                />
+                <input
+                  type="text"
+                  className="form-control ps-4"
+                  placeholder="Buscar..."
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                />
+              </div>
             </div>
           </div>
 

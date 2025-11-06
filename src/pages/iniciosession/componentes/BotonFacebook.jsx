@@ -57,7 +57,7 @@ export default function BotonFacebook({ setUsuario }) {
     <>
       <Cargando visible={cargando} />
       <FacebookLogin
-        appId="783811897859933"
+        appId="1930027897893635"
         fields="name,email,picture"
         callback={responseFacebook}
         render={({ onClick }) => (

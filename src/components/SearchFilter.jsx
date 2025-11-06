@@ -178,13 +178,14 @@ export default function SearchFilter({ mode, setMode }) {
           )}
         </div>
 
-        <button
-          className="btn btn-green"
-          type="submit"
-          disabled={!tipo}
-        >
-          Buscar
-        </button>
+        {tipo && (
+          <button
+            className="btn btn-green"
+            type="submit"
+          >
+            Buscar
+          </button>
+        )}
       </form>
     </div>
   );

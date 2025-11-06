@@ -5,6 +5,7 @@ import "../../css/TerminosCondiciones.css";
 import Breadcrumb from "../../components/Breadcrumb";
 import NotFound from "../../components/NotFound";
 import { SkeletonInformacion } from "../../components/TablaSkeleton";
+import config from "../../config";
 
 export default function PoliticasPrivacidad() {
   const [data, setData] = useState(null);
@@ -14,7 +15,7 @@ export default function PoliticasPrivacidad() {
     const fetchData = async () => {
       try {
         // Llamada a tu API de Laravel
-        const res = await axios.get("http://127.0.0.1:8000/api/paginaprincipal/politicas-privacidad");
+        const res = await axios.get(`${config.apiUrl}api/paginaprincipal/politicas-privacidad`);
         setData(res.data[0]);
       } catch (error) {
         console.error("Error al obtener Políticas de Privacidad:", error);

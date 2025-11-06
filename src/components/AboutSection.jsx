@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import { FaPlay } from "react-icons/fa";
 import axios from "axios";
 import "../css/AboutSection.css";
-import config from "../config";
 import { SkeletonInformacion } from "./TablaSkeleton";
+import config from "../config";
 
 
 export default function AboutSection() {
@@ -16,7 +16,7 @@ export default function AboutSection() {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          "http://127.0.0.1:8000/api/paginaprincipal/quienes-somos"
+          `${config.apiUrl}api/paginaprincipal/quienes-somos`
         );
         setData(res.data[0]);
       } catch (error) {

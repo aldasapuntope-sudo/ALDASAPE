@@ -24,11 +24,18 @@ export default function RecoverPassword() {
 
       setEmail('');
     } catch (error) {
+      console.error("Error en la respuesta:", error.response?.data);
+
+      const mensaje =
+        error.response?.data?.errors?.email?.[0] ||
+        error.response?.data?.message ||
+        'No se pudo enviar el enlace. Inténtalo nuevamente.';
+
       Swal.fire({
         title: 'Error',
-        text: error.response?.data?.message || 'No se pudo enviar el enlace. Inténtalo nuevamente.',
+        text: mensaje,
         icon: 'error',
-        confirmButtonColor: '#dc3545', // rojo Bootstrap
+        confirmButtonColor: '#dc3545',
       });
     } finally {
       setLoading(false);

@@ -182,7 +182,19 @@ button.btn.btn-outline-success:hover {
   border: 0;
 }
 
+input.form-control.ps-4 {
+  padding-left: 1.9rem !important;
+}
 
+span.badge.bg-success {
+  background: var(--green) !important;
+  font-size: 10px;
+}
+
+span.badge.bg-secondary {
+  background: red !important;
+  font-size: 10px;
+}
 
 /* Footer */
 .footer{background:#fafafa; padding:28px 0; text-align:center; color:var(--muted)}

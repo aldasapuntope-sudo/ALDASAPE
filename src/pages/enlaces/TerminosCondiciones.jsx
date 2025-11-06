@@ -5,6 +5,7 @@ import "../../css/TerminosCondiciones.css";
 import Breadcrumb from "../../components/Breadcrumb";
 import NotFound from "../../components/NotFound";
 import { SkeletonInformacion } from "../../components/TablaSkeleton";
+import config from "../../config";
 
 export default function TerminosCondiciones() {
   const [data, setData] = useState(null);
@@ -14,7 +15,7 @@ export default function TerminosCondiciones() {
     const fetchData = async () => {
       try {
         // 🔗 Endpoint dinámico desde Laravel
-        const res = await axios.get("http://127.0.0.1:8000/api/paginaprincipal/terminos-condiciones");
+        const res = await axios.get(`${config.apiUrl}api/paginaprincipal/terminos-condiciones`);
         setData(res.data[0]); // tomamos el primer registro
       } catch (error) {
         console.error("Error al obtener Términos y Condiciones:", error);
