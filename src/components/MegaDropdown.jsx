@@ -3,6 +3,8 @@ import React from "react";
 export default function MegaDropdown({ data, mode }) {
   if (!data) return null;
 
+  const BASE_URL = window.location.origin; // Detecta automáticamente http://localhost:3000 o el dominio actual
+
   // Si data es un objeto con secciones
   if (!Array.isArray(data)) {
     const sections = Object.entries(data);
@@ -12,7 +14,6 @@ export default function MegaDropdown({ data, mode }) {
         <div className="container">
           <div className="row">
             {sections.map(([sectionName, items]) => {
-              // Determinar el título
               let title =
                 sectionName === "tipo"
                   ? "TIPO DE PROPIEDADES"
@@ -24,32 +25,36 @@ export default function MegaDropdown({ data, mode }) {
 
                   {Array.isArray(items) && items.length > 0 ? (
                     items.map((item) => {
-                      // 👇 Parametro y valor correctos
-                      let paramName = "";
-                      let paramValue = "";
+                      let url = "#";
 
+                      // 🔹 Si es tipo o ciudad, va a /buscar
                       if (sectionName === "tipo") {
-                        paramName = "tipo";
-                        paramValue = item.id; // ✅ usar ID
+                        url = `/buscar?tipo=${item.id}${
+                          mode ? `&mode=${mode}` : ""
+                        }`;
                       } else if (sectionName === "ciudad") {
-                        paramName = "ciudad";
-                        paramValue = encodeURIComponent(item.nombre); // ✅ usar nombre
-                      } else {
-                        paramName = sectionName;
-                        paramValue = encodeURIComponent(item.nombre);
+                        url = `/buscar?ciudad=${encodeURIComponent(
+                          item.nombre
+                        )}${mode ? `&mode=${mode}` : ""}`;
                       }
-
-                      const url = `/buscar?${paramName}=${paramValue}${
-                        mode ? `&mode=${mode}` : ""
-                      }`;
+                      // 🔹 Si es propiedades más vistas, usar URL amigable completa
+                      else if (sectionName === "propiedades_mas_vistas") {
+                        url = `${item.url}`;
+                      }
 
                       return (
                         <a
                           key={item.id || item.nombre}
                           className="dropdown-item"
                           href={url}
+                          target={
+                            sectionName === "propiedades_mas_vistas"
+                              ? "_blank"
+                              : "_self"
+                          }
+                          rel="noopener noreferrer"
                         >
-                          {item.nombre}
+                          {item.titulo || item.nombre}
                         </a>
                       );
                     })

@@ -143,8 +143,8 @@ export default function FloorPlans({ anuncio }) {
             >
               <div className="card-body text-center">
                 <div
-                  className="item-img"
-                  style={{ cursor: "pointer" }}
+                  className="item-img position-relative"
+                  style={{ cursor: "pointer", overflow: "hidden" }}
                   onClick={() => openFullscreen(index)}
                 >
                   <img
@@ -154,10 +154,20 @@ export default function FloorPlans({ anuncio }) {
                         : `${config.urlserver}${plano.imagen}`
                     }
                     alt={`${plano.titulo || "Plano"} ${anuncio.titulo}`}
-                    className="img-fluid rounded shadow-sm"
-                    style={{ maxHeight: "350px", objectFit: "cover" }}
+                    className="img-fluid rounded shadow-sm w-100"
+                    style={{
+                      maxHeight: "350px",
+                      objectFit: "cover",
+                      transition: "transform 0.3s ease",
+                    }}
                   />
+
+                  {/* Overlay al pasar el mouse */}
+                  <div className="overlay-expand">
+                    <span>Haz clic aquí para expandir</span>
+                  </div>
                 </div>
+
               </div>
             </div>
           </div>

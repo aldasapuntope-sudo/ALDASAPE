@@ -135,6 +135,14 @@ h1, h2, h3, h4, h5, h6 {
     z-index: 5;
 }
 
+
+.property-box2 .item-img img {
+  height: 140px;         /* puedes ajustar la altura según tu diseño */
+  object-fit: cover;     /* recorta la imagen sin distorsionarla */
+  object-position: center; /* centra la parte visible */
+  border-radius: 10px;   /* opcional: esquinas redondeadas */
+}
+
 .property-box4 .item-img img {
     border-radius: 6px;
 }

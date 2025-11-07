@@ -54,7 +54,7 @@ export default function SkeletonBuscarPage() {
 
           {/* COLUMNA DERECHA */}
           <div className="col-lg-8">
-            <CardSkeleton cards={3} />
+            <CardSkeleton cards={1} />
           </div>
         </div>
       </div>
