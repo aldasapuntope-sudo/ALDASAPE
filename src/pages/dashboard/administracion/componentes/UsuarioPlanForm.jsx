@@ -10,6 +10,7 @@ export default function UsuarioPlanForm({ planUsuario, onClose }) {
   const [usuarios, setUsuarios] = useState([]);
   const [planes, setPlanes] = useState([]);
 
+
   // Cargar combos
   useEffect(() => {
     const fetchCombos = async () => {
@@ -33,8 +34,8 @@ export default function UsuarioPlanForm({ planUsuario, onClose }) {
     initialValues: {
       user_id: planUsuario?.user_id || "",
       plan_id: planUsuario?.plan_id || "",
-      fecha_inicio: planUsuario?.fecha_inicio || "",
-      fecha_fin: planUsuario?.fecha_fin || "",
+      fecha_inicio: planUsuario?.fecha_inicio?.split(" ")[0] || "", // quita hora si viene con timestamp
+      fecha_fin: planUsuario?.fecha_fin?.split(" ")[0] || "",
       anuncios_disponibles: planUsuario?.anuncios_disponibles || 0,
       estado: planUsuario?.estado || "activo",
       is_active: planUsuario?.is_active ?? 1,
@@ -50,6 +51,7 @@ export default function UsuarioPlanForm({ planUsuario, onClose }) {
         .required("Campo obligatorio"),
     }),
     onSubmit: async (values) => {
+      console.log(values);
       try {
         if (planUsuario) {
           await axios.put(
@@ -87,6 +89,7 @@ export default function UsuarioPlanForm({ planUsuario, onClose }) {
             <div className="modal-body">
               <div className="row">
                 {/* Usuario */}
+                {/* Usuario */}
                 <div className="col-md-6 mb-3">
                   <label className="fw-semibold">Usuario</label>
                   <select
@@ -97,6 +100,7 @@ export default function UsuarioPlanForm({ planUsuario, onClose }) {
                     value={formik.values.user_id}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
+                    disabled={!!planUsuario} // 🔹 Deshabilita el campo si es edición
                   >
                     <option value="">Seleccione usuario</option>
                     {usuarios.map((u) => (
@@ -107,6 +111,7 @@ export default function UsuarioPlanForm({ planUsuario, onClose }) {
                   </select>
                   <div className="invalid-feedback">{formik.errors.user_id}</div>
                 </div>
+
 
                 {/* Plan */}
                 <div className="col-md-6 mb-3">

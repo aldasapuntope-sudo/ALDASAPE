@@ -26,6 +26,8 @@ export default function PlanesList() {
     }
   };
 
+  console.log(planes);
+
   useEffect(() => {
     fetchPlanes();
   }, []);
