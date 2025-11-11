@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios"; 
 import DataTable from "react-data-table-component";
 import { Card, Button, Alert, Modal } from "react-bootstrap";
 import { FaThLarge, FaList, FaEye, FaEdit, FaPlus } from "react-icons/fa"; // 👈 Se agregó FaPlus
@@ -29,11 +30,12 @@ const AnunciosList = ({ isPublish }) => {
   const cargarDatos = async () => {
     setCargando(true);
     try {
-      const res = await fetch(
+      const res = await axios.get(
         `${config.apiUrl}api/misanuncios/listar/${isPublish}/${usuario.usuarioaldasa.id}`
       );
-      
-      const data = await res.json();
+
+      // Axios ya convierte la respuesta a JSON automáticamente
+      const data = res.data;
       
       const anunciosAdaptados = (Array.isArray(data) ? data : data.data || []).map((a) => ({
         id: a.id,

@@ -236,7 +236,8 @@
   }
 
   thead.table-primary {
-      --bs-table-bg: #013a85 !important;
+    --bs-table-bg: var(--green)!important;
+      /*--bs-table-bg: #013a85 !important;*/
       --bs-table-color: white !important;
   }
 
@@ -411,7 +412,8 @@
   /* Responsive */
   @media (max-width: 768px) {
     .logounj {
-    width: 40% !important;
+    /*width: 40% !important;*/
+    width: 90% !important;
     margin-bottom: 10px !important;
     /* margin-top: 27px; */
     margin-top: 4px;

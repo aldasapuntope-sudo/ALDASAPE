@@ -92,7 +92,7 @@
   }
   
   .sidebar-content::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
+    background-color: #f1f1f1; 
   }
 
   .btn-outline-UNJ{
@@ -115,7 +115,8 @@
   }
   
   .logounj {
-    width: 70%;
+    /*width: 70%;*/
+    width: 90%;
     margin-bottom: 10px !important;
     /*margin-top: 27px;*/
     margin-top: 4px;
@@ -176,7 +177,8 @@
   }*/
   
   .submenu.open {
-    max-height: 300px; /* ajusta según el tamaño */
+    /*max-height: 300px; /* ajusta según el tamaño */
+    max-height: max-content;
     opacity: 1;
     transform: translateY(0);
   }
@@ -215,6 +217,7 @@
   .submenu .active a {
     font-weight: bold;
     color: #565756;
+    display: block;
   }
   
   

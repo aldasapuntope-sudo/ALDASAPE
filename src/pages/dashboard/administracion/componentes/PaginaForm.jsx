@@ -137,7 +137,7 @@ export default function PaginaForm({ Pagina, onClose }) {
         <div className="modal-content shadow-lg border-0 rounded-3">
           {/* HEADER */}
           <div className="modal-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h5 className="modal-title text-white mb-0">
+            <h5 className="modal-title text-white">
               {Pagina ? "Editar Página" : "Agregar Nueva Página"}
             </h5>
             <button

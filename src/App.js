@@ -50,6 +50,8 @@ import MensajesPage from './pages/dashboard/administracion/MensajesPage';
 import BitacoraList from './pages/dashboard/administracion/BitacoraList';
 import UsuariosPlanesList from './pages/dashboard/administracion/UsuariosPlanesList';
 import ResetPassword from './pages/iniciosession/ResetPassword';
+import UbicacionesList from './pages/dashboard/administracion/UbicacionesList';
+import MisFavoritos from './pages/dashboard/mis-anuncios/mis-favoritos';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -220,6 +222,11 @@ function AppRoutes() {
             />
 
             <Route
+              path="/adm-ubicaciones"
+              element={<RutaProtegida element={UbicacionesList} />}
+            />
+
+            <Route
               path="/adm-bitacora"
               element={<RutaProtegida element={BitacoraList} />}
             />
@@ -247,6 +254,11 @@ function AppRoutes() {
               element={<RutaProtegida element={AnunciosRevision} />}
             />
 
+            <Route 
+              path="/mis-favoritos" 
+              element={<RutaProtegida element={MisFavoritos} />}
+            />
+            
             <Route
               path="/mensajes"
               element={<RutaProtegida element={MensajesPage} />}

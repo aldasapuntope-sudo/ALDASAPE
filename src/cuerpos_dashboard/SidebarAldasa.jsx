@@ -143,6 +143,13 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
                     </li>
 
                     <li
+                      className={`submenu-link ${location.pathname.startsWith('/adm-ubicaciones') ? 'active' : ''}`}
+                    >
+                      <Link to="/adm-ubicaciones" onClick={toggleSidebar}>Gestionar Ubicaciones</Link>
+                    </li>
+
+
+                    <li
                       className={`submenu-link ${location.pathname.startsWith('/adm-configuraciones') ? 'active' : ''}`}
                     >
                       <Link to="/adm-configuraciones" onClick={toggleSidebar}>Gestionar configuración</Link>
@@ -174,6 +181,12 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
               </button>
               
                 <ul className={`submenu ${openMenu === 'mis-anuncios' ? 'open' : ''}`}>
+                  
+                  <li
+                    className={`submenu-link ${location.pathname.startsWith('/mis-favoritos') ? 'active' : ''}`}
+                  >
+                    <Link to="/mis-favoritos" onClick={toggleSidebar}>Mis Anuncios Favoritos</Link>
+                  </li>
                   <li
                     className={`submenu-link ${location.pathname.startsWith('/nuevo-anuncio') ? 'active' : ''}`}
                   >
@@ -216,7 +229,7 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
         )}
 
         {/* Si el modo es "evaluacion", mostramos solo ese menú */}
-        {modo === 'evaluacion' && (
+        {modo === 'evaluacion' && ( 
           <Link
             to="/estudiante/evaluacion"
             className={`menu-btn ${location.pathname === '/estudiante/evaluacion' ? 'active' : ''}`}

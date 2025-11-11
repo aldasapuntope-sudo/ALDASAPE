@@ -73,14 +73,14 @@ export default function UsuarioPlanForm({ planUsuario, onClose }) {
       }
     },
   });
-
+ 
   return (
     <div className="modal show fade d-block" tabIndex="-1" role="dialog">
       <div className="modal-dialog modal-lg modal-dialog-centered">
         <div className="modal-content shadow">
-          <div className="modal-header bg-primary text-white">
-            <h5>{planUsuario ? "Editar Asignación" : "Asignar Plan a Usuario"}</h5>
-            <button className="btn btn-light btn-sm" onClick={() => onClose(false)}>
+          <div className="modal-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 className="modal-title text-white">{planUsuario ? "Editar Asignación" : "Asignar Plan a Usuario"}</h5>
+            <button className="btn btn-light btn-sm rounded-circle" onClick={() => onClose(false)}>
               <FaTimes />
             </button>
           </div>

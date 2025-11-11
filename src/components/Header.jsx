@@ -103,12 +103,12 @@ export default function HeaderAldasa({ abrirModal }) {
               // ✅ MENÚS PARA USUARIO LOGUEADO
               <>
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/subir-anuncio">
+                  <NavLink className="nav-link" to="/nuevo-anuncio">
                     Subir anuncio
                   </NavLink>
                 </li>
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/mis-anuncios">
+                  <NavLink className="nav-link" to="/anuncios-activos">
                     Mis anuncios
                   </NavLink>
                 </li>
