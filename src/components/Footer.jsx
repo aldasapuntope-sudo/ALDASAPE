@@ -42,7 +42,7 @@ export default function Footer({ fondo = "imagen" }) {
                         ? configuracion.logo.startsWith("http")
                           ? configuracion.logo
                           : `${config.urlserver}${configuracion.logo}`
-                        : "/assets/images/default-logo.png"
+                        : "/assets/images/logo-aldasape-color.png"
                     }
                     width="157"
                     height="40"

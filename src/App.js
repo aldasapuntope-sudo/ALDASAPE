@@ -52,6 +52,7 @@ import UsuariosPlanesList from './pages/dashboard/administracion/UsuariosPlanesL
 import ResetPassword from './pages/iniciosession/ResetPassword';
 import UbicacionesList from './pages/dashboard/administracion/UbicacionesList';
 import MisFavoritos from './pages/dashboard/mis-anuncios/mis-favoritos';
+import Publicatuanuncio from './pages/enlaces/Publicatuanuncio';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -144,6 +145,7 @@ function AppRoutes() {
           />
           <Route path="/anuncio/:slug" element={<PropertyDetail />} />
           <Route path="/terminos-condiciones" element={<TerminosCondiciones />} />
+          <Route path="/publica-tu-aviso" element={<Publicatuanuncio />} />
           <Route path="/nosotros" element={<Nosotros />} />
           <Route path="/politicas-de-privacidad" element={<PoliticasPrivacidad />} />
           <Route path="/buscar" element={<BuscarPage />} />
