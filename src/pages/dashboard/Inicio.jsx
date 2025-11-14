@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from 'recharts';
-import { FaCheckCircle, FaClock } from 'react-icons/fa';
+import { FaCheckCircle, FaClock, FaEye } from 'react-icons/fa';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import config from '../../config';// 👈 Asegúrate de que la ruta sea correcta
@@ -22,6 +22,7 @@ function Inicio() {
   const [favoritos, setFavoritos] = useState([]);
   const [publicacionesCirculacion, setPublicacionesCirculacion] = useState(0);
   const [publicacionesRevision, setPublicacionesRevision] = useState(0);
+  const [publicacionesVendidas, setPublicacionesVendidas] = useState(0);
 
   useEffect(() => {
     const cargarDatos = async () => {
@@ -34,8 +35,8 @@ function Inicio() {
         );
         const dataCirculacion = resCirculacion.data;
 
-        const favoritosAdaptados = dataCirculacion.map(item => ({
-          nombre: item.titulo,
+        const favoritosAdaptados = dataCirculacion.map((item, index) => ({
+          nombre: item.id + '-' + item.titulo,
           vistas: item.visitas,
           ubicacion: item.ubicacion
         }));
@@ -49,6 +50,12 @@ function Inicio() {
         const dataRevision = resRevision.data;
         setPublicacionesRevision(dataRevision.length);
 
+        const resVendidas = await axios.get(
+          `${config.apiUrl}api/misanuncios/listar/2/${usuario.usuarioaldasa.id}`
+        );
+        const dataVendidas = resVendidas.data;
+        setPublicacionesVendidas(dataVendidas.length);
+
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       } finally {
@@ -60,6 +67,8 @@ function Inicio() {
       cargarDatos();
     }
   }, [usuario]);
+
+  console.log(favoritos);
 
   return (
     <>
@@ -89,23 +98,46 @@ function Inicio() {
           {/* Columna Derecha: Totales */}
           <div className="col-md-4">
             <div className="d-flex flex-column gap-3">
+              
               {/* Tarjeta 1 */}
-              <div className="bg-white rounded-4 shadow-sm p-4 d-flex align-items-center justify-content-between">
+              <div
+                className="bg-white rounded-4 shadow-sm p-4 d-flex align-items-center justify-content-between cursor-pointer"
+                style={{ cursor: "pointer" }}
+                onClick={() => (window.location.href = "/anuncios-activos")}
+              >
                 <div>
                   <h6 className="text-secondary mb-1">En circulación</h6>
                   <h3 className="text-success fw-bold">{publicacionesCirculacion}</h3>
                 </div>
-                <FaCheckCircle size={40} className="text-success" />
+                <FaEye size={40} className="text-success" />
               </div>
 
               {/* Tarjeta 2 */}
-              <div className="bg-white rounded-4 shadow-sm p-4 d-flex align-items-center justify-content-between">
+              <div
+                className="bg-white rounded-4 shadow-sm p-4 d-flex align-items-center justify-content-between"
+                style={{ cursor: "pointer" }}
+                onClick={() => (window.location.href = "/anuncios-revision")}
+              >
                 <div>
                   <h6 className="text-secondary mb-1">En revisión</h6>
                   <h3 className="text-warning fw-bold">{publicacionesRevision}</h3>
                 </div>
                 <FaClock size={40} className="text-warning" />
               </div>
+
+              {/* Tarjeta 3 */}
+              <div
+                className="bg-white rounded-4 shadow-sm p-4 d-flex align-items-center justify-content-between"
+                style={{ cursor: "pointer" }}
+                onClick={() => (window.location.href = "/anuncios-vendidos")}
+              >
+                <div>
+                  <h6 className="text-secondary mb-1">Propiedades Vendidas</h6>
+                  <h3 className="text-info fw-bold">{publicacionesVendidas}</h3>
+                </div>
+                <FaCheckCircle size={40} className="text-info" />
+              </div>
+
             </div>
           </div>
         </div>

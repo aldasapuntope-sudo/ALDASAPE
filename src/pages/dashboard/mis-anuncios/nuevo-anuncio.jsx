@@ -631,7 +631,7 @@ useEffect(() => {
       </h2>
       <div
         id="collapseImgsAdic"
-        className="accordion-collapse collapse"
+        className="accordion-collapse collapse show"
         aria-labelledby="headingImgsAdic"
         data-bs-parent="#accordionImagenesAdicionales"
       >
@@ -722,7 +722,7 @@ useEffect(() => {
       </h2>
       <div
         id="collapseCarac"
-        className="accordion-collapse collapse"
+        className="accordion-collapse collapse show"
         aria-labelledby="headingCarac"
         data-bs-parent="#accordionCaracteristicas"
       >
@@ -787,7 +787,7 @@ useEffect(() => {
       </h2>
       <div
         id="collapseAmen"
-        className="accordion-collapse collapse"
+        className="accordion-collapse collapse show"
         aria-labelledby="headingAmen"
         data-bs-parent="#accordionAmenities"
       >
@@ -842,7 +842,7 @@ useEffect(() => {
     </h2>
     <div
       id="collapsePlanos"
-      className="accordion-collapse collapse"
+      className="accordion-collapse collapse show"
       aria-labelledby="headingPlanos"
       data-bs-parent="#accordionPlanos"
     >
@@ -950,7 +950,7 @@ useEffect(() => {
       </h2>
       <div
         id="collapseVideo"
-        className="accordion-collapse collapse"
+        className="accordion-collapse collapse show"
         aria-labelledby="headingVideo"
         data-bs-parent="#accordionVideo"
       >

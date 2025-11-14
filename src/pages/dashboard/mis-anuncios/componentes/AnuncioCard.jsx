@@ -6,10 +6,15 @@ import {
   FaBed,
   FaBath,
   FaRulerCombined,
-  FaEye
+  FaEye,
+  FaCheck 
 } from "react-icons/fa";
 import { Card } from "react-bootstrap";
 import config from "../../../../config";
+import Switch from "@mui/material/Switch";
+import axios from "axios";
+import Swal from "sweetalert2";
+
 
 export default function AnuncioCard({ anuncio }) {
 
@@ -19,9 +24,75 @@ export default function AnuncioCard({ anuncio }) {
   : "https://aldasa.pe/wp-content/themes/theme_aldasape/img/comprar-inmueble.jpg";
 
 
-  
+  const generarSlug = (id, titulo, ubicacion) => {
+    const slug = `${titulo}-${ubicacion}`
+      .toLowerCase()
+      .replace(/ /g, "-")
+      .replace(/[^\w-]+/g, "");
+
+    return `${id}-${slug}`;
+  };
+
+
+  const slug = generarSlug(anuncio.id, anuncio.titulo, anuncio.ubicacion);
+const urlAmigable = `/anuncio/${slug}`;
+
+ const toggleVendido = async (id, isChecked) => {
+    try {
+      // Mostrar cargando
+      Swal.fire({
+        title: "Actualizando...",
+        text: "Por favor espere",
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+      });
+
+      // Enviar petición
+      await axios.post(
+        `${config.apiUrl}api/misanuncios/vendido/${id}`,
+        { vendido: isChecked },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      // Cerrar el loader
+      Swal.close();
+
+      // Preguntar si desea ver los vendidos
+      Swal.fire({
+        title: "Estado actualizado",
+        text: "¿Desea ver todos los artículos vendidos?",
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonText: "Sí, ver vendidos",
+        cancelButtonText: "No, quedarme aquí",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = "/anuncios-vendidos";
+        }
+      });
+
+    } catch (error) {
+      Swal.close();
+      console.error("Error actualizando:", error);
+
+      Swal.fire({
+        title: "Error",
+        text: "No se pudo actualizar el estado.",
+        icon: "error",
+      });
+    }
+  };
+
+
+
+
+
   return (
-    <Card className="property-box2 shadow-sm border-0 rounded-4 overflow-hidden h-100">
+    <Card
+      className="property-box2 shadow-sm border-0 rounded-4 overflow-hidden h-100"
+      style={{ cursor: "pointer" }}
+      onClick={() => (window.location.href = urlAmigable)}
+    >
       {/* Imagen */}
       <div className="position-relative">
         <img
@@ -40,7 +111,7 @@ export default function AnuncioCard({ anuncio }) {
 
         {/* Precio */}
         <div className="position-absolute bottom-0 start-0 bg-dark bg-opacity-75 text-white px-3 py-2 rounded-end">
-          <strong>S/ {anuncio.precio}</strong>
+          <strong>{anuncio.simbolo} {anuncio.precio}</strong>
         </div>
 
         {/* Íconos */}
@@ -91,8 +162,8 @@ export default function AnuncioCard({ anuncio }) {
         </ul>
         
 
-        {/* Características secundarias / amenities */}
-        <div className="d-flex flex-wrap gap-2 mt-2" style={{float:'right'}}>
+        {/* Características secundarias / amenities style={{float:'right'}}*/}
+        <div className="d-flex flex-wrap gap-2 mt-2">
           {anuncio.caracteristicas_secundarios?.length > 0 &&
             anuncio.caracteristicas_secundarios.map((amenity, index) => (
               <div
@@ -119,6 +190,35 @@ export default function AnuncioCard({ anuncio }) {
               </div>
             ))}
         </div>
+     
+        
+        {/* Switch VENDIDO / NO VENDIDO */}
+        <div className="d-flex justify-content-end align-items-center mt-3">
+
+          {anuncio.isPublish === 2 ? (
+            // 🟩 YA VENDIDO → Mostrar BADGE verde
+            <span className="px-3 py-1 rounded-pill text-white fw-semibold"
+                  style={{ backgroundColor: "#28a745" }}>
+               <FaCheck /> Vendido
+            </span>
+          ) : (
+            // 🔘 NO VENDIDO → Mostrar SWITCH
+            <>
+              <span className="me-2 fw-semibold">No vendido</span>
+
+              <Switch
+                checked={anuncio.vendido === true}
+                onChange={(e) => toggleVendido(anuncio.id, e.target.checked)}
+                color="success"
+              />
+            </>
+          )}
+
+        </div>
+
+
+
+
       </Card.Body>
     </Card>
   );

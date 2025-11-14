@@ -51,6 +51,7 @@ const AnunciosList = ({ isPublish }) => {
         banos: a.banos,
         dormitorios: a.dormitorios,
         precio: a.precio,
+        simbolo: a.moneda_simbolo,
         moneda_id: a.moneda_id,
         direccion: a.direccion,
         isPublish: a.is_active_publish,
@@ -132,25 +133,34 @@ const AnunciosList = ({ isPublish }) => {
           <span className="bg-success text-light px-2 py-1 rounded text-uppercase small d-flex align-items-center justify-content-center">
             <FaEye className="me-1" /> En circulación
           </span>
-        ) : (
+        ) : row.isPublish === 0 ? (
           <span className="bg-warning text-dark px-2 py-1 rounded text-uppercase small d-flex align-items-center justify-content-center">
             <FaEye className="me-1" /> En revisión
           </span>
+        ) : (
+          <span className="bg-primary text-light px-2 py-1 rounded text-uppercase small d-flex align-items-center justify-content-center" style={{background: 'var(--green) !important'}}>
+            <FaEye className="me-1" /> Vendido
+          </span>
         ),
     },
+
     {
       name: "Acciones",
       center: true,
-      cell: (row) => (
-        <Button
-          variant="outline-success"
-          size="sm"
-          onClick={() => handleEditar(row)}
-        >
-          <FaEdit />
-        </Button>
-      ),
+      cell: (row) =>
+        row.isPublish !== 2 ? (
+          <Button
+            variant="outline-success"
+            size="sm"
+            onClick={() => handleEditar(row)}
+          >
+            <FaEdit />
+          </Button>
+        ) : (
+          <span className="text-muted small">—</span> // opcional, puedes dejarlo vacío
+        ),
     },
+
   ];
 
   const customStyles = {
@@ -179,7 +189,12 @@ const AnunciosList = ({ isPublish }) => {
             {/* 🔹 Encabezado */}
             <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
               <h4 className="mb-0 text-success fw-bold">
-                {isPublish === 1 ? "Anuncios Activos" : "Anuncios en Revisión"}
+                {isPublish === 1
+                  ? "Anuncios Activos"
+                  : isPublish === 0
+                  ? "Anuncios en Revisión"
+                  : "Anuncios Vendidos"}
+
               </h4>
               
               <div className="d-flex gap-2">
@@ -222,7 +237,9 @@ const AnunciosList = ({ isPublish }) => {
                 <p className="mb-0">
                   {isPublish === 1
                     ? "Actualmente no tienes anuncios activos."
-                    : "No tienes anuncios en revisión por el momento."}
+                    : isPublish === 0
+                      ? "No tienes anuncios en revisión por el momento."
+                      : "No tienes anuncios vendidos por el momento."}
                 </p>
               </Alert>
             ) : view === "list" ? (
@@ -241,6 +258,7 @@ const AnunciosList = ({ isPublish }) => {
                   <div className="col-md-4 mb-4" key={item.id}>
                     <div className="position-relative">
                       <AnuncioCard anuncio={item} />
+                     {item.isPublish !== 2 && (
                       <Button
                         variant="outline-success"
                         size="sm"
@@ -249,6 +267,7 @@ const AnunciosList = ({ isPublish }) => {
                       >
                         <FaEdit />
                       </Button>
+                    )}
                     </div>
                   </div>
                 ))}

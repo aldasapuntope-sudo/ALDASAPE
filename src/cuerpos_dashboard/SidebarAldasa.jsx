@@ -202,6 +202,11 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
                   >
                     <Link to="/anuncios-revision" onClick={toggleSidebar}>Anuncios en revisión</Link>
                   </li>
+                  <li
+                    className={`submenu-link ${location.pathname.startsWith('/anuncios-vendidos') ? 'active' : ''}`}
+                  >
+                    <Link to="/anuncios-vendidos" onClick={toggleSidebar}>Anuncios Vendidos</Link>
+                  </li>
                 </ul>
               
             </div>

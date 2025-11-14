@@ -53,6 +53,7 @@ import ResetPassword from './pages/iniciosession/ResetPassword';
 import UbicacionesList from './pages/dashboard/administracion/UbicacionesList';
 import MisFavoritos from './pages/dashboard/mis-anuncios/mis-favoritos';
 import Publicatuanuncio from './pages/enlaces/Publicatuanuncio';
+import AnunciosVendidos from './pages/dashboard/mis-anuncios/AnunciosVendidos';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -255,6 +256,12 @@ function AppRoutes() {
               path="/anuncios-revision"
               element={<RutaProtegida element={AnunciosRevision} />}
             />
+
+            <Route
+              path="/anuncios-vendidos"
+              element={<RutaProtegida element={AnunciosVendidos} />}
+            />
+            
 
             <Route 
               path="/mis-favoritos" 
