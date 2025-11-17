@@ -130,6 +130,9 @@ function AppRoutes() {
       <Preloader />
 
       <Routes>
+        {!usuario && (
+        <Route path="/login" element={<Login />} />
+        )}
         {/* 🌐 Páginas públicas con Header y Footer */}
         <Route
           element={
@@ -154,7 +157,7 @@ function AppRoutes() {
 
           {!usuario && (
             <>
-              <Route path="/login" element={<Login />} />
+              
               <Route path="/registro" element={<Register />} />
               <Route path="/recover-password" element={<RecoverPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />

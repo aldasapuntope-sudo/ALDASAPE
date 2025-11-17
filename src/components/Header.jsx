@@ -1,7 +1,7 @@
 // src/componentes/HeaderAldasa.js
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { FaUser, FaPlus, FaSun, FaMoon } from "react-icons/fa";
+import { FaUser, FaPlus, FaSun, FaMoon, FaChevronDown } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "../css/Header.css";
@@ -15,8 +15,20 @@ export default function HeaderAldasa({ abrirModal }) {
   const [user, setUser] = useState(null);
   const { darkMode, toggleDarkMode } = useTheme();
   const [menuData, setMenuData] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [activeMenu, setActiveMenu] = useState(null);
 
-  // Cargar usuario
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 992);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const toggleMenu = (menuKey) => {
+    setActiveMenu(activeMenu === menuKey ? null : menuKey);
+  };
+
   useEffect(() => {
     const usuarioGuardado = localStorage.getItem("usuario");
     if (usuarioGuardado) {
@@ -26,7 +38,6 @@ export default function HeaderAldasa({ abrirModal }) {
     }
   }, []);
 
-  // Cargar menús desde la API
   useEffect(() => {
     fetch(`${config.apiUrl}api/menus`)
       .then((res) => res.json())
@@ -34,26 +45,17 @@ export default function HeaderAldasa({ abrirModal }) {
       .catch((err) => console.error("Error al cargar menús:", err));
   }, []);
 
-  console.log(menuData);
   return (
     <nav
       className={`navbar navbar-expand-lg ${
-        darkMode
-          ? "bg-dark navbar-dark shadow-sm sticky-top"
-          : "bg-white shadow-sm sticky-top"
+        darkMode ? "bg-dark navbar-dark shadow-sm sticky-top" : "bg-white shadow-sm sticky-top"
       }`}
     >
       <div className="container">
-        {/* LOGO */}
         <NavLink className="navbar-brand d-flex align-items-center" to="/">
-          <img
-            src="/assets/images/logo-aldasape-color.png"
-            alt="ALDASA"
-            style={{ height: 40 }}
-          />
+          <img src="/assets/images/logo-aldasape-color.png" alt="ALDASA" style={{ height: 40 }} />
         </NavLink>
 
-        {/* TOGGLER MÓVIL */}
         <button
           className="navbar-toggler"
           type="button"
@@ -63,44 +65,54 @@ export default function HeaderAldasa({ abrirModal }) {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* MENÚ PRINCIPAL */}
         <div className="collapse navbar-collapse" id="menuPrincipal">
           <ul className="navbar-nav mx-auto">
             {!user ? (
               <>
-                {/* 🔁 Generar menús automáticamente desde el JSON */}
                 {menuData &&
-                  Object.entries(menuData).map(([key, value]) => (
-                    <li key={key} className="nav-item dropdown position-static">
-                      <NavLink
-                        className="nav-link dropdown-toggle text-capitalize"
-                        to="#"
-                      >
-                        {key}
-                      </NavLink>
+                  Object.entries(menuData).map(([key, value]) => {
+                    const hasSubmenu = Array.isArray(value) || typeof value === "object";
 
-                      {/* Mostrar el mega menú solo si no es la sección de servicios */}
-                      {key !== "servicios" ? (
-                        <MegaDropdown data={value} mode={key} />
-                      ) : (
-                        <MegaDropdown data={value} mode="servicios" />
-                      )}
-                    </li>
-                  ))}
+                    return (
+                      <li key={key} className="nav-item dropdown position-static">
+                        <NavLink
+                          className="nav-link dropdown-toggle text-capitalize d-flex align-items-center"
+                          to="#"
+                          onClick={() => isMobile && hasSubmenu && toggleMenu(key)}
+                          data-bs-toggle={!isMobile && hasSubmenu ? "dropdown" : null}
+                        >
+                          {key}
+                          {/* Mostrar flecha solo en móvil si hay submenu */}
+                          {isMobile && hasSubmenu && (
+                            <FaChevronDown
+                              className={`ms-1 transition ${
+                                activeMenu === key ? "rotate-180" : ""
+                              }`}
+                              size={12}
+                            />
+                          )}
+                        </NavLink>
 
+                        {/* Solo pasar MegaDropdown si hay submenu */}
+                        {hasSubmenu && (
+                          <MegaDropdown
+                            data={value}
+                            mode={key !== "servicios" ? key : "servicios"}
+                            isMobile={isMobile}
+                            isOpen={activeMenu === key}
+                          />
+                        )}
+                      </li>
+                    );
+                  })}
 
-                {/* Ejemplo: si la API no trae “proyectos” */}
                 <li className="nav-item">
-                  <a
-                    className="nav-link"
-                    href="https://aldasa.pe/proyectos"
-                  >
+                  <a className="nav-link" href="https://aldasa.pe/proyectos">
                     Proyectos
                   </a>
                 </li>
               </>
             ) : (
-              // ✅ MENÚS PARA USUARIO LOGUEADO
               <>
                 <li className="nav-item">
                   <NavLink className="nav-link" to="/nuevo-anuncio">
@@ -116,13 +128,10 @@ export default function HeaderAldasa({ abrirModal }) {
             )}
           </ul>
 
-          {/* DERECHA: Modo Noche/Día + Usuario */}
           <div className="d-flex align-items-center gap-2">
             {!user ? (
               <>
-                <button className="btn btn-outline-success">
-                  Inversiones TOP
-                </button>
+                <button className="btn btn-outline-success">Inversiones TOP</button>
 
                 <button
                   className="btn-publicar"
@@ -131,10 +140,7 @@ export default function HeaderAldasa({ abrirModal }) {
                     if (usuarioGuardado) {
                       window.location.href = "/nuevo-anuncio";
                     } else {
-                      localStorage.setItem(
-                        "redirectAfterLogin",
-                        "/nuevo-anuncio"
-                      );
+                      localStorage.setItem("redirectAfterLogin", "/nuevo-anuncio");
                       window.location.href = "/login";
                     }
                   }}
@@ -152,9 +158,7 @@ export default function HeaderAldasa({ abrirModal }) {
             ) : (
               <>
                 <button
-                  className={`btn btn-${
-                    darkMode ? "warning" : "secondary"
-                  }`}
+                  className={`btn btn-${darkMode ? "warning" : "secondary"}`}
                   onClick={toggleDarkMode}
                 >
                   {darkMode ? <FaSun /> : <FaMoon />}

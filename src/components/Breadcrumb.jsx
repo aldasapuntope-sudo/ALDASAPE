@@ -26,6 +26,7 @@ const Breadcrumb = () => {
   const titles = {
     "politicas-de-privacidad": "Políticas de Privacidad",
     "terminos-condiciones": "Términos & Condiciones",
+    "publica-tu-aviso": "Publica tu Anuncio",
     nosotros: "Nosotros",
     contacto: "Contacto",
     propiedades: "Propiedades",

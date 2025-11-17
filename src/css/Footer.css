@@ -11,7 +11,7 @@
   background-attachment: fixed;
   position: relative;
   z-index: 1;
-  padding: 82px 0 65px;
+  padding: 82px 0 65px; 
 }
 
 
@@ -28,6 +28,14 @@
   margin-bottom: 1rem;
   font-weight: 600;
   color: #fff;
+  position: relative;
+}
+
+.footer-title2 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: var(--green);
   position: relative;
 }
 
@@ -64,11 +72,46 @@
   transition: color 0.3s ease;
 }
 
-.footer-link a:hover,
-.footer-location a:hover,
-.insta-link a:hover {
+
+
+.footer-link2 a:hover,
+.footer-location2 a:hover,
+.insta-link2 a:hover {
   color: var(--green);
 }
+
+
+.footer-link2 ul,
+.footer-location2,
+.insta-link2,
+.social-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-link2 ul li,
+.insta-link2 li,
+.footer-location2 li {
+  margin-bottom: 10px;
+}
+
+.footer-link2 a,
+.footer-location2 a,
+.insta-link2 a {
+  color: #565656;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+
+
+.footer-link2 a:hover,
+.footer-location2 a:hover,
+.insta-link2 a:hover {
+  color: var(--green);
+}
+
 
 .footer-location li {
   display: flex;
