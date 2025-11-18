@@ -291,7 +291,8 @@
 /* Asegura que no tape contenido en móvil */
 @media (max-width: 767px) {
   body {
-    padding-bottom: 65px; /* espacio para que no se tape el contenido */
+    /*padding-bottom: 65px; /* espacio para que no se tape el contenido */
+    padding-bottom: 0px;
   }
   .d-none {
     display: block !important;

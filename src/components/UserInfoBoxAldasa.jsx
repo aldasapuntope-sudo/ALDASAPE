@@ -88,6 +88,7 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
       <Dropdown align="end" className="me-2">
         <Dropdown.Toggle
           as="div"
+          className="no-arrow"
           style={{ cursor: 'pointer', position: 'relative', marginRight: '8px' }}
         >
           <FaEnvelope size={20} />
@@ -163,6 +164,7 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
       <Dropdown align="end" className="me-2">
         <Dropdown.Toggle
           as="div"
+          className="no-arrow"
           style={{ cursor: 'pointer', position: 'relative', marginRight: '8px' }}
         >
           <FaHeart size={20} color="red" />
@@ -236,7 +238,7 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
             roundedCircle
             height="40"
             width="40"
-            className="ms-2"
+            
           />
         </Dropdown.Toggle>
 

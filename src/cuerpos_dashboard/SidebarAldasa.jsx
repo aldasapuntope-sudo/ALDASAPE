@@ -143,6 +143,14 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
                     </li>
 
                     <li
+                      className={`submenu-link ${location.pathname.startsWith('/adm-slider') ? 'active' : ''}`}
+                    >
+                      <Link to="/adm-slider" onClick={toggleSidebar}>Gestionar Slider</Link>
+                    </li>
+
+                    
+
+                    <li
                       className={`submenu-link ${location.pathname.startsWith('/adm-ubicaciones') ? 'active' : ''}`}
                     >
                       <Link to="/adm-ubicaciones" onClick={toggleSidebar}>Gestionar Ubicaciones</Link>
