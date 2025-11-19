@@ -55,6 +55,7 @@ import MisFavoritos from './pages/dashboard/mis-anuncios/mis-favoritos';
 import Publicatuanuncio from './pages/enlaces/Publicatuanuncio';
 import AnunciosVendidos from './pages/dashboard/mis-anuncios/AnunciosVendidos';
 import SliderList from './pages/dashboard/administracion/SliderList';
+import PopupList from './pages/dashboard/administracion/PopupList';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -227,6 +228,13 @@ function AppRoutes() {
               path="/adm-slider"
               element={<RutaProtegida element={SliderList} />}
             />
+
+            <Route
+              path="/adm-anunciospopups"
+              element={<RutaProtegida element={PopupList} />}
+            />
+
+            
 
             
 

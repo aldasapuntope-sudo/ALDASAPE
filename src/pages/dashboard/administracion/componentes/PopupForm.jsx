@@ -6,22 +6,30 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import config from "../../../../config";
 
-export default function SliderForm({ slider, onClose }) {
+export default function PopupForm({ popup, onClose }) {
   const [preview, setPreview] = useState(null);
 
   const formik = useFormik({
     initialValues: {
       titulo: "",
       descripcion: "",
-      orden: 0,
+      tiempo_segundos: 180, 
+      orden: 0,                // 👈 NUEVO CAMPO
       is_active: 1,
       imagen_url: null,
     },
     validationSchema: Yup.object({
       titulo: Yup.string().required("El título es obligatorio"),
+      tiempo_segundos: Yup.number()
+        .min(10, "Mínimo 10 segundos")
+        .required("El tiempo es obligatorio"),
+      orden: Yup.number()
+        .min(0, "El orden debe ser 0 o mayor")
+        .required("El orden es obligatorio"), // 👈 VALIDACIÓN
     }),
     onSubmit: async (values) => {
       const formData = new FormData();
+
       Object.entries(values).forEach(([key, value]) => {
         if (key === "imagen_url" && value) {
           formData.append(key, value);
@@ -31,45 +39,48 @@ export default function SliderForm({ slider, onClose }) {
       });
 
       try {
-        if (slider) {
+        if (popup) {
           formData.append("_method", "PUT");
 
-        
           await axios.post(
-            `${config.apiUrl}api/administracion/aslider/${slider.id}`,
+            `${config.apiUrl}api/administracion/apopups/${popup.id}`,
             formData,
             { headers: { "Content-Type": "multipart/form-data" } }
           );
-          Swal.fire("✅ Actualizado", "El slider fue actualizado correctamente", "success");
+
+          Swal.fire("Actualizado", "Popup actualizado correctamente", "success");
         } else {
-          await axios.post(`${config.apiUrl}api/administracion/rslider`, formData, {
+          await axios.post(`${config.apiUrl}api/administracion/rpopups`, formData, {
             headers: { "Content-Type": "multipart/form-data" },
           });
-          Swal.fire("✅ Guardado", "El slider fue creado correctamente", "success");
+
+          Swal.fire("Guardado", "Popup creado correctamente", "success");
         }
+
         onClose(true);
       } catch (error) {
         console.error(error);
-        Swal.fire("❌ Error", "No se pudo guardar el slider", "error");
+        Swal.fire("Error", "No se pudo guardar el popup", "error");
       }
     },
   });
 
   useEffect(() => {
-    if (slider) {
+    if (popup) {
       formik.setValues({
-        titulo: slider.titulo || "",
-        descripcion: slider.descripcion || "",
-        orden: slider.orden || 0,
-        is_active: slider.is_active ?? 1,
+        titulo: popup.titulo || "",
+        descripcion: popup.descripcion || "",
+        tiempo_segundos: popup.tiempo_segundos || 180,
+        orden: popup.orden || 0,      // 👈 AGREGADO AQUÍ
+        is_active: popup.is_active ?? 1,
         imagen_url: null,
       });
 
-      if (slider.imagen_url) {
-        setPreview(`${config.urlserver}${slider.imagen_url}`);
+      if (popup.imagen_url) {
+        setPreview(`${config.urlserver}${popup.imagen_url}`);
       }
     }
-  }, [slider]);
+  }, [popup]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -83,12 +94,12 @@ export default function SliderForm({ slider, onClose }) {
   };
 
   return (
-    <div className="modal show fade d-block" tabIndex="-1">
+    <div className="modal show fade d-block">
       <div className="modal-dialog modal-lg modal-dialog-centered">
         <div className="modal-content shadow-lg border-0 rounded-3">
           <div className="modal-header bg-primary text-white d-flex justify-content-between align-items-center">
             <h5 className="modal-title text-white">
-              {slider ? "Editar Slider" : "Agregar Nuevo Slider"}
+              {popup ? "Editar Popup" : "Agregar Nuevo Popup"}
             </h5>
             <button
               className="btn btn-light btn-sm rounded-circle"
@@ -103,26 +114,50 @@ export default function SliderForm({ slider, onClose }) {
               <div className="row">
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">Título</label>
-                  <input
-                    type="text"
-                    name="titulo"
-                    className="form-control"
-                    value={formik.values.titulo}
-                    onChange={formik.handleChange}
-                  />
+                    <label className="form-label">Título</label>
+                    <input
+                        type="text"
+                        name="titulo"
+                        className="form-control"
+                        value={formik.values.titulo}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    />
+                    {formik.touched.titulo && formik.errors.titulo && (
+                        <div className="text-danger small">{formik.errors.titulo}</div>
+                    )}
                 </div>
 
-                <div className="col-md-6 mb-3">
-                  <label className="form-label">Orden</label>
-                  <input
-                    type="number"
-                    name="orden"
-                    className="form-control"
-                    value={formik.values.orden}
-                    onChange={formik.handleChange}
-                  />
+                <div className="col-md-3 mb-3">
+                    <label className="form-label">Tiempo (segundos)</label>
+                    <input
+                        type="number"
+                        name="tiempo_segundos"
+                        className="form-control"
+                        value={formik.values.tiempo_segundos}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    />
+                    {formik.touched.tiempo_segundos && formik.errors.tiempo_segundos && (
+                        <div className="text-danger small">{formik.errors.tiempo_segundos}</div>
+                    )}
                 </div>
+
+                <div className="col-md-3 mb-3">
+                    <label className="form-label">Orden</label>
+                    <input
+                        type="number"
+                        name="orden"
+                        className="form-control"
+                        value={formik.values.orden}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    />
+                    {formik.touched.orden && formik.errors.orden && (
+                        <div className="text-danger small">{formik.errors.orden}</div>
+                    )}
+                </div>
+
 
                 <div className="col-md-12 mb-3">
                   <label className="form-label">Descripción</label>
@@ -171,11 +206,11 @@ export default function SliderForm({ slider, onClose }) {
 
             <div className="modal-footer">
               <button className="btn btn-success" type="submit">
-                {slider ? "Actualizar" : "Guardar"}
+                {popup ? "Actualizar" : "Guardar"}
               </button>
-              <button className="btn btn-secondary" onClick={() => onClose(false)}>
+              <button type="button" className="btn btn-secondary" onClick={() => onClose(false)}>
                 Cancelar
-              </button>
+                </button>
             </div>
 
           </form>

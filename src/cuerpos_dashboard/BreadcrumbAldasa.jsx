@@ -19,6 +19,8 @@ const nombresPersonalizados = {
   'adm-tpropiedades': 'Lista Tipo Propiedades',
   'adm-bitacora': 'Bitácora del Sistema',
   'mis-favoritos': 'Mis Anuncios Favoritos',
+  'adm-slider': 'Gestión de Slider',
+  'adm-anunciospopups': 'Gestión de Anuncios Popups',
   detalle_guia: 'Detalle Guías',
   curso: 'Mis Cursos',
   detalle_curso: 'Detalle Curso',
