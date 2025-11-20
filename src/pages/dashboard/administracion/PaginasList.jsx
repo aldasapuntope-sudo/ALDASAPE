@@ -7,8 +7,11 @@ import Cargando from "../../../components/cargando";
 import DataTableBase from "./componentes/DataTableBase";
 import PaginaForm from "./componentes/PaginaForm";
 import BreadcrumbALDASA from "../../../cuerpos_dashboard/BreadcrumbAldasa";
+import SinPrivilegios from "../../../components/SinPrivilegios";
+import { useUsuario } from "../../../context/UserContext";
 
 export default function PaginasList() {
+  const { usuario } = useUsuario();
   const [paginas, setPaginas] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [selectedPagina, setSelectedPagina] = useState(null);
@@ -30,6 +33,13 @@ export default function PaginasList() {
   useEffect(() => {
     fetchPaginas();
   }, []);
+
+  if (!usuario) return null;
+   const perfil = usuario.usuarioaldasa?.perfil_id;
+
+  if (perfil !== 1) {
+    return <SinPrivilegios />;
+  }
 
   // 🔹 Abrir modal para agregar
   const handleAdd = () => {

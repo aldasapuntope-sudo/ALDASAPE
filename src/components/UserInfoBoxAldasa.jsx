@@ -69,9 +69,17 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
 
   const nombre = usuario.usuarioaldasa?.nombre || usuario.name || 'Usuario';
   const escuela = usuario.escuela || 'Aldasa';
-  const imgSrc =
-    usuario.imagen || usuario.usuarioaldasa?.imagen || `${config.urlserver}image/animoji-1.png`;
 
+  const imgSrc =
+  usuario.imagen
+    ? `${config.urlserver}${usuario.imagen}`
+    : usuario.usuarioaldasa?.imagen
+      ? `${config.urlserver}${usuario.usuarioaldasa.imagen}`
+      : `${config.urlserver}image/animoji-1.png`;
+
+  /*const imgSrc =
+    usuario.imagen || usuario.usuarioaldasa?.imagen || `${config.urlserver}image/animoji-1.png`;
+*/
   const ultimosMensajes = mensajes.slice(-3).reverse();
   const ultimosFavoritos = favoritos.slice(-3).reverse();
 

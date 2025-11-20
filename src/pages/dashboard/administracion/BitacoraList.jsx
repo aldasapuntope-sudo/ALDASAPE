@@ -6,8 +6,11 @@ import config from "../../../config";
 import Cargando from "../../../components/cargando";
 import DataTableBase from "./componentes/DataTableBase";
 import BreadcrumbALDASA from "../../../cuerpos_dashboard/BreadcrumbAldasa";
+import SinPrivilegios from "../../../components/SinPrivilegios";
+import { useUsuario } from "../../../context/UserContext";
 
 export default function BitacoraList() {
+  const { usuario } = useUsuario();
   const [bitacora, setBitacora] = useState([]);
   const [cargando, setCargando] = useState(false);
 
@@ -28,6 +31,13 @@ export default function BitacoraList() {
   useEffect(() => {
     fetchBitacora();
   }, []);
+
+  if (!usuario) return null;
+   const perfil = usuario.usuarioaldasa?.perfil_id;
+
+  if (perfil !== 1) {
+    return <SinPrivilegios />;
+  }
 
   // ✅ Columnas del DataTable
   const columns = [

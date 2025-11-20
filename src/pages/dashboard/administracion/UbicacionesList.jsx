@@ -7,8 +7,11 @@ import DataTableBase from "./componentes/DataTableBase";
 import Cargando from "../../../components/cargando";
 import BreadcrumbALDASA from "../../../cuerpos_dashboard/BreadcrumbAldasa";
 import UbicacionForm from "./componentes/UbicacionForm";
+import SinPrivilegios from "../../../components/SinPrivilegios";
+import { useUsuario } from "../../../context/UserContext";
 
 export default function UbicacionesList() {
+  const { usuario } = useUsuario();
   const [data, setData] = useState([]);
   const [cargando, setCargando] = useState(false);
   const [showForm, setShowForm] = useState(false);
@@ -31,6 +34,13 @@ export default function UbicacionesList() {
   useEffect(() => {
     fetchData();
   }, []);
+
+  if (!usuario) return null;
+   const perfil = usuario.usuarioaldasa?.perfil_id;
+
+  if (perfil !== 1) {
+    return <SinPrivilegios />;
+  }
 
   const handleAdd = () => {
     setSelected(null);

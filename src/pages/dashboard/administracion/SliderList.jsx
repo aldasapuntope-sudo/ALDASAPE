@@ -7,8 +7,11 @@ import Cargando from "../../../components/cargando";
 import DataTableBase from "./componentes/DataTableBase";
 import BreadcrumbALDASA from "../../../cuerpos_dashboard/BreadcrumbAldasa";
 import SliderForm from "./componentes/SliderForm";
+import { useUsuario } from "../../../context/UserContext";
+import SinPrivilegios from "../../../components/SinPrivilegios";
 
 export default function SliderList() {
+  const { usuario } = useUsuario();
   const [sliders, setSliders] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -29,6 +32,14 @@ export default function SliderList() {
   useEffect(() => {
     fetchSliders();
   }, []);
+
+  if (!usuario) return null;
+   const perfil = usuario.usuarioaldasa?.perfil_id;
+
+  if (perfil !== 1) {
+    return <SinPrivilegios />;
+  }
+  
 
   const handleAdd = () => {
     setSelectedItem(null);

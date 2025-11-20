@@ -56,6 +56,7 @@ import Publicatuanuncio from './pages/enlaces/Publicatuanuncio';
 import AnunciosVendidos from './pages/dashboard/mis-anuncios/AnunciosVendidos';
 import SliderList from './pages/dashboard/administracion/SliderList';
 import PopupList from './pages/dashboard/administracion/PopupList';
+import UsuariosList from './pages/dashboard/administracion/UsuariosList';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -187,6 +188,12 @@ function AppRoutes() {
               element={<RutaProtegida element={PlanesList} />}
             />
 
+            <Route
+              path="/adm-usuarios"
+              element={<RutaProtegida element={UsuariosList} />}
+            />
+            
+            
             <Route
               path="/adm-usuarioplanes"
               element={<RutaProtegida element={UsuariosPlanesList} />}

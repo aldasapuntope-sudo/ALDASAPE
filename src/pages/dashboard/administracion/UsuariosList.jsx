@@ -5,27 +5,26 @@ import config from "../../../config";
 import Swal from "sweetalert2";
 import DataTableBase from "./componentes/DataTableBase";
 import Cargando from "../../../components/cargando";
-import UsuarioPlanForm from "./componentes/UsuarioPlanForm";
 import BreadcrumbALDASA from "../../../cuerpos_dashboard/BreadcrumbAldasa";
+import UsuarioForm from "./componentes/UsuarioForm";
 import { useUsuario } from "../../../context/UserContext";
 import SinPrivilegios from "../../../components/SinPrivilegios";
 
-export default function UsuariosPlanesList() {
+export default function UsuariosList() {
   const { usuario } = useUsuario();
   const [data, setData] = useState([]);
   const [cargando, setCargando] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [selected, setSelected] = useState(null);
 
-  // 🔹 Cargar datos
   const fetchData = async () => {
     setCargando(true);
     try {
-      const res = await axios.get(`${config.apiUrl}api/administracion/lplanes_usuario`);
+      const res = await axios.get(`${config.apiUrl}api/administracion/lusuarios`);
       setData(res.data);
     } catch (err) {
       console.error(err);
-      Swal.fire("Error", "No se pudieron cargar los planes de usuario", "error");
+      Swal.fire("Error", "No se pudieron cargar los usuarios", "error");
     } finally {
       setCargando(false);
     }
@@ -42,6 +41,7 @@ export default function UsuariosPlanesList() {
     return <SinPrivilegios />;
   }
 
+
   const handleAdd = () => {
     setSelected(null);
     setShowForm(true);
@@ -52,43 +52,27 @@ export default function UsuariosPlanesList() {
     setShowForm(true);
   };
 
-  // 🔹 Activar / Desactivar plan de usuario
   const handleToggleEstado = (row) => {
-    const activo = row.estado === "activo";
+    const activo = row.is_active === 1;
+
     Swal.fire({
-      title: activo
-        ? "¿Desactivar plan del usuario?"
-        : "¿Activar plan del usuario?",
-      text: "Puedes volver a cambiar su estado cuando quieras.",
+      title: activo ? "¿Desactivar usuario?" : "¿Activar usuario?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Sí, continuar",
-      cancelButtonText: "Cancelar",
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const newStatus = activo ? "inactivo" : "activo";
-
           await axios.put(
-            `${config.apiUrl}api/administracion/eplanes_usuario/${row.id}/estado`,
-            { estado: newStatus }
+            `${config.apiUrl}api/administracion/eusuarios/${row.id}/estado`,
+            { is_active: activo ? 0 : 1 }
           );
 
-          Swal.fire(
-            "Actualizado",
-            newStatus === "activo"
-              ? "El plan del usuario fue activado correctamente."
-              : "El plan del usuario fue desactivado correctamente.",
-            "success"
-          );
+          Swal.fire("Actualizado", "El estado fue cambiado", "success");
           fetchData();
         } catch (error) {
           console.error(error);
-          Swal.fire(
-            "Error",
-            "No se pudo actualizar el estado del plan del usuario.",
-            "error"
-          );
+          Swal.fire("Error", "No se pudo actualizar", "error");
         }
       }
     });
@@ -101,20 +85,15 @@ export default function UsuariosPlanesList() {
 
   const columns = [
     { name: "#", selector: (r, i) => i + 1, width: "60px" },
-    { name: "Usuario", selector: (r) => r.usuario, sortable: true },
-    { name: "Plan", selector: (r) => r.plan, sortable: true },
-    { name: "Inicio", selector: (r) => r.fecha_inicio },
-    { name: "Fin", selector: (r) => r.fecha_fin },
-    { name: "Anuncios", selector: (r) => r.anuncios_disponibles },
+    { name: "Nombre", selector: (r) => `${r.nombre} ${r.apellido}` },
+    { name: "Email", selector: (r) => r.email },
+    { name: "Documento", selector: (r) => `${r.numero_documento}` },
+    { name: "Teléfono", selector: (r) => r.telefono_movil },
     {
       name: "Estado",
       selector: (r) => (
-        <span
-          className={`badge ${
-            r.estado === "activo" ? "bg-success" : "bg-secondary"
-          }`}
-        >
-          {r.estado}
+        <span className={`badge ${r.is_active ? "bg-success" : "bg-secondary"}`}>
+          {r.is_active ? "Activo" : "Inactivo"}
         </span>
       ),
     },
@@ -125,16 +104,14 @@ export default function UsuariosPlanesList() {
       <button
         className="btn btn-sm btn-warning me-2"
         onClick={() => handleEdit(row)}
-        title="Editar plan de usuario"
       >
         <FaEdit />
       </button>
 
-      {row.estado === "activo" ? (
+      {row.is_active ? (
         <button
           className="btn btn-sm btn-danger"
           onClick={() => handleToggleEstado(row)}
-          title="Desactivar plan"
         >
           <FaTrash />
         </button>
@@ -142,7 +119,6 @@ export default function UsuariosPlanesList() {
         <button
           className="btn btn-sm btn-success"
           onClick={() => handleToggleEstado(row)}
-          title="Activar plan"
         >
           <FaCheck />
         </button>
@@ -157,13 +133,16 @@ export default function UsuariosPlanesList() {
         <BreadcrumbALDASA />
         <div className="d-flex justify-content-between align-items-center mb-3 mt-3">
           <h4 className="text-success fw-bold"></h4>
+
           <button className="btn btn-primary" onClick={handleAdd}>
-            <FaPlus className="me-2" /> Asignar nuevo
+            <FaPlus className="me-2" /> Nuevo Usuario
           </button>
         </div>
+
         <DataTableBase title="" columns={columns} data={data} actions={actions} />
+
         {showForm && (
-          <UsuarioPlanForm planUsuario={selected} onClose={handleCloseForm} />
+          <UsuarioForm usuario={selected} onClose={handleCloseForm} />
         )}
       </div>
     </>

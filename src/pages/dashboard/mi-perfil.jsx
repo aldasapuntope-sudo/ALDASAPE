@@ -8,6 +8,7 @@ import config from "../../config";
 import { actualizarPerfil, obtenerdatosperfil } from "./logica/obtenerdatosperfil";
 import { useNavigate } from "react-router-dom";
 import BreadcrumbALDASA from "../../cuerpos_dashboard/BreadcrumbAldasa";
+import axios from "axios";
 
 export default function MiPerfil() {
   const { usuario } = useUsuario();
@@ -238,9 +239,55 @@ useEffect(() => {
   }
 }, [formik.values.tipoUsuario, condicionesFiscales]);
 
+
+async function handleImagen(e) {
+  const archivo = e.target.files[0];
+  if (!archivo) return;
+
+  const formData = new FormData();
+  formData.append("imagen", archivo);
+
+  setCargando(true);
+
+  try {
+    const res = await axios.post(
+      `${config.apiUrl}api/paginaprincipal/actualizar-perfil/${usuario.usuarioaldasa.id}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    const data = res.data;
+
+    if (data.exito) {
+      Swal.fire({
+        icon: "success",
+        title: "Imagen actualizada",
+        text: "Tu foto de perfil se actualizó correctamente",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
+      // Actualizar imagen en pantalla
+      setDatos((prev) => ({ ...prev, imagen: data.imagen }));
+    } else {
+      Swal.fire("Atención", data.mensaje || "No se pudo actualizar la imagen", "warning");
+    }
+  } catch (error) {
+    Swal.fire("Error", "No se pudo subir la imagen", "error");
+  } finally {
+    setCargando(false);
+  }
+}
+
+
   const imagenPerfil =
-    datos.imagen ||
-    "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+    datos.imagen
+      ? `${config.urlserver}${datos.imagen}`
+      : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 
   return (
     <>
@@ -256,12 +303,25 @@ useEffect(() => {
 
             <div className="card-body p-4">
               <div className="text-center mb-4">
+                <label className="foto-perfil-container">
                 <img
                   src={imagenPerfil}
                   alt="Perfil"
                   className="rounded-circle shadow"
                   style={{ width: "120px", height: "120px", objectFit: "cover" }}
                 />
+
+                <div className="icono-camara">
+                  <i className="fa fa-camera"></i>
+                </div>
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImagen}
+                  style={{ display: "none" }}
+                />
+              </label>
               </div>
 
               <form onSubmit={formik.handleSubmit} className="row g-3">

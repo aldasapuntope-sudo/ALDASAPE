@@ -7,8 +7,11 @@ import PlanForm from "./componentes/PlanForm";
 import Cargando from "../../../components/cargando";
 import DataTableBase from "./componentes/DataTableBase";
 import BreadcrumbALDASA from "../../../cuerpos_dashboard/BreadcrumbAldasa";
+import { useUsuario } from "../../../context/UserContext";
+import SinPrivilegios from "../../../components/SinPrivilegios";
 
 export default function PlanesList() {
+  const { usuario } = useUsuario();
   const [planes, setPlanes] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
@@ -31,6 +34,13 @@ export default function PlanesList() {
   useEffect(() => {
     fetchPlanes();
   }, []);
+
+  if (!usuario) return null;
+   const perfil = usuario.usuarioaldasa?.perfil_id;
+
+  if (perfil !== 1) {
+    return <SinPrivilegios />;
+  }
 
   const handleAdd = () => {
     setSelectedPlan(null);

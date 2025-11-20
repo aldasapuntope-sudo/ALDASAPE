@@ -7,8 +7,11 @@ import config from "../../../config";
 import Cargando from "../../../components/cargando";
 import DataTableBase from "./componentes/DataTableBase";
 import BreadcrumbALDASA from "../../../cuerpos_dashboard/BreadcrumbAldasa";
+import { useUsuario } from "../../../context/UserContext";
+import SinPrivilegios from "../../../components/SinPrivilegios";
 
 export default function CaracteristicaList() {
+  const { usuario } = useUsuario();
   const [caracteristicas, setCaracteristicas] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -29,6 +32,13 @@ export default function CaracteristicaList() {
   useEffect(() => {
     fetchCaracteristicas();
   }, []);
+
+  if (!usuario) return null;
+   const perfil = usuario.usuarioaldasa?.perfil_id;
+
+  if (perfil !== 1) {
+    return <SinPrivilegios />;
+  }
 
   const handleAdd = () => {
     setSelectedItem(null);

@@ -7,8 +7,11 @@ import Cargando from "../../../components/cargando";
 import DataTableBase from "./componentes/DataTableBase";
 import TiposPropiedadForm from "./componentes/TiposPropiedadForm";
 import BreadcrumbALDASA from "../../../cuerpos_dashboard/BreadcrumbAldasa";
+import { useUsuario } from "../../../context/UserContext";
+import SinPrivilegios from "../../../components/SinPrivilegios";
 
 export default function TiposPropiedadList() {
+  const { usuario } = useUsuario();
   const [tipos, setTipos] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [selectedTipo, setSelectedTipo] = useState(null);
@@ -29,6 +32,14 @@ export default function TiposPropiedadList() {
   useEffect(() => {
     fetchTipos();
   }, []);
+
+  if (!usuario) return null;
+   const perfil = usuario.usuarioaldasa?.perfil_id;
+
+  if (perfil !== 1) {
+    return <SinPrivilegios />;
+  }
+  
 
   const handleAdd = () => {
     setSelectedTipo(null);

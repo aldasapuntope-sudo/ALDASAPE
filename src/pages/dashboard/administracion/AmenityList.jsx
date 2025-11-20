@@ -7,9 +7,12 @@ import config from "../../../config";
 import Cargando from "../../../components/cargando";
 import DataTableBase from "./componentes/DataTableBase";
 import BreadcrumbALDASA from "../../../cuerpos_dashboard/BreadcrumbAldasa";
+import { useUsuario } from "../../../context/UserContext";
+import SinPrivilegios from "../../../components/SinPrivilegios";
 
 
 export default function ServicioList() {
+  const { usuario } = useUsuario();
   const [amenities, setAmenities] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [selectedServicio, setSelectedServicio] = useState(null);
@@ -30,6 +33,13 @@ export default function ServicioList() {
   useEffect(() => {
     fetchAmenities();
   }, []);
+
+  if (!usuario) return null;
+   const perfil = usuario.usuarioaldasa?.perfil_id;
+
+  if (perfil !== 1) {
+    return <SinPrivilegios />;
+  }
 
   const handleAdd = () => {
     setSelectedServicio(null);

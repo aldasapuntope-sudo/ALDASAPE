@@ -21,6 +21,7 @@ const nombresPersonalizados = {
   'mis-favoritos': 'Mis Anuncios Favoritos',
   'adm-slider': 'Gestión de Slider',
   'adm-anunciospopups': 'Gestión de Anuncios Popups',
+  'adm-usuarios': 'Gestión de Usuarios',
   detalle_guia: 'Detalle Guías',
   curso: 'Mis Cursos',
   detalle_curso: 'Detalle Curso',

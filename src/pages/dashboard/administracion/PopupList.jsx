@@ -7,8 +7,11 @@ import Cargando from "../../../components/cargando";
 import DataTableBase from "./componentes/DataTableBase";
 import BreadcrumbALDASA from "../../../cuerpos_dashboard/BreadcrumbAldasa";
 import PopupForm from "./componentes/PopupForm";
+import SinPrivilegios from "../../../components/SinPrivilegios";
+import { useUsuario } from "../../../context/UserContext";
 
 export default function PopupList() {
+  const { usuario } = useUsuario();
   const [popups, setPopups] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -29,6 +32,14 @@ export default function PopupList() {
   useEffect(() => {
     fetchPopups();
   }, []);
+
+  if (!usuario) return null;
+   const perfil = usuario.usuarioaldasa?.perfil_id;
+
+  if (perfil !== 1) {
+    return <SinPrivilegios />;
+  }
+  
 
   const handleAdd = () => {
     setSelectedItem(null);

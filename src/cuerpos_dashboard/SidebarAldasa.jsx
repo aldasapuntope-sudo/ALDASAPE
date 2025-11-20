@@ -88,9 +88,9 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
                 {usuario?.usuarioaldasa?.perfil_id === 1 && (
                   <>
                     <li
-                      className={`submenu-link ${location.pathname.startsWith('/usuarios') ? 'active' : ''}`}
+                      className={`submenu-link ${location.pathname.startsWith('/adm-usuarios') ? 'active' : ''}`}
                     >
-                      <Link to="/usuarios" onClick={toggleSidebar}>Usuarios</Link>
+                      <Link to="/adm-usuarios" onClick={toggleSidebar}>Usuarios</Link>
                     </li>
 
                     <li

@@ -7,8 +7,11 @@ import BreadcrumbALDASA from "../../../cuerpos_dashboard/BreadcrumbAldasa";
 import config from "../../../config";
 import ConfiguracionForm from "./componentes/ConfiguracionForm";
 import DataTableBase from "./componentes/DataTableBase";
+import SinPrivilegios from "../../../components/SinPrivilegios";
+import { useUsuario } from "../../../context/UserContext";
 
 export default function ConfiguracionesList() {
+  const { usuario } = useUsuario();
   const [configuraciones, setConfiguraciones] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [selectedConfig, setSelectedConfig] = useState(null);
@@ -29,6 +32,14 @@ export default function ConfiguracionesList() {
   useEffect(() => {
     fetchConfiguraciones();
   }, []);
+
+  if (!usuario) return null;
+   const perfil = usuario.usuarioaldasa?.perfil_id;
+
+  if (perfil !== 1) {
+    return <SinPrivilegios />;
+  }
+  
 
   const handleAdd = () => {
     setSelectedConfig(null);

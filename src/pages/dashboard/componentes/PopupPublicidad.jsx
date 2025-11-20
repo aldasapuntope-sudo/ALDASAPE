@@ -71,7 +71,7 @@ export default function PopupPublicidad({ popups }) {
         />
 
         {/* → Flecha derecha */}
-        {popups.length > 1 && (
+        {popups.length > 1 && (  
           <button className="popup-arrow right" onClick={siguiente}>
             ▶
           </button>
