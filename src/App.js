@@ -57,6 +57,8 @@ import AnunciosVendidos from './pages/dashboard/mis-anuncios/AnunciosVendidos';
 import SliderList from './pages/dashboard/administracion/SliderList';
 import PopupList from './pages/dashboard/administracion/PopupList';
 import UsuariosList from './pages/dashboard/administracion/UsuariosList';
+import GTMScripts from './pages/dashboard/componentes/GTMScripts';
+import ConfigScriptsList from './pages/dashboard/administracion/ConfigScriptsList';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -250,6 +252,11 @@ function AppRoutes() {
               element={<RutaProtegida element={ConfiguracionesList} />}
             />
 
+             <Route
+              path="/adm-scripts"
+              element={<RutaProtegida element={ConfigScriptsList} />}
+            />
+
             <Route
               path="/adm-ubicaciones"
               element={<RutaProtegida element={UbicacionesList} />}
@@ -362,6 +369,8 @@ export default function App() {
       <ThemeProvider>
         <UserProvider>
           <Router basename="/">
+
+            <GTMScripts />
             <AppRoutes />
           </Router>
         </UserProvider>

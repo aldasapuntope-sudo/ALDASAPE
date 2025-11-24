@@ -65,7 +65,7 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
         </Link>
 
         {/* Si el modo es "gestion", mostramos todos los menús de gestión académica */}
-        {modo === 'gestion' && (
+        
           <>
             {/* Administración */}
             <div className="menu-group">
@@ -172,6 +172,12 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
                     </li>
 
                     <li
+                      className={`submenu-link ${location.pathname.startsWith('/adm-scripts') ? 'active' : ''}`}
+                    >
+                      <Link to="/adm-scripts" onClick={toggleSidebar}>Gestionar Scripts Campañas</Link>
+                    </li>
+
+                    <li
                       className={`submenu-link ${location.pathname.startsWith('/adm-bitacora') ? 'active' : ''}`}
                     >
                       <Link to="/adm-bitacora" onClick={toggleSidebar}>Bitácora</Link>
@@ -247,7 +253,31 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
             </div>
 
           </>
+       
+
+
+        {/* COLABORADOR */}
+        {usuario?.usuarioaldasa?.perfil_id === 2 && (
+          <div className="menu-group">
+            <button className="menu-btn" onClick={() => toggleMenu('colaborador')}>
+              <FaClipboardList className="me-2" /> Revisión
+              {openMenu === 'colaborador'
+                ? <FaChevronDown className="ms-auto" />
+                : <FaChevronRight className="ms-auto" />}
+            </button>
+
+            <ul className={`submenu ${openMenu === 'colaborador' ? 'open' : ''}`}>
+              <li
+                className={`submenu-link ${location.pathname.startsWith('/col-revision-anuncios') ? 'active' : ''}`}
+              >
+                <Link to="/col-revision-anuncios" onClick={toggleSidebar}>
+                  Revisar Anuncios
+                </Link>
+              </li>
+            </ul>
+          </div>
         )}
+
 
         {/* Si el modo es "evaluacion", mostramos solo ese menú */}
         {modo === 'evaluacion' && ( 

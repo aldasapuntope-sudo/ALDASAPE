@@ -7,8 +7,11 @@ import Cargando from "../../../components/cargando";
 import DataTableBase from "./componentes/DataTableBase";
 import OperacionForm from "./componentes/OperacionForm";
 import BreadcrumbALDASA from "../../../cuerpos_dashboard/BreadcrumbAldasa";
+import { useUsuario } from "../../../context/UserContext";
+import SinPrivilegios from "../../../components/SinPrivilegios";
 
 export default function OperacionesList() {
+  const { usuario } = useUsuario();
   const [operaciones, setOperaciones] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [selectedOperacion, setSelectedOperacion] = useState(null);
@@ -30,6 +33,14 @@ export default function OperacionesList() {
   useEffect(() => {
     fetchOperaciones();
   }, []);
+
+  if (!usuario) return null;
+   const perfil = usuario.usuarioaldasa?.perfil_id;
+
+  if (perfil !== 1) {
+    return <SinPrivilegios />;
+  }
+  
 
   // 🔹 Abrir modal para agregar
   const handleAdd = () => {
