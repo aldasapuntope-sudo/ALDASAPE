@@ -15,7 +15,7 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
   
 
   const abrirFavorito = (fav) => {
-    console.log(fav);
+    
     // Si ya tiene slug, úsalo directamente
     let slug = fav.slug;
 

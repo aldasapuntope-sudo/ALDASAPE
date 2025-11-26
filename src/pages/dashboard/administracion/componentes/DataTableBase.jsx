@@ -5,6 +5,7 @@ import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { FaFileExcel, FaFilePdf, FaSearch } from "react-icons/fa";
+import config from "../../../../config";
 
 export default function DataTableBase({
   title,
@@ -129,7 +130,8 @@ export default function DataTableBase({
     // 📸 Insertar logo
     try {
       doc.addImage(
-        "http://localhost:3000/assets/images/logo-aldasape-color.png",
+        `${config.urlimageneslocal}/assets/images/logo-aldasape-color.png`,
+        //"http://localhost:3000/assets/images/logo-aldasape-color.png",
         "PNG",
         40,
         20,

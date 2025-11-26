@@ -22,6 +22,7 @@ const nombresPersonalizados = {
   'adm-slider': 'Gestión de Slider',
   'adm-anunciospopups': 'Gestión de Anuncios Popups',
   'adm-usuarios': 'Gestión de Usuarios',
+  'adm-scripts': 'Gestión de Scripts',
   detalle_guia: 'Detalle Guías',
   curso: 'Mis Cursos',
   detalle_curso: 'Detalle Curso',

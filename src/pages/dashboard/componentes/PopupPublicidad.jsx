@@ -2,39 +2,59 @@ import React, { useEffect, useState, useRef } from 'react';
 import '../../../css/PopupPublicidad.css';
 import config from '../../../config';
 
-export default function PopupPublicidad({ popups }) {
-  const [visible, setVisible] = useState(true);
+export default function PopupPublicidad({ popups, configPopup }) {
+ 
+
+  const [visible, setVisible] = useState(false);
   const [index, setIndex] = useState(0);
 
   const noData = !popups || popups.length === 0;
   const timerRef = useRef(null);
+  const sliderRef = useRef(null);
 
-  // 🔁 Slider automático
+  // 🟦 1. Mostrar en primera instancia según tiempo BD
+  useEffect(() => {
+    if (noData) return;
+
+    const tiempoInicio = (configPopup?.[0]?.tiempo_inicio_seg || 5) * 1000;
+    
+    timerRef.current = setTimeout(() => {
+      setVisible(true);
+    }, tiempoInicio);
+
+    return () => clearTimeout(timerRef.current);
+  }, [noData, configPopup]);
+
+
+  // 🟩 2. Slider automático controlado por cada popup
   useEffect(() => {
     if (!visible) return;
     if (noData) return;
-    if (popups.length <= 1) return;
 
-    const slider = setInterval(() => {
+    const tiempo = (popups[index].tiempo_segundos || 3) * 1000;
+
+    sliderRef.current = setTimeout(() => {
       setIndex(prev => (prev + 1) % popups.length);
-    }, 3000);
+    }, tiempo);
 
-    return () => clearInterval(slider);
-  }, [visible, noData, popups]);
+    return () => clearTimeout(sliderRef.current);
+  }, [visible, index, popups, noData]);
 
-  // 🔥 Cerrar popup y reaparición
+
+  // 🟥 3. Cerrar popup y reaparición
   const cerrarPopup = () => {
     setVisible(false);
+
     clearTimeout(timerRef.current);
 
-    const tiempoMilisegundos = (popups[0].tiempo_segundos || 180) * 1000;
+    const tiempoReaparecer = (configPopup?.tiempo_inicio_seg || 5) * 1000;
 
     timerRef.current = setTimeout(() => {
       setVisible(true);
-    }, tiempoMilisegundos);
+    }, tiempoReaparecer);
   };
 
-  // ⏩ Cambiar imagen manualmente
+  // ⏩ Manual
   const siguiente = () => {
     setIndex(prev => (prev + 1) % popups.length);
   };
@@ -56,22 +76,19 @@ export default function PopupPublicidad({ popups }) {
           ✕
         </button>
 
-        {/* ← Flecha izquierda */}
         {popups.length > 1 && (
           <button className="popup-arrow left" onClick={anterior}>
             ◀
           </button>
         )}
 
-        {/* Imagen */}
         <img
           src={`${config.urlserver}${popups[index].imagen_url}`}
           className="popup-img full-image"
           alt="Publicidad"
         />
 
-        {/* → Flecha derecha */}
-        {popups.length > 1 && (  
+        {popups.length > 1 && (
           <button className="popup-arrow right" onClick={siguiente}>
             ▶
           </button>

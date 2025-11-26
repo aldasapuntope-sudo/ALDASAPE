@@ -14,18 +14,24 @@ export default function Home(){
 
   const { usuario } = useUsuario();
   const [popups, setPopups] = useState([]);
+  const [popupConfig, setPopupConfig] = useState(null);
 
   useEffect(() => {
     if (!usuario) {
+
       axios.get(`${config.apiUrl}api/paginaprincipal/lpopups`)
         .then(res => setPopups(res.data))
+        .catch(err => console.log(err));
+
+      axios.get(`${config.apiUrl}api/paginaprincipal/popup-config`)
+        .then(res => setPopupConfig(res.data))
         .catch(err => console.log(err));
     }
   }, [usuario]);
 
   return (
     <>
-      {!usuario && <PopupPublicidad popups={popups} />}
+      {!usuario && <PopupPublicidad popups={popups} configPopup={popupConfig} />}
 
       <Hero />
       <HomeOptions />

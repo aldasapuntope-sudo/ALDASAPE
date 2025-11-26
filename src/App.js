@@ -59,6 +59,7 @@ import PopupList from './pages/dashboard/administracion/PopupList';
 import UsuariosList from './pages/dashboard/administracion/UsuariosList';
 import GTMScripts from './pages/dashboard/componentes/GTMScripts';
 import ConfigScriptsList from './pages/dashboard/administracion/ConfigScriptsList';
+import AppConfigLoader from './pages/dashboard/componentes/AppConfigLoader';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -132,6 +133,7 @@ function AppRoutes() {
 
   return (
     <>
+      <AppConfigLoader />
       <Preloader />
 
       <Routes>

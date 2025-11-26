@@ -20,7 +20,7 @@ export default function PopupList() {
   const fetchPopups = async () => {
     setCargando(true);
     try {
-      const res = await axios.get(`${config.apiUrl}api/administracion/lpopups`);
+      const res = await axios.get(`${config.apiUrl}api/administracion/lpopups2`);
       setPopups(res.data);
     } catch (error) {
       console.error("Error al cargar popups:", error);
@@ -52,6 +52,7 @@ export default function PopupList() {
   };
 
   const handleChangeStatus = async (id, newStatus) => {
+    console.log(newStatus);
     const confirm = await Swal.fire({
       title: newStatus ? "¿Activar Popup?" : "¿Desactivar Popup?",
       text: newStatus
@@ -67,7 +68,8 @@ export default function PopupList() {
       try {
         await axios.put(
           `${config.apiUrl}api/administracion/epopups/${id}/estado`,
-          { is_active: newStatus }
+          { is_active: Number(newStatus) },
+          { headers: { "Content-Type": "application/json" } }
         );
 
         fetchPopups();
