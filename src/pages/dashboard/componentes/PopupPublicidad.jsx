@@ -3,7 +3,6 @@ import '../../../css/PopupPublicidad.css';
 import config from '../../../config';
 
 export default function PopupPublicidad({ popups, configPopup }) {
- 
 
   const [visible, setVisible] = useState(false);
   const [index, setIndex] = useState(0);
@@ -12,21 +11,28 @@ export default function PopupPublicidad({ popups, configPopup }) {
   const timerRef = useRef(null);
   const sliderRef = useRef(null);
 
-  // 🟦 1. Mostrar en primera instancia según tiempo BD
+  // 🔒 Evitar que vuelva a mostrarse cuando el usuario lo cierra
+  const yaCerradoRef = useRef(false);
+
+
+  // 🟦 1. Mostrar popup por primera vez según tiempo de BD
   useEffect(() => {
     if (noData) return;
+    if (yaCerradoRef.current) return; // ⛔ No aparecer si ya se cerró
 
     const tiempoInicio = (configPopup?.[0]?.tiempo_inicio_seg || 5) * 1000;
-    
+
     timerRef.current = setTimeout(() => {
-      setVisible(true);
+      if (!yaCerradoRef.current) {
+        setVisible(true);
+      }
     }, tiempoInicio);
 
     return () => clearTimeout(timerRef.current);
   }, [noData, configPopup]);
 
 
-  // 🟩 2. Slider automático controlado por cada popup
+  // 🟩 2. Slider automático según tiempo de cada imagen
   useEffect(() => {
     if (!visible) return;
     if (noData) return;
@@ -41,20 +47,16 @@ export default function PopupPublicidad({ popups, configPopup }) {
   }, [visible, index, popups, noData]);
 
 
-  // 🟥 3. Cerrar popup y reaparición
+  // 🟥 3. Cerrar popup y evitar que vuelva a aparecer
   const cerrarPopup = () => {
     setVisible(false);
+    yaCerradoRef.current = true; // 🔒 Bloqueado hasta refrescar la página
 
     clearTimeout(timerRef.current);
-
-    const tiempoReaparecer = (configPopup?.tiempo_inicio_seg || 5) * 1000;
-
-    timerRef.current = setTimeout(() => {
-      setVisible(true);
-    }, tiempoReaparecer);
   };
 
-  // ⏩ Manual
+
+  // ⏩ Navegación manual
   const siguiente = () => {
     setIndex(prev => (prev + 1) % popups.length);
   };

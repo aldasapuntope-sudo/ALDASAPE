@@ -398,6 +398,155 @@
     margin-left: -27.5px;
 }
 
+.about-wrap2 {
+    padding: 100px 0px;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.about-box3 {
+    padding: 0px 70px 0px 40px;
+}
+
+
+.about-box3 .item-subtitle {
+    color: var(--green);
+    font-size: 15px;
+    font-family: "Ubuntu", sans-serif;
+    text-transform: uppercase;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 8px; 
+}
+
+.about-box3 .item-title {
+    color: #212121;
+    font-size: 32px;
+    line-height: 40px;
+    font-family: "Ubuntu", sans-serif;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.about-box3 p {
+    line-height: 26px;
+    color: #70778b;
+    margin-bottom: 50px;
+}
+
+
+.about-box3 .about-layout1 .item-img {
+    margin-bottom: 18px;
+}
+
+.about-box3 .about-layout1 .item-sm-title {
+    color: #212121;
+    font-size: 22px;
+    line-height: 24px;
+    font-family: "Ubuntu", sans-serif;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.about-box3 .about-layout1 p {
+    line-height: 24px;
+    color: #70778b;
+    margin-bottom: 0;
+    display: contents;
+}
+
+.about-layout2 {
+    padding: 70px 33px 0px 40px;
+}
+
+.about-layout2 .item-subtitle {
+    color: var(--rt-primary-color);
+    font-size: 15px;
+    font-family: "Ubuntu", sans-serif;
+    text-transform: uppercase;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.about-layout2 .item-title {
+    color: #212121;
+    font-size: 32px;
+    line-height: 40px;
+    font-family: "Ubuntu", sans-serif;
+    font-weight: 600;
+    margin-bottom: 10px;
+    padding-right: 75px;
+}
+
+.about-layout2 p {
+    line-height: 26px;
+    color: #70778b;
+    margin-bottom: 24px;
+}
+
+.about-layout3 .play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    z-index: 5;
+}
+
+
+.about-layout3 .item-img {
+    position: relative;
+}
+
+.about-layout3 .play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    z-index: 5;
+}
+
+.play-btn .play-icon.style-2 {
+    margin-right: 0;
+}
+
+.play-btn.play-btn-big .play-icon {
+    background: #fff;
+    color: var(--green);
+    transition: all 0.3s ease-in-out;
+}
+
+.play-btn .play-icon::before
+ {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: block;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 1px solid #15c39a;
+    animation: pulse-border 1500ms ease-out infinite;
+    z-index: -1;
+    background: white;
+}
+
+@media only screen and (max-width: 991px) {
+  .about-wrap2 {
+    padding: 70px 0px;
+  }
+}
+@media only screen and (max-width: 575px) {
+  .about-wrap2 {
+    padding: 50px 0px;
+  }
+}
+
   @media (min-width: 1200px) {
     .page-body .container, .container-lg, .container-md, .container-sm, .container-xl {
       max-width: 100% !important;

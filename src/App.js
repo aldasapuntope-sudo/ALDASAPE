@@ -60,6 +60,9 @@ import UsuariosList from './pages/dashboard/administracion/UsuariosList';
 import GTMScripts from './pages/dashboard/componentes/GTMScripts';
 import ConfigScriptsList from './pages/dashboard/administracion/ConfigScriptsList';
 import AppConfigLoader from './pages/dashboard/componentes/AppConfigLoader';
+import ConfigPopupList from './pages/dashboard/administracion/ConfigPopupList';
+import Club from './pages/enlaces/club';
+import Inversiones from './pages/enlaces/Inversiones';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -158,6 +161,9 @@ function AppRoutes() {
           <Route path="/terminos-condiciones" element={<TerminosCondiciones />} />
           <Route path="/publica-tu-aviso" element={<Publicatuanuncio />} />
           <Route path="/nosotros" element={<Nosotros />} />
+          <Route path="/inversiones" element={<Inversiones />} />
+          
+          <Route path="/club" element={<Club />} />
           <Route path="/politicas-de-privacidad" element={<PoliticasPrivacidad />} />
           <Route path="/buscar" element={<BuscarPage />} />
           
@@ -245,6 +251,13 @@ function AppRoutes() {
               element={<RutaProtegida element={PopupList} />}
             />
 
+            <Route
+              path="/adm-popupsconfig"
+              element={<RutaProtegida element={ConfigPopupList} />}
+            />
+
+
+            
             
 
             

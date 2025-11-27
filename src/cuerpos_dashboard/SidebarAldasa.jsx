@@ -154,6 +154,12 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
                       <Link to="/adm-anunciospopups" onClick={toggleSidebar}>Gestionar Anuncios Popups</Link>
                     </li>
 
+                    <li
+                      className={`submenu-link ${location.pathname.startsWith('/adm-popupsconfig') ? 'active' : ''}`}
+                    >
+                      <Link to="/adm-popupsconfig" onClick={toggleSidebar}>Gestionar Configuración Popups</Link>
+                    </li>
+
                     
 
                     

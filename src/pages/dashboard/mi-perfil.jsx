@@ -284,10 +284,20 @@ async function handleImagen(e) {
 }
 
 
-  const imagenPerfil =
-    datos.imagen
-      ? `${config.urlserver}${datos.imagen}`
-      : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+  const imagenPerfil = (() => {
+      if (!datos.imagen) {
+        // 🔹 Imagen por defecto
+        return "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+      }
+
+      // 🔹 Si es una URL completa (Google, Facebook, etc)
+      if (datos.imagen.startsWith("http://") || datos.imagen.startsWith("https://")) {
+        return datos.imagen;
+      }
+
+      // 🔹 Si es imagen guardada en tu servidor
+      return `${config.urlserver}${datos.imagen}`;
+    })();
 
   return (
     <>

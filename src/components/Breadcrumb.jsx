@@ -28,6 +28,8 @@ const Breadcrumb = () => {
     "terminos-condiciones": "Términos & Condiciones",
     "publica-tu-aviso": "Publica tu Anuncio",
     nosotros: "Nosotros",
+    club: "ALDASA CLUB",
+    inversiones: "ALDASA INVERSIONES",
     contacto: "Contacto",
     propiedades: "Propiedades",
   };

@@ -7,7 +7,7 @@ import NotFound from "../../components/NotFound";
 import { SkeletonInformacion } from "../../components/TablaSkeleton";
 import config from "../../config";
 
-export default function Nosotros() {
+export default function Inversiones() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -15,10 +15,10 @@ export default function Nosotros() {
     const fetchData = async () => {
       try {
         // 🔗 Endpoint para la sección "Nosotros"
-        const res = await axios.get(`${config.apiUrl}api/paginaprincipal/nosotros`);
+        const res = await axios.get(`${config.apiUrl}api/paginaprincipal/inversiones`);
         setData(res.data[0]); // toma el primer registro del array
       } catch (error) {
-        console.error("Error al obtener información de Nosotros:", error);
+        console.error("Error al obtener información de Inversiones:", error);
       } finally {
         setLoading(false);
       }
@@ -61,6 +61,12 @@ export default function Nosotros() {
     <>
       <section className="about-wrap2 py-5">
         <Breadcrumb />
+        <h2
+            className="text-center fw-bold mb-4"
+            style={{ color: "var(--green)" }}
+        >
+              {data.titulo || "Términos y Condiciones"}
+        </h2>
         
         <div className="container" dangerouslySetInnerHTML={{ __html: decodeHTML2(data.contenido) }}>
         

@@ -70,12 +70,33 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
   const nombre = usuario.usuarioaldasa?.nombre || usuario.name || 'Usuario';
   const escuela = usuario.escuela || 'Aldasa';
 
-  const imgSrc =
+
+  const imgSrc = (() => {
+    const img =
+      usuario.imagen ||
+      usuario.usuarioaldasa?.imagen ||
+      null;
+
+    // Si no hay imagen → usar por defecto
+    if (!img) {
+      return `${config.urlserver}image/animoji-1.png`;
+    }
+
+    // Si ya es una URL completa (Google, Facebook, etc.)
+    if (img.startsWith("http://") || img.startsWith("https://")) {
+      return img;
+    }
+
+    // Si es una imagen guardada en tu servidor
+    return `${config.urlserver}${img}`;
+  })();
+
+  /*const imgSrc =
   usuario.imagen
     ? `${config.urlserver}${usuario.imagen}`
     : usuario.usuarioaldasa?.imagen
       ? `${config.urlserver}${usuario.usuarioaldasa.imagen}`
-      : `${config.urlserver}image/animoji-1.png`;
+      : `${config.urlserver}image/animoji-1.png`;*/
 
   /*const imgSrc =
     usuario.imagen || usuario.usuarioaldasa?.imagen || `${config.urlserver}image/animoji-1.png`;
