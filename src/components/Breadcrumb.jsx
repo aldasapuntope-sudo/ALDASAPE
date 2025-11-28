@@ -30,6 +30,7 @@ const Breadcrumb = () => {
     nosotros: "Nosotros",
     club: "ALDASA CLUB",
     inversiones: "ALDASA INVERSIONES",
+    
     contacto: "Contacto",
     propiedades: "Propiedades",
   };

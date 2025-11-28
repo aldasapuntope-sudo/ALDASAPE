@@ -24,6 +24,7 @@ const nombresPersonalizados = {
   'adm-popupsconfig': 'Gestión de Configuración Popups',
   'adm-usuarios': 'Gestión de Usuarios',
   'adm-scripts': 'Gestión de Scripts',
+  'aldasaclub': 'Aldasa Club',
   detalle_guia: 'Detalle Guías',
   curso: 'Mis Cursos',
   detalle_curso: 'Detalle Curso',

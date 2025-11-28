@@ -322,6 +322,12 @@ function AppRoutes() {
             />
 
 
+            <Route 
+              path="/aldasaclub" 
+              element={<RutaProtegida element={Club} />}
+            />
+            
+
           </Route>
         )}
 

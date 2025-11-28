@@ -18,7 +18,7 @@
 .play-btn-modern:hover {
   background: rgba(0, 150, 0, 1);
 }
-
+ 
 .video-modal {
   position: fixed;
   top: 0;
@@ -42,7 +42,7 @@
     content: "";
     height: 100%;
     width: 62%;
-    background-color: #00c657;
+    background-color: var(--green);
     position: absolute;
     bottom: 111px;
     left: -77px;
@@ -54,7 +54,7 @@
 .about-button .item-btn {
   display: inline-block;
   padding: 7px 30px;
-  color: #00c657;
+  color: var(--green);
   font-size: 15px;
   font-weight: 500;
   background-color: #eaf7f4;
@@ -66,6 +66,6 @@
 }
 
 .about-button .item-btn:hover {
-  background-color: #00c657;
+  background-color: var(--green);
   color: #fff;
 }

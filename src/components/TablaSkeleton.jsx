@@ -86,7 +86,7 @@ export const CardSkeleton = ({ cards = 3 }) => (
   <div className="container mt-3">
     <div className="row">
       {Array.from({ length: cards }).map((_, i) => (
-        <div key={i} className="col-12 col-sm-6 col-md-4 mb-4">
+        <div key={i} className="col-12 col-sm-12 col-md-12 mb-4">
           <div className="card p-3 h-100">
             <Skeleton height={150} />
             <Skeleton count={3} style={{ marginTop: 10 }} />

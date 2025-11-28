@@ -1,14 +1,14 @@
 /*------------------- 6.21 Single Listing -------------------*/
 .swiper-button-next {
   color: white;
-  background: #00c657c2;
+  background: var(--green)c2;
   padding: 6px;
   border-radius: 9px;
 }
 
 .swiper-button-prev {
   color: white;
-  background: #00c657c2;
+  background: var(--green)c2;
   padding: 6px;
   border-radius: 9px;
 }
@@ -655,7 +655,7 @@ ul.ameniting-list {
 }
 
 .ms-auto svg.text-secondary {
-    background: #00c657;
+    background: var(--green);
     color: white !important;
     padding: 3px;
     border-radius: 2px;

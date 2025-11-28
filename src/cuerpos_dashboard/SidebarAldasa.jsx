@@ -198,7 +198,7 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
 
             {/* Mis anuncios */}
             
-
+            
             {/* Matrícula */}
             <div className="menu-group">
               <button className="menu-btn" onClick={() => toggleMenu('mis-anuncios')}>
@@ -239,24 +239,26 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
               
             </div>
 
-            {/* Reportes */}
-            <div className="menu-group">
-              <button className="menu-btn" onClick={() => toggleMenu('reportes')}>
-                <FaChartBar className="me-2" /> Reportes
-                {openMenu === 'reportes'
-                  ? <FaChevronDown className="ms-auto" />
-                  : <FaChevronRight className="ms-auto" />}
-              </button>
-              {openMenu === 'reportes' && (
-                <ul className="submenu">
-                  <li
-                    className={`submenu-link ${location.pathname.startsWith('/reportestud') ? 'active' : ''}`}
-                  >
-                    <Link to="/reportestud" onClick={toggleSidebar}>Reportes estudiantes</Link>
-                  </li>
-                </ul>
-              )}
-            </div>
+
+            
+
+            {/* Aldasa Club */}
+            <Link
+              to="/aldasaclub"
+              className={`menu-btn ${location.pathname === '/aldasaclub' ? 'active' : ''}`}
+              onClick={() => cambiarModo('gestion')}
+            >
+              <FaHome className="me-2" /> Aldasa Club
+            </Link>
+
+            {/* Aldasa Inversiones */}
+            <Link
+              to="/"
+              className={`menu-btn ${location.pathname === '/aldasainversiones' ? 'active' : ''}`}
+              onClick={() => cambiarModo('gestion')}
+            >
+              <FaHome className="me-2" /> Aldasa Inversiones
+            </Link>
 
           </>
        

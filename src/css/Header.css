@@ -161,7 +161,7 @@
 .btn-publicar {
   position: relative;
   overflow: hidden;
-  background-color: #00c657; /* Verde base */
+  background-color: var(--green); /* Verde base */
   color: #fff;
   font-weight: 600;
   padding: 8px 18px;
@@ -183,7 +183,7 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background-color: #00c6576b; /* Verde más oscuro */
+  background-color: var(--green)6b; /* Verde más oscuro */
   transition: left 0.4s ease;
   z-index: 0; /* fondo debajo del texto */
   color: white;
@@ -257,7 +257,7 @@
 .mega-menu .dropdown-header {
   font-weight: 700;
   font-size: 0.9rem;
-  color: var(--green, #00c657);
+  color: var(--green, var(--green));
   margin-bottom: 0.5rem;
   border-bottom: 1px solid #e9ecef;
   padding-bottom: 4px;
