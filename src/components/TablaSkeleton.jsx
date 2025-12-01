@@ -97,6 +97,21 @@ export const CardSkeleton = ({ cards = 3 }) => (
   </div>
 );
 
+export const CardSkeleton2 = ({ cards = 3 }) => (
+  <div className="container mt-3">
+    <div className="row">
+      {Array.from({ length: cards }).map((_, i) => (
+        <div key={i} className="col-12 col-sm-4 col-md-4 mb-4">
+          <div className="card p-3 h-100">
+            <Skeleton height={150} />
+            <Skeleton count={3} style={{ marginTop: 10 }} />
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
 // ✅ CORRECTO: Skeleton de información
 export const SkeletonInformacion = () => {
   return (

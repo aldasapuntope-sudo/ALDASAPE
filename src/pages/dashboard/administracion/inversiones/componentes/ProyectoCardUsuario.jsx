@@ -1,0 +1,63 @@
+    import React from "react";
+    import { Card } from "react-bootstrap";
+    import { FaLock } from "react-icons/fa";
+    import config from "../../../../../config";
+
+    export default function ProyectoCardUsuario({ proyecto, activo }) {
+        
+
+        const crearSlug = (texto) => {
+  return texto
+    .toString()
+    .normalize("NFD")                 // quita acentos
+    .replace(/[\u0300-\u036f]/g, "")  // limpia acentos restantes
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")      // reemplaza espacios por guiones
+    .replace(/^-+|-+$/g, "");         // elimina guiones sobrantes
+};
+
+
+
+  const imagen = proyecto.imagen_principal
+    ? `${config.urlserver}${proyecto.imagen_principal}`
+    : "https://via.placeholder.com/400x250";
+
+  const irDetalle = () => {
+    if (activo) {
+         const slug = crearSlug(proyecto.titulo);
+      window.location.href = `/proyecto/${proyecto.id}-${slug}`;
+    }
+  };
+
+  return (
+    <Card
+      className={`shadow-sm border-0 rounded-4 position-relative ${
+        !activo ? "opacity-50" : ""
+      }`}
+      style={{ cursor: activo ? "pointer" : "not-allowed" }}
+      onClick={irDetalle}
+    >
+      {!activo && (
+        <div className="position-absolute top-50 start-50 translate-middle text-center">
+          <FaLock size={50} className="text-dark opacity-75" />
+        </div>
+      )}
+
+      <img
+        src={imagen}
+        alt={proyecto.titulo}
+        style={{ height: "220px", objectFit: "cover" }}
+        className="w-100"
+      />
+
+      <Card.Body>
+        <h5>{proyecto.titulo}</h5>
+        <p className="text-muted">{proyecto.descripcion}</p>
+
+        {activo && (
+          <p className="text-success fw-bold">Disponible para ti</p>
+        )}
+      </Card.Body>
+    </Card>
+  );
+}

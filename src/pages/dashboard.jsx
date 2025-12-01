@@ -24,7 +24,7 @@ export default function DashboardLayout() {
   const [usuario, setUsuario] = useState(null);
 
   useEffect(() => {
-    document.body.style.backgroundImage = "url('assets/images/bg-buscador.webp')";
+    document.body.style.backgroundImage = "url('../assets/images/bg-buscador.webp')";
     const data = localStorage.getItem('usuario');
     if (data) setUsuario(JSON.parse(data));
   }, []);

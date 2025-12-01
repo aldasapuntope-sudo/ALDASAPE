@@ -63,6 +63,8 @@ import AppConfigLoader from './pages/dashboard/componentes/AppConfigLoader';
 import ConfigPopupList from './pages/dashboard/administracion/ConfigPopupList';
 import Club from './pages/enlaces/club';
 import Inversiones from './pages/enlaces/Inversiones';
+import ProyectosUsuario from './pages/dashboard/administracion/inversiones/ProyectosUsuario';
+import ProyectoDetalle from './components/proyecto_detalle/ProyectoDetalle';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -158,6 +160,7 @@ function AppRoutes() {
             element={usuario ? <Navigate to="/dashboard" /> : <Home />}
           />
           <Route path="/anuncio/:slug" element={<PropertyDetail />} />
+
           <Route path="/terminos-condiciones" element={<TerminosCondiciones />} />
           <Route path="/publica-tu-aviso" element={<Publicatuanuncio />} />
           <Route path="/nosotros" element={<Nosotros />} />
@@ -203,6 +206,7 @@ function AppRoutes() {
               element={<RutaProtegida element={UsuariosList} />}
             />
             
+            <Route path="/proyecto/:slug" element={<ProyectoDetalle />} />
             
             <Route
               path="/adm-usuarioplanes"
@@ -325,6 +329,12 @@ function AppRoutes() {
             <Route 
               path="/aldasaclub" 
               element={<RutaProtegida element={Club} />}
+            />
+
+            
+            <Route
+              path="/aldasainversioens"
+              element={<RutaProtegida element={ProyectosUsuario} />}
             />
             
 

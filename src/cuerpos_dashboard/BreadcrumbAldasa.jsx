@@ -13,7 +13,7 @@ const nombresPersonalizados = {
   'adm-amenities': 'Lista de Servicios',
   'adm-caracteristicas': 'Lista de Características',
   'adm-operaciones': 'Lista de Operaciones',
-  'adm-paginas': 'Gestión de Páginas',
+  'adm-paginas': 'Gestión de Páginas', 
   'adm-ubicaciones': 'Gestión de Ubicaciones',
   'adm-configuraciones': 'Gestión de Configuraciones',
   'adm-tpropiedades': 'Lista Tipo Propiedades',
@@ -25,6 +25,8 @@ const nombresPersonalizados = {
   'adm-usuarios': 'Gestión de Usuarios',
   'adm-scripts': 'Gestión de Scripts',
   'aldasaclub': 'Aldasa Club',
+  'aldasainversioens': 'Aldasa Inversiones',
+  
   detalle_guia: 'Detalle Guías',
   curso: 'Mis Cursos',
   detalle_curso: 'Detalle Curso',

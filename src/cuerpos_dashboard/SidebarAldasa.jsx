@@ -23,8 +23,8 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
  
   const { darkMode } = useTheme();
   const logo = darkMode
-    ? 'assets/images/logo-aldasape-color.png'
-    : 'assets/images/logo-aldasape-color.png';
+    ? '../assets/images/logo-aldasape-color.png'
+    : '../assets/images/logo-aldasape-color.png';
 
   const toggleMenu = (menu) => {
     setOpenMenu(openMenu === menu ? null : menu);
@@ -253,8 +253,8 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
 
             {/* Aldasa Inversiones */}
             <Link
-              to="/"
-              className={`menu-btn ${location.pathname === '/aldasainversiones' ? 'active' : ''}`}
+              to="/aldasainversioens"
+              className={`menu-btn ${location.pathname === '/aldasainversioens' ? 'active' : ''}`}
               onClick={() => cambiarModo('gestion')}
             >
               <FaHome className="me-2" /> Aldasa Inversiones
