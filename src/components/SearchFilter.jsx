@@ -2,15 +2,17 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import config from "../config";
+import { SkeletonTabs } from "./TablaSkeleton";
 
 export default function SearchFilter({ mode, setMode }) {
   const [tipos, setTipos] = useState([]);
-  const [operaciones, setOperaciones] = useState([]); // 🔹 NUEVO estado
+  const [operaciones, setOperaciones] = useState([]);
   const [tipo, setTipo] = useState("");
   const [q, setQ] = useState("");
   const [resultados, setResultados] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
+  const [loadingTabs, setLoadingTabs] = useState(true);
 
   // 🔹 Cargar tipos de propiedad
   useEffect(() => {
@@ -20,20 +22,28 @@ export default function SearchFilter({ mode, setMode }) {
         const data = Array.isArray(res.data) ? res.data : res.data.data;
         setTipos(data || []);
       })
-      .catch((err) => console.error("Error al cargar tipos de propiedad:", err));
+      .catch((err) => {
+        console.error("Error al cargar tipos:", err);
+      });
   }, []);
 
-  // 🔹 Cargar tipos de operación (alquilar, comprar, proyectos)
+  // 🔹 Cargar tipos de operación
   useEffect(() => {
     axios
       .get(`${config.apiUrl}api/paginaprincipal/tipos-operacion`)
       .then((res) => {
         const data = Array.isArray(res.data) ? res.data : res.data.data;
         setOperaciones(data || []);
-        // Si no hay modo seleccionado, usar el primero de la lista
-        if (!mode && data.length > 0) setMode(data[0].nombre.toLowerCase());
+        setLoadingTabs(false);
+
+        if (!mode && data.length > 0) {
+          setMode(data[0].nombre.toLowerCase());
+        }
       })
-      .catch((err) => console.error("Error al cargar tipos de operación:", err));
+      .catch((err) => {
+        console.error("Error:", err);
+        setLoadingTabs(false);
+      });
   }, []);
 
   // 🔍 Buscar propiedades (considera tipo + texto)
@@ -66,7 +76,6 @@ export default function SearchFilter({ mode, setMode }) {
     return () => clearTimeout(delayDebounce);
   }, [q, tipo, mode]);
 
-  // 🔹 Enviar búsqueda
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -79,7 +88,6 @@ export default function SearchFilter({ mode, setMode }) {
     setShowDropdown(false);
   };
 
-  // 🔹 Seleccionar sugerencia
   const handleSelectSuggestion = (item) => {
     navigate(
       `/anuncio/${item.id}-${item.titulo
@@ -91,20 +99,22 @@ export default function SearchFilter({ mode, setMode }) {
 
   return (
     <div style={{ position: "relative" }}>
-      {/* Tabs dinámicos de tipos de operación */}
       <div className="search-tabs mb-2">
-        {operaciones.map((item) => (
-          <button
-            key={item.id}
-            className={`tab-btn ${mode === item.nombre.toLowerCase() ? "active" : ""}`}
-            onClick={() => setMode(item.nombre.toLowerCase())}
-          >
-            {item.nombre.charAt(0).toUpperCase() + item.nombre.slice(1)}
-          </button>
-        ))}
+        {loadingTabs ? (
+          <SkeletonTabs />
+        ) : (
+          operaciones.map((item) => (
+            <button
+              key={item.id}
+              className={`tab-btn ${mode === item.nombre.toLowerCase() ? "active" : ""}`}
+              onClick={() => setMode(item.nombre.toLowerCase())}
+            >
+              {item.nombre.charAt(0).toUpperCase() + item.nombre.slice(1)}
+            </button>
+          ))
+        )}
       </div>
 
-      {/* Formulario de búsqueda */}
       <form className="search-box" onSubmit={handleSubmit}>
         <select
           className="form-select"
@@ -131,7 +141,6 @@ export default function SearchFilter({ mode, setMode }) {
             disabled={!tipo}
           />
 
-          {/* Dropdown de sugerencias */}
           {showDropdown && resultados.length > 0 && (
             <ul
               style={{

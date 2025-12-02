@@ -41,7 +41,7 @@ export default function MegaDropdown({ data, mode, isMobile, isOpen }) {
                         target={sectionName === "propiedades_mas_vistas" ? "_blank" : "_self"}
                         rel="noopener noreferrer"
                       >
-                        {item.titulo || item.nombre}
+                        {item.titulo || item.nombre.toUpperCase()}
                       </a>
                     );
                   })

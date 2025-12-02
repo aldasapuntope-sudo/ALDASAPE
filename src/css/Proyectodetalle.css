@@ -1,0 +1,166 @@
+li.list-group-item.d-flex.justify-content-between.align-items-center.list-group-item-success.border-0.px-0.py-2 {
+    padding: 7px 13px !important;
+    border-radius: 100px;
+    margin-top: 4px;
+}
+
+.gallery-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+        .gallery-modal-content {
+          position: relative;
+          max-width: 90%;
+          max-height: 90%;
+        }
+
+        .gallery-image {
+          max-width: 100%;
+          max-height: 80vh;
+          border-radius: 10px;
+          transition: opacity 0.3s ease;
+        }
+
+        .fade-in {
+          opacity: 1;
+        }
+
+        .fade-out {
+          opacity: 0;
+        }
+
+        .btn-prev,
+        .btn-next {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          background: rgba(0, 0, 0, 0.6);
+          border: none;
+          color: #fff;
+          font-size: 35px;
+          padding: 8px 14px;
+          border-radius: 50%;
+          cursor: pointer;
+        }
+
+        .btn-prev {
+          left: -60px;
+        }
+.btn-next {
+  right: -60px;
+}
+
+.btn-close {
+  position: absolute;
+  top: -55px;
+  right: -55px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: white;
+  border: none;
+  color: #000;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.btn-close:hover {
+  background: #f1f1f1;
+  transform: scale(1.1);
+}
+
+.btn-close:active {
+  transform: scale(0.95);
+}
+
+/* Fondo negro transparente */
+.gallery-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+/* Contenedor */
+.gallery-modal-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 85%;
+  animation: fadeZoom 0.25s ease-in-out;
+}
+
+/* Imagen */
+.gallery-image {
+  max-width: 100%;
+  max-height: 85vh;
+  border-radius: 10px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+  object-fit: contain;
+}
+
+/* Animación */
+@keyframes fadeZoom {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* BOTONES SLIDER */
+
+
+/* Fondo negro transparente */
+.video-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+/* Contenedor del video */
+.video-modal-content {
+  width: 90%;
+  max-width: 900px;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+  animation: modalFade 0.25s ease-in-out;
+}
+
+/* Animación suave */
+@keyframes modalFade {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

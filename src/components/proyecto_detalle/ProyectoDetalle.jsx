@@ -7,13 +7,14 @@ import config from "../../config";
 import Breadcrumb from "../Breadcrumb";
 import NotFound from "../NotFound";
 import { SkeletonInformacionPropiedaddetalle } from "../TablaSkeleton";
-
+import "../../css/Proyectodetalle.css";
 import ProyectoHeading from "./componentes/ProyectoHeading";
 import ProyectoGallery from "./componentes/ProyectoGallery";
 import ProyectoDescripcion from "./componentes/ProyectoDescripcion";
 import ProyectoCaracteristicas from "./componentes/ProyectoCaracteristicas";
 import ProyectoMultimedia from "./componentes/ProyectoMultimedia";
 import ProyectoContactBox from "./componentes/ProyectoContactBox";
+import ProyectoEtapas from "./componentes/ProyectoEtapas";
 
 export default function ProyectoDetalle() {
   const { slug } = useParams();
@@ -71,8 +72,7 @@ export default function ProyectoDetalle() {
               <div className="row">
                 <div className="col-lg-8">
 
-                  {/* GALERÍA */}
-                  <ProyectoGallery imagenes={proyecto.imagenes} />
+              
 
                   <div className="single-listing-box1">
 
@@ -82,10 +82,18 @@ export default function ProyectoDetalle() {
                     {/* CARACTERÍSTICAS */}
                     <ProyectoCaracteristicas caracteristicas={proyecto.caracteristicas} />
 
+                    {/* ETAPAS DEL PROYECTO */}
+                    <ProyectoEtapas etapas={proyecto.etapas} />
+
+                    {/* GALERÍA */}
+                    <ProyectoGallery imagenes={proyecto.imagenes} />
+
                     {/* MULTIMEDIA */}
                     <ProyectoMultimedia multimedia={proyecto.multimedia} />
 
                   </div>
+
+
                 </div>
 
                 {/* LADO DERECHO */}

@@ -183,3 +183,14 @@ export const SkeletonInformacionPropiedaddetalle = () => {
     </section>
   );
 };
+
+
+export const SkeletonTabs = () => {
+  return (
+    <div className="search-tabs mb-2">
+      {[1, 2, 3].map((i) => (
+        <div key={i} className="tab-skeleton"></div>
+      ))}
+    </div>
+  );
+}

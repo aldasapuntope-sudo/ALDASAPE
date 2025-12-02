@@ -1,45 +1,83 @@
-import React from "react";
+import React, { useState } from "react";
 import config from "../../../config";
 
 export default function ProyectoMultimedia({ multimedia }) {
+  const [videoSeleccionado, setVideoSeleccionado] = useState(null);
+
   if (!multimedia || multimedia.length === 0) return null;
 
+  // Filtrar solo videos
+  const videos = multimedia.filter((item) => item.tipo === "video");
+
+  if (videos.length === 0) return null;
+
   return (
-    <div className="single-listing-box1 mt-4">
-      <h4>Multimedia</h4>
+    <>
+      <div className="card shadow-sm border-0 rounded-4 p-4 mt-4">
+        <h3 className="mb-3">Videos del Proyecto</h3>
 
-      <div className="mt-3">
-        {multimedia.map((item) => {
-          if (item.tipo === "imagen") {
-            return (
-              <img
-                key={item.id}
-                src={`${config.urlserver}${item.archivo}`}
-                className="img-fluid rounded mb-3"
-                style={{ width: "100%", objectFit: "cover" }}
-                alt="Multimedia"
-              />
-            );
-          }
-
-          if (item.tipo === "video") {
-            return (
-              <div key={item.id} className="mb-3">
-                <iframe
-                  width="100%"
-                  height="315"
-                  src={item.archivo}
-                  title="Video"
-                  frameBorder="0"
-                  allowFullScreen
-                ></iframe>
+        <div className="row">
+          {videos.map((video) => (
+            <div key={video.id} className="col-12 mb-4">
+              <div
+                className="card shadow-sm border-0 rounded-4 overflow-hidden"
+                style={{ cursor: "pointer" }}
+                onClick={() => setVideoSeleccionado(video.archivo)}
+              >
+                <div className="ratio ratio-16x9">
+                  <iframe
+                    src={video.archivo}
+                    title="Video del proyecto"
+                    allowFullScreen
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      border: "none",
+                      pointerEvents: "none", // Evita que el iframe capture el click
+                    }}
+                  ></iframe>
+                </div>
               </div>
-            );
-          }
-
-          return null;
-        })}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+
+      {/* MODAL FULLSCREEN */}
+      {videoSeleccionado && (
+        <div
+          className="video-modal"
+          onClick={() => setVideoSeleccionado(null)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.85)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,
+          }}
+        >
+          <div
+            className="video-modal-content"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: "90%",
+              maxWidth: "900px",
+              aspectRatio: "16/9",
+              borderRadius: "12px",
+              overflow: "hidden",
+            }}
+          >
+            <iframe
+              src={videoSeleccionado}
+              title="Video en pantalla completa"
+              allowFullScreen
+              style={{ width: "100%", height: "100%", border: "none" }}
+            ></iframe>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

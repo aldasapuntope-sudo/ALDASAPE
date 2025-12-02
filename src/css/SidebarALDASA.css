@@ -151,9 +151,14 @@
     text-decoration: none;
     font-size: 14px;
   }
+
+.menu-btn.active
+ {
+    background: #555656;
+}
   
   .menu-btn:hover {
-    background-color: #c4e0f7;
+    background: #555656;
   }
   
   .submenu {
