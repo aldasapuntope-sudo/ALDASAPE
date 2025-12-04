@@ -1,12 +1,14 @@
+// src/.../ProyectosUsuario.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Alert } from "react-bootstrap";
+import { Alert, Modal } from "react-bootstrap";
 import config from "../../../../config";
 import ProyectoCardUsuario from "./componentes/ProyectoCardUsuario";
 import { useUsuario } from "../../../../context/UserContext";
 import BreadcrumbALDASA from "../../../../cuerpos_dashboard/BreadcrumbAldasa";
 import Cargando from "../../../../components/cargando";
 import { CardSkeleton2 } from "../../../../components/TablaSkeleton";
+import NuevoProyecto from "./NuevoProyecto"; // ← IMPORTANTE
 
 export default function ProyectosUsuario() {
   const { usuario } = useUsuario();
@@ -14,55 +16,78 @@ export default function ProyectosUsuario() {
   const [permitidoID, setPermitidoID] = useState(null);
   const [cargando, setCargando] = useState(false);
 
+  const [showModal, setShowModal] = useState(false);
+  const [proyectoSel, setProyectoSel] = useState(null);
+
+  const esAdmin = usuario?.usuarioaldasa?.perfil_id === 1;
+
   useEffect(() => {
     cargarDatos();
   }, []);
 
-  
   const cargarDatos = async () => {
     setCargando(true);
     try {
-        // 1️⃣ Traer todos los proyectos
-        const res = await axios.get(`${config.apiUrl}api/inversiones/mis-proyectos`);
-        
-        // 2️⃣ Traer el proyecto permitido
-        const asignacion = await axios.get(
+      const res = await axios.get(`${config.apiUrl}api/inversiones/mis-proyectos`);
+
+      if (esAdmin) {
+        setProyectos(res.data);
+        setPermitidoID(null);
+        return;
+      }
+
+      const asignacion = await axios.get(
         `${config.apiUrl}api/inversiones/mis-proyectos/${usuario.usuarioaldasa.id}`
-        );
+      );
 
-        const asignadoID = asignacion.data?.proyecto_id || null;
+      const asignadoID = asignacion.data?.proyecto_id || null;
 
-        // 3️⃣ Ordenar → Primero el permitido, luego los demás
-        const proyectosOrdenados = res.data.sort((a, b) => {
+      const proyectosOrdenados = res.data.sort((a, b) => {
         if (a.id === asignadoID) return -1;
         if (b.id === asignadoID) return 1;
         return 0;
-        });
+      });
 
-        // 4️⃣ Guardar ordenados
-        setProyectos(proyectosOrdenados);
-        setPermitidoID(asignadoID);
+      setProyectos(proyectosOrdenados);
+      setPermitidoID(asignadoID);
 
     } catch (error) {
-        console.log(error);
+      console.log(error);
     } finally {
-        setCargando(false);
+      setCargando(false);
     }
-    };
+  };
 
+  const handleNuevo = () => {
+    setProyectoSel(null);
+    setShowModal(true);
+  };
 
+  const handleEditar = (proyecto) => {
+    setProyectoSel(proyecto);
+    setShowModal(true);
+  };
+
+  
   return (
     <>
-      {/* 🔹 Breadcrumb */}
       <BreadcrumbALDASA />
 
       <div className="container pt-4">
         <div className="card shadow-sm border-0 rounded-4">
           <div className="card-body p-4">
 
-            <h3 className="fw-bold text-success mb-4"></h3>
+            {/* Título + Botón Nuevo */}
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h3 className="fw-bold">Proyectos</h3>
 
-            {/* 🔹 Cargando */}
+              {esAdmin && (
+                <button className="btn btn-primary" onClick={handleNuevo}>
+                  ➕ Nuevo Proyecto
+                </button>
+              )}
+            </div>
+
             {cargando ? (
               <>
                 <Cargando visible={true} />
@@ -75,17 +100,32 @@ export default function ProyectosUsuario() {
                 {proyectos.map((proy) => (
                   <div className="col-md-4 mb-4" key={proy.id}>
                     <ProyectoCardUsuario
-                      proyecto={proy}
-                      activo={proy.id === permitidoID}
+                      proyecto={proy}   // ← Manda el OBJETO COMPLETO
+                      activo={esAdmin || proy.id === permitidoID}
+                      onEditar={handleEditar}
+                      esAdmin={esAdmin}
                     />
                   </div>
                 ))}
               </div>
             )}
-
           </div>
         </div>
       </div>
+
+      {/* MODAL */}
+      <Modal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        size="lg"
+        centered
+      >
+        <NuevoProyecto
+          proyectoId={proyectoSel}   // ← enviar ID real
+          onClose={() => setShowModal(false)}
+          onSuccess={cargarDatos}
+        />
+      </Modal>
     </>
   );
 }

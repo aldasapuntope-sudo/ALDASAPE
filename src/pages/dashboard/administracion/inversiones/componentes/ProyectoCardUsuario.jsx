@@ -1,22 +1,20 @@
-    import React from "react";
-    import { Card } from "react-bootstrap";
-    import { FaLock } from "react-icons/fa";
-    import config from "../../../../../config";
+// src/.../ProyectoCardUsuario.jsx
+import React from "react";
+import { Card, Button } from "react-bootstrap";
+import { FaEdit, FaLock } from "react-icons/fa";
+import config from "../../../../../config";
 
-    export default function ProyectoCardUsuario({ proyecto, activo }) {
-        
-
-        const crearSlug = (texto) => {
-  return texto
-    .toString()
-    .normalize("NFD")                 // quita acentos
-    .replace(/[\u0300-\u036f]/g, "")  // limpia acentos restantes
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")      // reemplaza espacios por guiones
-    .replace(/^-+|-+$/g, "");         // elimina guiones sobrantes
-};
-
-
+export default function ProyectoCardUsuario({ proyecto, activo, onEditar, esAdmin }) {
+  
+  const crearSlug = (texto) => {
+    return texto
+      .toString()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+  };
 
   const imagen = proyecto.imagen_principal
     ? `${config.urlserver}${proyecto.imagen_principal}`
@@ -24,7 +22,7 @@
 
   const irDetalle = () => {
     if (activo) {
-         const slug = crearSlug(proyecto.titulo);
+      const slug = crearSlug(proyecto.titulo);
       window.location.href = `/proyecto/${proyecto.id}-${slug}`;
     }
   };
@@ -37,6 +35,22 @@
       style={{ cursor: activo ? "pointer" : "not-allowed" }}
       onClick={irDetalle}
     >
+      {/* BOTÓN EDITAR SOLO PARA ADMIN */}
+      {esAdmin && (
+        <Button
+          variant="success"
+          size="sm"
+          className="position-absolute top-0 end-0 m-2 rounded-circle"
+          onClick={(e) => {
+            e.stopPropagation(); // NO abrir detalle
+            onEditar(proyecto);
+          }}
+        >
+          <FaEdit />
+        </Button>
+      )}
+
+      {/* LOCK si NO activo */}
       {!activo && (
         <div className="position-absolute top-50 start-50 translate-middle text-center">
           <FaLock size={50} className="text-dark opacity-75" />
@@ -54,9 +68,7 @@
         <h5>{proyecto.titulo}</h5>
         <p className="text-muted">{proyecto.descripcion}</p>
 
-        {activo && (
-          <p className="text-success fw-bold">Disponible para ti</p>
-        )}
+        {activo && <p className="text-success fw-bold">Disponible para ti</p>}
       </Card.Body>
     </Card>
   );
