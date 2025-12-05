@@ -74,6 +74,78 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
     }
   };
 
+
+  const confirmarEliminacion = async (callback) => {
+    Swal.fire({
+      title: "¿Eliminar elemento?",
+      text: "Esta acción no se puede deshacer.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await callback();
+        Swal.fire("Eliminado", "El elemento ha sido eliminado", "success");
+      }
+    });
+  };
+
+
+  const eliminarMultimedia = async (item, index) => {
+    confirmarEliminacion(async () => {
+      if (item.id) {
+        await axios.delete(`${config.apiUrl}api/inversiones/emultimedia/${item.id}`);
+      }
+
+      const copia = [...multimedia];
+      copia.splice(index, 1);
+      setMultimedia(copia);
+    });
+  };
+
+
+  const eliminarEtapa = async (item, index) => {
+    confirmarEliminacion(async () => {
+      if (item.id) {
+        await axios.delete(`${config.apiUrl}api/inversiones/eetapas/${item.id}`);
+      }
+
+      const copia = [...etapas];
+      copia.splice(index, 1);
+      setEtapas(copia);
+    });
+  };
+
+  const eliminarCaracteristica = async (item, index) => {
+    confirmarEliminacion(async () => {
+      if (item.id) {
+        await axios.delete(`${config.apiUrl}api/inversiones/ecaracteristicas/${item.id}`);
+      }
+
+      const copia = [...caracteristicas];
+      copia.splice(index, 1);
+      setCaracteristicas(copia);
+    });
+  };
+
+  const eliminarInversionista = async (item, index) => {
+    confirmarEliminacion(async () => {
+      if (item.id) {
+        await axios.delete(`${config.apiUrl}api/inversiones/einversionistas/${item.id}`);
+      }
+
+      const copia = [...inversionistas];
+      copia.splice(index, 1);
+      setInversionistas(copia);
+    });
+  };
+
+
+
+
   // ==========================================================
   // VALIDACIÓN FORM
   // ==========================================================
@@ -116,12 +188,13 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
         // MULTIMEDIA
         multimedia.forEach((item, i) => {
           if (item.archivo instanceof File) {
+            // archivo nuevo → se envía archivo
             formData.append(`multimedia[${i}][archivo]`, item.archivo);
             formData.append(`multimedia[${i}][tipo]`, item.tipo);
           } else {
+            // archivo existente → NO se envía "archivo", solo el id
             formData.append(`multimedia[${i}][id]`, item.id);
             formData.append(`multimedia[${i}][tipo]`, item.tipo);
-            formData.append(`multimedia[${i}][archivo]`, item.archivo);
           }
         });
 
@@ -149,16 +222,21 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
           formData.append(`etapas[${i}][fecha_completado]`, item.fecha_completado || "");
         });
 
+        for (let pair of formData.entries()) {
+  console.log(pair[0] + ": ", pair[1]);
+}
         let r;
         if (esEdicion) {
           r = await axios.post(
             `${config.apiUrl}api/proyectos/${proyectoId.id}/actualizar`,
             formData
           );
+
+          
         } else {
           r = await axios.post(`${config.apiUrl}api/proyectos/crear`, formData);
         }
-
+        
         Swal.fire("Éxito", r.data.mensaje, "success");
         if (onSuccess) onSuccess();
         if (onClose) onClose();
@@ -270,7 +348,7 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
                   <Form.Group className="mb-2">
                     <Form.Label>Usuario</Form.Label>
                     <Form.Select
-                      value={inv.interesado_id}
+                      value={inv.id}
                       onChange={(e) => {
                         const copia = [...inversionistas];
                         copia[index].interesado_id = e.target.value;
@@ -307,14 +385,11 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
                   <Button
                     variant="danger"
                     size="sm"
-                    onClick={() => {
-                      const copia = [...inversionistas];
-                      copia.splice(index, 1);
-                      setInversionistas(copia);
-                    }}
+                    onClick={() => eliminarInversionista(inv, index)}
                   >
                     Eliminar
                   </Button>
+
                 </div>
               ))}
 
@@ -369,11 +444,7 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
                   <Button
                     variant="danger"
                     size="sm"
-                    onClick={() => {
-                      const copia = [...caracteristicas];
-                      copia.splice(index, 1);
-                      setCaracteristicas(copia);
-                    }}
+                    onClick={() => eliminarCaracteristica(item, index)}
                   >
                     Eliminar
                   </Button>
@@ -484,11 +555,7 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
                   <Button
                     variant="danger"
                     size="sm"
-                    onClick={() => {
-                      const copia = [...etapas];
-                      copia.splice(index, 1);
-                      setEtapas(copia);
-                    }}
+                    onClick={() => eliminarEtapa(item, index)}
                   >
                     Eliminar
                   </Button>
@@ -500,7 +567,7 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
               {/* ====================================================== */}
 
               {/* ====================================================== */}
-                <Col md={6} className="mt-4">
+                <Col md={12} className="mt-4">
                 <h5>Multimedia</h5>
 
                 <Button
@@ -583,17 +650,14 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
 
                         {/* BOTÓN ELIMINAR */}
                         <Button
-                            variant="danger"
-                            size="sm"
-                            className="mt-2"
-                            onClick={() => {
-                            const copia = [...multimedia];
-                            copia.splice(index, 1);
-                            setMultimedia(copia);
-                            }}
+                          variant="danger"
+                          size="sm"
+                          className="mt-2"
+                          onClick={() => eliminarMultimedia(item, index)}
                         >
-                            Eliminar
+                          Eliminar
                         </Button>
+
 
                         </div>
                     );

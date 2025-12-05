@@ -38,9 +38,9 @@ export default function ProyectoCardUsuario({ proyecto, activo, onEditar, esAdmi
       {/* BOTÓN EDITAR SOLO PARA ADMIN */}
       {esAdmin && (
         <Button
-          variant="success"
+          variant=""
           size="sm"
-          className="position-absolute top-0 end-0 m-2 rounded-circle"
+          className="position-absolute top-0 end-0 m-2 rounded-circle boton-editar-card btn btn-outline-success btn-sm"
           onClick={(e) => {
             e.stopPropagation(); // NO abrir detalle
             onEditar(proyecto);
