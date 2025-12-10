@@ -179,11 +179,22 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
       try {
         let formData = new FormData();
 
-        // Valores simples
-        Object.entries(values).forEach(([k, v]) => {
-          if (k === "imagen_principal" && v === null) return;
-          formData.append(k, v);
-        });
+        // Campos simples
+        formData.append("titulo", values.titulo);
+        formData.append("descripcion", values.descripcion);
+        formData.append("ubicacion", values.ubicacion);
+        formData.append("porcentaje_avance", values.porcentaje_avance);
+        formData.append("is_active", values.is_active);
+
+        // Imagen principal
+        if (values.imagen_principal instanceof File) {
+          // Si el usuario seleccionó una imagen nueva → enviar archivo
+          formData.append("imagen_principal", values.imagen_principal);
+        } else {
+          // Si no seleccionó nada → enviar la ruta anterior (pero NO como file)
+          formData.append("imagen_principal_actual", datosProyecto?.imagen_principal || "");
+        }
+
 
         // MULTIMEDIA
         multimedia.forEach((item, i) => {
@@ -201,7 +212,6 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
         // INVERSIONISTAS
         inversionistas.forEach((item, i) => {
           formData.append(`inversionistas[${i}][id]`, item.id || "");
-          formData.append(`inversionistas[${i}][interesado_id]`, item.interesado_id);
           formData.append(`inversionistas[${i}][estado]`, item.estado);
         });
 
@@ -228,13 +238,13 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
         let r;
         if (esEdicion) {
           r = await axios.post(
-            `${config.apiUrl}api/proyectos/${proyectoId.id}/actualizar`,
+            `${config.apiUrl}api/inversiones/actualizar/${proyectoId.id}`,
             formData
           );
 
           
         } else {
-          r = await axios.post(`${config.apiUrl}api/proyectos/crear`, formData);
+          r = await axios.post(`${config.apiUrl}api/inversiones/registrar`, formData);
         }
         
         Swal.fire("Éxito", r.data.mensaje, "success");
@@ -286,6 +296,9 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
                     value={formik.values.titulo}
                     onChange={formik.handleChange}
                   />
+                  {formik.touched.titulo && formik.errors.titulo && (
+                    <small className="text-danger">{formik.errors.titulo}</small>
+                  )}
                 </Form.Group>
 
                 {/* DESCRIPCIÓN */}
@@ -298,6 +311,9 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
                     value={formik.values.descripcion}
                     onChange={formik.handleChange}
                   />
+                  {formik.touched.descripcion && formik.errors.descripcion && (
+                    <small className="text-danger">{formik.errors.descripcion}</small>
+                  )}
                 </Form.Group>
 
                 {/* UBICACIÓN */}
@@ -308,6 +324,9 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
                     value={formik.values.ubicacion}
                     onChange={formik.handleChange}
                   />
+                  {formik.touched.ubicacion && formik.errors.ubicacion && (
+                    <small className="text-danger">{formik.errors.ubicacion}</small>
+                  )}
                 </Form.Group>
 
                 {/* IMAGEN PRINCIPAL */}
@@ -319,6 +338,7 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
                       formik.setFieldValue("imagen_principal", e.target.files[0])
                     }
                   />
+                  
                 </Form.Group>
               </Col>
 
