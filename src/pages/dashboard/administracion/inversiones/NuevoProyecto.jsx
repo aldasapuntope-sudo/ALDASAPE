@@ -52,7 +52,7 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
       );
 
       const data = Array.isArray(res.data) ? res.data[0] : res.data;
-
+      console.log(data);
       setDatosProyecto(data);
       setMultimedia(data.multimedia || []);
       setCaracteristicas(data.caracteristicas || []);
@@ -180,20 +180,20 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
         let formData = new FormData();
 
         // Campos simples
-        formData.append("titulo", values.titulo);
-        formData.append("descripcion", values.descripcion);
-        formData.append("ubicacion", values.ubicacion);
-        formData.append("porcentaje_avance", values.porcentaje_avance);
-        formData.append("is_active", values.is_active);
+      formData.append("titulo", values.titulo);
+      formData.append("descripcion", values.descripcion);
+      formData.append("ubicacion", values.ubicacion);
+      formData.append("porcentaje_avance", values.porcentaje_avance);
+      formData.append("is_active", values.is_active);
 
-        // Imagen principal
-        if (values.imagen_principal instanceof File) {
-          // Si el usuario seleccionó una imagen nueva → enviar archivo
-          formData.append("imagen_principal", values.imagen_principal);
-        } else {
-          // Si no seleccionó nada → enviar la ruta anterior (pero NO como file)
-          formData.append("imagen_principal_actual", datosProyecto?.imagen_principal || "");
-        }
+      // Imagen principal
+      if (values.imagen_principal instanceof File) {
+        // Si el usuario seleccionó una imagen nueva → enviar archivo
+        formData.append("imagen_principal", values.imagen_principal);
+      } else {
+        // Si no seleccionó nada → enviar la ruta anterior (pero NO como file)
+        formData.append("imagen_principal_actual", datosProyecto?.imagen_principal || "");
+      }
 
 
         // MULTIMEDIA
@@ -202,16 +202,19 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
             // archivo nuevo → se envía archivo
             formData.append(`multimedia[${i}][archivo]`, item.archivo);
             formData.append(`multimedia[${i}][tipo]`, item.tipo);
+            if (item.id) formData.append(`multimedia[${i}][id]`, item.id);
           } else {
             // archivo existente → NO se envía "archivo", solo el id
             formData.append(`multimedia[${i}][id]`, item.id);
             formData.append(`multimedia[${i}][tipo]`, item.tipo);
+            formData.append(`multimedia[${i}][archivo_actual]`, item.archivo);
           }
         });
 
         // INVERSIONISTAS
         inversionistas.forEach((item, i) => {
           formData.append(`inversionistas[${i}][id]`, item.id || "");
+          formData.append(`inversionistas[${i}][interesado_id]`, item.interesado_id || "");
           formData.append(`inversionistas[${i}][estado]`, item.estado);
         });
 
@@ -368,13 +371,14 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
                   <Form.Group className="mb-2">
                     <Form.Label>Usuario</Form.Label>
                     <Form.Select
-                      value={inv.id}
+                      value={inv.interesado_id}
                       onChange={(e) => {
                         const copia = [...inversionistas];
                         copia[index].interesado_id = e.target.value;
                         setInversionistas(copia);
                       }}
                     >
+
                       <option value="">Seleccione un usuario</option>
                       {usuarios.map((u) => (
                         <option key={u.id} value={u.id}>
@@ -586,104 +590,129 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
               {/* MULTIMEDIA + PREVIEW */}
               {/* ====================================================== */}
 
-              {/* ====================================================== */}
-                <Col md={12} className="mt-4">
+              <Col md={12} className="mt-4">
                 <h5>Multimedia</h5>
 
                 <Button
-                    variant="primary"
-                    size="sm"
-                    className="me-2"
-                    onClick={() => agregarMultimedia("imagen")}
+                  variant="primary"
+                  size="sm"
+                  className="me-2"
+                  onClick={() => agregarMultimedia("imagen")}
                 >
-                    + Imagen
+                  + Imagen
                 </Button>
 
                 <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={() => agregarMultimedia("video")}
+                  variant="primary"
+                  size="sm"
+                  onClick={() => agregarMultimedia("video")}
                 >
-                    + Video
+                  + Video
                 </Button>
 
                 {multimedia.map((item, index) => {
-                    const esFile = item.archivo instanceof File;
-                    const esString = typeof item.archivo === "string";
+                  const esFile = item.archivo instanceof File;
+                  const esString = typeof item.archivo === "string";
 
-                    return (
-                        <div key={index} className="mt-3 p-2 border rounded">
+                  // 🔹 Si es video, permitir URL
+                  const esVideo = item.tipo === "video";
 
-                        <strong>{item.tipo.toUpperCase()}</strong>
+                  return (
+                    <div key={index} className="mt-3 p-3 border rounded">
+                      <strong>{item.tipo.toUpperCase()}</strong>
 
-                        {/* INPUT FILE */}
-                        <Form.Control
+                      {/* ============================================================ */}
+                      {/* SI ES VIDEO → INPUT DE URL */}
+                      {/* ============================================================ */}
+                      {esVideo ? (
+                        <>
+                          <Form.Control
+                            className="mt-2"
+                            placeholder="URL de YouTube o video"
+                            value={item.archivo || ""}
+                            onChange={(e) => {
+                              const copia = [...multimedia];
+                              copia[index].archivo = e.target.value;
+                              setMultimedia(copia);
+                            }}
+                          />
+
+                          {/* PREVIEW VIDEO */}
+                          {item.archivo && (
+                            <div className="mt-2">
+                              {/* Si es YouTube → incrustar */}
+                              {extraerIdYoutube(item.archivo) ? (
+                                <iframe
+                                  width="300"
+                                  height="180"
+                                  src={`https://www.youtube.com/embed/${extraerIdYoutube(item.archivo)}`}
+                                  title="YouTube video"
+                                  frameBorder="0"
+                                  allowFullScreen
+                                ></iframe>
+                              ) : (
+                                // Video MP4 o directo
+                                <video width="300" controls>
+                                  <source src={item.archivo} />
+                                  Tu navegador no soporta videos.
+                                </video>
+                              )}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          {/* ============================================================ */}
+                          {/* SI ES IMAGEN → INPUT FILE */}
+                          {/* ============================================================ */}
+                          <Form.Control
                             type="file"
                             className="mt-2"
-                            accept={item.tipo === "imagen" ? "image/*" : "video/*"}
+                            accept="image/*"
                             onChange={(e) => cambiarArchivo(index, e.target.files[0])}
-                        />
+                          />
 
-                        {/* PREVIEW SI ES NUEVO FILE */}
-                        {esFile && (
-                            <div className="mt-2">
-                            {item.tipo === "imagen" ? (
-                                <img
-                                src={URL.createObjectURL(item.archivo)}
-                                alt="preview"
-                                style={{ width: "120px", borderRadius: "6px" }}
-                                />
-                            ) : (
-                                <video
-                                src={URL.createObjectURL(item.archivo)}
-                                width="150"
-                                controls
-                                style={{ borderRadius: "6px" }}
-                                />
-                            )}
-                            </div>
-                        )}
+                          {/* PREVIEW IMAGEN NUEVA */}
+                          {esFile && (
+                            <img
+                              src={URL.createObjectURL(item.archivo)}
+                              className="mt-2"
+                              alt="preview"
+                              width={150}
+                              style={{ borderRadius: "6px" }}
+                            />
+                          )}
 
-                        {/* PREVIEW SI ES STRING (YA GUARDADO) */}
-                        {esString && item.archivo !== "" && (
-                            <div className="mt-2">
-                            {item.tipo === "imagen" ? (
-                                <img
-                                src={`${config.urlserver}${item.archivo}`}
-                                alt="preview"
-                                style={{ width: "120px", borderRadius: "6px" }}
-                                />
-                            ) : (
-                                <iframe
-                                width="250"
-                                height="150"
-                                style={{ borderRadius: "6px" }}
-                                src={`https://www.youtube.com/embed/${extraerIdYoutube(item.archivo)}`}
-                                title="YouTube video"
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                                ></iframe>
-                            )}
-                            </div>
-                        )}
+                          {/* PREVIEW IMAGEN EXISTENTE (STRING) */}
+                          {esString && (
+                            <img
+                              src={`${config.urlserver}${item.archivo}`}
+                              className="mt-2"
+                              alt="imagen"
+                              width={150}
+                              style={{ borderRadius: "6px" }}
+                            />
+                          )}
 
-                        {/* BOTÓN ELIMINAR */}
-                        <Button
-                          variant="danger"
-                          size="sm"
-                          className="mt-2"
-                          onClick={() => eliminarMultimedia(item, index)}
-                        >
-                          Eliminar
-                        </Button>
+                        </>
+                      )}
 
+                      {/* ============================================================ */}
+                      {/* BOTÓN ELIMINAR */}
+                      {/* ============================================================ */}
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        className="mt-2"
+                        onClick={() => eliminarMultimedia(item, index)}
+                      >
+                        Eliminar
+                      </Button>
+                    </div>
+                  );
+                })}
+              </Col>
 
-                        </div>
-                    );
-                    })}
-
-                </Col>
 
             </Row>
 
