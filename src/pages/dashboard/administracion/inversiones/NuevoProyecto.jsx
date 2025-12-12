@@ -52,7 +52,7 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
       );
 
       const data = Array.isArray(res.data) ? res.data[0] : res.data;
-      console.log(data);
+      //console.log(data);
       setDatosProyecto(data);
       setMultimedia(data.multimedia || []);
       setCaracteristicas(data.caracteristicas || []);

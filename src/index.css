@@ -433,6 +433,44 @@ body.dark-mode .salir-btn {
   cursor: pointer;
 }
 
+.newsletter-form {
+    margin-bottom: 20px;
+}
+
+
+.newsletter-form .input-group {
+    position: relative;
+    border-radius: 30px !important;
+}
+
+.newsletter-form .input-group {
+    border-radius: 3px;
+    background-color: #ffffff;
+    border: 1px solid var(--green);
+    transition: 0.4s;
+}
+
+.newsletter-form .input-group .form-control{
+    height: 60px;
+    background-color: transparent;
+    border: none;
+    color: #212121;
+    padding-left: 25px;
+    border-radius: 0 !important;
+}
+
+.newsletter-form button.btn.btn-outline-secondary {
+    background: var(--green);
+    border-radius: 100px;
+    color: white;
+}
+
+
+.swal2-container {
+  z-index: 9999999999999999999999999999999;
+}
+
+
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.9); }
   to { opacity: 1; transform: scale(1); }

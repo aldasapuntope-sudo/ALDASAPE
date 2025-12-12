@@ -8,6 +8,7 @@ import { SkeletonInformacion } from "../../components/TablaSkeleton";
 import { useUsuario } from "../../context/UserContext";
 import config from "../../config";
 import BreadcrumbALDASA from "../../cuerpos_dashboard/BreadcrumbAldasa";
+import Swal from "sweetalert2";
 
 export default function Club() {
   const { usuario } = useUsuario();
@@ -16,6 +17,101 @@ export default function Club() {
 
   const [mostrarPrecios, setMostrarPrecios] = useState(false); // NO usuario
   const [abrirPopup, setAbrirPopup] = useState(false); // SÍ usuario
+  const [mostrarNewsletter, setMostrarNewsletter] = useState(false);
+  const [emailSubs, setEmailSubs] = useState("");
+  const handleSuscribir = async () => {
+
+    // Validar vacío
+    if (!emailSubs.trim()) {
+      Swal.fire({
+        icon: "warning",
+        title: "Campo vacío",
+        text: "Por favor ingresa un correo electrónico.",
+      });
+      return;
+    }
+
+    // Validar formato de correo
+    const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!regexCorreo.test(emailSubs)) {
+      Swal.fire({
+        icon: "error",
+        title: "Correo inválido",
+        text: "Por favor ingresa un correo electrónico válido.",
+      });
+      return;
+    }
+
+    // Enviar petición a API
+    try {
+      const res = await axios.post(`${config.apiUrl}api/suscripciones`, {
+        correo: emailSubs,
+      });
+
+      Swal.fire({
+        icon: "success",
+        title: "Suscripción exitosa",
+        text: "Gracias por suscribirte a Aldasa Club!",
+      });
+
+      setEmailSubs("");
+      setMostrarNewsletter(false);
+
+    } catch (error) {
+      console.error("Error al suscribir:", error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Ocurrió un problema al suscribirte. Inténtalo nuevamente.",
+      });
+    }
+  };
+
+  const modalNewsletter = (
+  <section className="newsletter-wrap1 p-4">
+    <div className="container">
+      <div className="row align-items-center">
+        <div className="col-lg-12">
+          <div className="newsletter-layout1">
+            <div className="item-heading">
+              <h2 className="item-title">Suscribirse al boletín de Aldasa Club</h2>
+              <h3 className="item-subtitle">Obtén las últimas noticias y actualizaciones</h3>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-lg-12">
+          <div className="newsletter-form">
+            <div className="input-group">
+              
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Ingresa tu correo"
+                value={emailSubs}
+                onChange={(e) => setEmailSubs(e.target.value)}
+              />
+
+              <button
+                className="btn btn-outline-secondary"
+                onClick={handleSuscribir}
+              >
+                Subscribe
+              </button>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+);
+
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,6 +125,12 @@ export default function Club() {
       }
     };
     fetchData();
+
+    const timer = setTimeout(() => {
+      setMostrarNewsletter(true);
+    }, 3000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   if (loading) return <SkeletonInformacion />;
@@ -192,10 +294,11 @@ export default function Club() {
         </h2>
 
         <div className="container" dangerouslySetInnerHTML={{ __html: decodeHTML2(data.contenido) }} />
+        {botonPlan}
       </section>
 
       {/* BOTÓN DINÁMICO */}
-      {botonPlan}
+      
 
       {/* ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
           DESPLEGABLE PARA NO REGISTRADOS
@@ -223,6 +326,22 @@ export default function Club() {
           </div>
         </div>
       )}
+
+      {mostrarNewsletter && (
+        <div className="popup-overlay">
+          <div className="popup-content" style={{ maxWidth: "700px" }}>
+            <button
+              className="cerrar-popup"
+              onClick={() => setMostrarNewsletter(false)}
+            >
+              ✖
+            </button>
+
+            {modalNewsletter}
+          </div>
+        </div>
+      )}
+
     </>
   );
 }
