@@ -204,10 +204,14 @@ export default function NuevoProyecto({ proyectoId, onClose, onSuccess }) {
             formData.append(`multimedia[${i}][tipo]`, item.tipo);
             if (item.id) formData.append(`multimedia[${i}][id]`, item.id);
           } else {
-            // archivo existente → NO se envía "archivo", solo el id
-            formData.append(`multimedia[${i}][id]`, item.id);
+            if (item.id) {
+              formData.append(`multimedia[${i}][id]`, item.id);
+            }
+
             formData.append(`multimedia[${i}][tipo]`, item.tipo);
-            formData.append(`multimedia[${i}][archivo_actual]`, item.archivo);
+
+            // 🔥 CLAVE
+            formData.append(`multimedia[${i}][archivo]`, item.archivo);
           }
         });
 

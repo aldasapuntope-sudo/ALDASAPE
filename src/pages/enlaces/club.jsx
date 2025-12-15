@@ -9,19 +9,29 @@ import { useUsuario } from "../../context/UserContext";
 import config from "../../config";
 import BreadcrumbALDASA from "../../cuerpos_dashboard/BreadcrumbAldasa";
 import Swal from "sweetalert2";
+import PropertyClub from "../../components/propiedad_club/PropertyClub";
 
 export default function Club() {
   const { usuario } = useUsuario();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  const [mostrarPrecios, setMostrarPrecios] = useState(false); // NO usuario
-  const [abrirPopup, setAbrirPopup] = useState(false); // SÍ usuario
+  console.log(usuario);
+  // UI
+  const [mostrarPrecios, setMostrarPrecios] = useState(false);
+  const [abrirPopup, setAbrirPopup] = useState(false);
   const [mostrarNewsletter, setMostrarNewsletter] = useState(false);
-  const [emailSubs, setEmailSubs] = useState("");
-  const handleSuscribir = async () => {
 
-    // Validar vacío
+  // Newsletter
+  const [emailSubs, setEmailSubs] = useState("");
+
+  // 🔑 MEMBRESÍA
+  const [verificandoMembresia, setVerificandoMembresia] = useState(true);
+  const [membresiaActiva, setMembresiaActiva] = useState(false);
+
+  /* ----------------------------------
+     NEWSLETTER
+  ---------------------------------- */
+  const handleSuscribir = async () => {
     if (!emailSubs.trim()) {
       Swal.fire({
         icon: "warning",
@@ -31,9 +41,7 @@ export default function Club() {
       return;
     }
 
-    // Validar formato de correo
     const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
     if (!regexCorreo.test(emailSubs)) {
       Swal.fire({
         icon: "error",
@@ -43,9 +51,8 @@ export default function Club() {
       return;
     }
 
-    // Enviar petición a API
     try {
-      const res = await axios.post(`${config.apiUrl}api/suscripciones`, {
+      await axios.post(`${config.apiUrl}api/suscripciones`, {
         correo: emailSubs,
       });
 
@@ -57,14 +64,11 @@ export default function Club() {
 
       setEmailSubs("");
       setMostrarNewsletter(false);
-
     } catch (error) {
-      console.error("Error al suscribir:", error);
-
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Ocurrió un problema al suscribirte. Inténtalo nuevamente.",
+        text: "Ocurrió un problema al suscribirte.",
       });
     }
   };
@@ -110,20 +114,21 @@ export default function Club() {
   </section>
 );
 
-
-
-
+  /* ----------------------------------
+     OBTENER CONTENIDO CLUB
+  ---------------------------------- */
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await axios.get(`${config.apiUrl}api/paginaprincipal/club`);
         setData(res.data[0]);
       } catch (error) {
-        console.error("Error al obtener información de Club:", error);
+        console.error(error);
       } finally {
         setLoading(false);
       }
     };
+
     fetchData();
 
     const timer = setTimeout(() => {
@@ -133,130 +138,78 @@ export default function Club() {
     return () => clearTimeout(timer);
   }, []);
 
-  if (loading) return <SkeletonInformacion />;
+  /* ----------------------------------
+     VALIDAR MEMBRESÍA
+  ---------------------------------- */
+  useEffect(() => {
+    if (!usuario) {
+      setVerificandoMembresia(false);
+      return;
+    }
+    
+    axios
+      .get(`${config.apiUrl}api/aldasaclub/estado-membresia/${usuario.usuarioaldasa.id}`)
+      .then((res) => {
+        setMembresiaActiva(res.data.activo === true);
+      })
+      .catch(() => setMembresiaActiva(false))
+      .finally(() => setVerificandoMembresia(false));
+  }, [usuario]);
+
+  /* ----------------------------------
+     CORTES DE RENDER
+  ---------------------------------- */
+  if (loading || verificandoMembresia) return <SkeletonInformacion />;
   if (!data) return <NotFound />;
 
+  // 👑 USUARIO CON MEMBRESÍA ACTIVA
+  if (usuario && membresiaActiva) {
+    return (
+      <>
+        <div className="container mt-4">
+          <BreadcrumbALDASA />
+        </div>
+
+        {/* CONTENIDO EXCLUSIVO */}
+        <PropertyClub />
+      </>
+    );
+  }
+
+
+  /* ----------------------------------
+     UTIL
+  ---------------------------------- */
   const decodeHTML2 = (html) => {
     if (!html) return "";
     const txt = document.createElement("textarea");
     txt.innerHTML = html;
-    let decoded = txt.value;
-    decoded = decoded.replace(/\u00A0/g, " ");
-    decoded = decoded.replace(/\u200B/g, "");
-    decoded = decoded.replace(/\s+/g, " ");
-    decoded = decoded.replace(/<br\s*\/?>/gi, "");
-    return decoded;
+    return txt.value;
   };
 
-  // ----------------------------------
-  // CONTENIDO DE LOS PLANES (REUTILIZABLE)
-  // ----------------------------------
+  /* ----------------------------------
+     CONTENIDO DE PLANES
+  ---------------------------------- */
   const contenidoPrecios = (
     <div className="container">
-      <div className="item-heading-center mb-20">
-        <span className="section-subtitle">Tabla de precios</span>
-        <h2 className="section-title">Planes de precios</h2>
-        <div className="bg-title-wrap" style={{ display: "block" }}>
-          <span className="background-title solid">Aldasa</span>
-        </div>
-      </div>
+      <h2 className="text-center mb-4">Planes de precios</h2>
 
       <div className="row justify-content-center">
-
-        {/* --- PLAN 1 --- */}
-        <div className="col-xl-4 col-lg-6 col-md-6">
-          <div className="pricing-box1">
-            <div className="heading-title">
-              <h3 className="item-title">BASIC</h3>
-              <div className="item-price">$15<span>/ month</span></div>
-              <p>Shen an unknown printer took a galley of type and scrambled</p>
+        {["BASIC", "STANDARD", "PREMIUM"].map((plan, i) => (
+          <div className="col-md-4" key={i}>
+            <div className="pricing-box1">
+              <h3>{plan}</h3>
+              <p>Acceso exclusivo a propiedades</p>
             </div>
-
-            <div className="shape-img1">
-              <img src="/assets/images/favicon-aldasape.png" alt="ALDASA Logo"
-                style={{ height: 50, width: 50 }} />
-            </div>
-
-            <div className="pricing-list">
-              <ul>
-                <li className="available"><i className="fas fa-check-circle"></i>All Listing Access</li>
-                <li className="available"><i className="fas fa-check-circle"></i>Location Wise Map</li>
-                <li className="available"><i className="fas fa-check-circle"></i>Free / Pro Ads</li>
-                <li className="available"><i className="fas fa-check-circle"></i>Custom Map Setup</li>
-                <li className="available"><i className="fas fa-check-circle"></i>Apps Integrated</li>
-                <li className="available"><i className="fas fa-check-circle"></i>Advanced Custom Field</li>
-                <li className="available"><i className="fas fa-check-circle"></i>Pro Features</li>
-              </ul>
-            </div>
-
           </div>
-        </div>
-
-        {/* --- PLAN 2 --- */}
-        <div className="col-xl-4 col-lg-6 col-md-6">
-          <div className="pricing-box1">
-            <div className="heading-title">
-              <h3 className="item-title">STANDARD</h3>
-              <div className="item-price">$29<span>/ month</span></div>
-              <p>Shen an unknown printer took a galley of type and scrambled</p>
-            </div>
-
-            <div className="shape-img1">
-              <img src="/assets/images/favicon-aldasape.png" alt="ALDASA Logo"
-                style={{ height: 50, width: 50 }} />
-            </div>
-
-            <div className="pricing-list">
-              <ul>
-                <li className="available"><i className="fas fa-check-circle"></i>All Listing Access</li>
-                <li className="available"><i className="fas fa-check-circle"></i>Location Wise Map</li>
-                <li className="available"><i className="fas fa-check-circle"></i>Free / Pro Ads</li>
-                <li className="available"><i className="fas fa-check-circle"></i>Custom Map Setup</li>
-                <li className="available"><i className="fas fa-check-circle"></i>Apps Integrated</li>
-                <li className="available"><i className="fas fa-check-circle"></i>Advanced Custom Field</li>
-                <li className="available"><i className="fas fa-check-circle"></i>Pro Features</li>
-              </ul>
-            </div>
-
-          </div>
-        </div>
-
-        {/* --- PLAN 3 --- */}
-        <div className="col-xl-4 col-lg-6 col-md-6">
-          <div className="pricing-box1">
-            <div className="heading-title">
-              <h3 className="item-title">PREMIUM</h3>
-              <div className="item-price">$45<span>/ month</span></div>
-              <p>Shen an unknown printer took a galley of type and scrambled</p>
-            </div>
-
-            <div className="shape-img1">
-              <img src="/assets/images/favicon-aldasape.png" alt="ALDASA Logo"
-                style={{ height: 50, width: 50 }} />
-            </div>
-
-            <div className="pricing-list">
-              <ul>
-                <li className="available"><i className="fas fa-check-circle"></i>All Listing Access</li>
-                <li className="available"><i className="fas fa-check-circle"></i>Location Wise Map</li>
-                <li className="available"><i className="fas fa-check-circle"></i>Free / Pro Ads</li>
-                <li className="available"><i className="fas fa-check-circle"></i>Custom Map Setup</li>
-                <li className="available"><i className="fas fa-check-circle"></i>Apps Integrated</li>
-                <li className="available"><i className="fas fa-check-circle"></i>Advanced Custom Field</li>
-                <li className="available"><i className="fas fa-check-circle"></i>Pro Features</li>
-              </ul>
-            </div>
-
-          </div>
-        </div>
-
+        ))}
       </div>
     </div>
   );
 
-  // ----------------------------------
-  // BOTÓN: SI HAY USUARIO O NO
-  // ----------------------------------
+  /* ----------------------------------
+     BOTÓN PLAN
+  ---------------------------------- */
   const botonPlan = (
     <div className="pricing-button text-center mt-3">
       {!usuario ? (
@@ -282,46 +235,44 @@ export default function Club() {
     </div>
   );
 
+  /* ----------------------------------
+     RENDER NORMAL
+  ---------------------------------- */
   return (
     <>
       <div className="container mt-4">
         {usuario ? <BreadcrumbALDASA /> : <Breadcrumb />}
       </div>
 
-      <section className="about-wrap2 rounded-4 py-5 mt-5" style={{ background: 'white' }}>
+      <section className="about-wrap2 rounded-4 py-5 mt-5" style={{ background: "white" }}>
         <h2 className="text-center fw-bold mb-4" style={{ color: "var(--green)" }}>
-          {data.titulo || "Términos y Condiciones"}
+          {data.titulo}
         </h2>
 
-        <div className="container" dangerouslySetInnerHTML={{ __html: decodeHTML2(data.contenido) }} />
+        <div
+          className="container"
+          dangerouslySetInnerHTML={{ __html: decodeHTML2(data.contenido) }}
+        />
+
         {botonPlan}
       </section>
 
-      {/* BOTÓN DINÁMICO */}
-      
-
-      {/* ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-          DESPLEGABLE PARA NO REGISTRADOS
-      ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ */}
       {!usuario && mostrarPrecios && (
         <motion.section
           className="pricing-wrap1 rounded-4 mt-4"
-          style={{ background: "white" }}
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: "auto", opacity: 1 }}
-          transition={{ duration: 0.4 }}
         >
           {contenidoPrecios}
         </motion.section>
       )}
 
-      {/* ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-          POPUP PARA USUARIOS REGISTRADOS
-      ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ */}
       {usuario && abrirPopup && (
         <div className="popup-overlay">
           <div className="popup-content">
-            <button className="cerrar-popup" onClick={() => setAbrirPopup(false)}>✖</button>
+            <button className="cerrar-popup" onClick={() => setAbrirPopup(false)}>
+              ✖
+            </button>
             {contenidoPrecios}
           </div>
         </div>
@@ -341,7 +292,6 @@ export default function Club() {
           </div>
         </div>
       )}
-
     </>
   );
 }
