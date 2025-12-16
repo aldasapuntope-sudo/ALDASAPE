@@ -9,13 +9,13 @@ import { useUsuario } from "../../context/UserContext";
 import config from "../../config";
 import BreadcrumbALDASA from "../../cuerpos_dashboard/BreadcrumbAldasa";
 import Swal from "sweetalert2";
-import PropertyClub from "../../components/propiedad_club/PropertyClub";
+import AnunciosActivosclub from "../dashboard/aldasa-club/AnunciosActivosclub";
 
 export default function Club() {
   const { usuario } = useUsuario();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  console.log(usuario);
+  //console.log(usuario);
   // UI
   const [mostrarPrecios, setMostrarPrecios] = useState(false);
   const [abrirPopup, setAbrirPopup] = useState(false);
@@ -171,7 +171,7 @@ export default function Club() {
         </div>
 
         {/* CONTENIDO EXCLUSIVO */}
-        <PropertyClub />
+        <AnunciosActivosclub />
       </>
     );
   }

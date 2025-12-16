@@ -26,7 +26,7 @@ const nombresPersonalizados = {
   'adm-scripts': 'Gestión de Scripts',
   'aldasaclub': 'Aldasa Club',
   'aldasainversioens': 'Aldasa Inversiones',
-  
+  'propiedadremates': 'Remate',
   detalle_guia: 'Detalle Guías',
   curso: 'Mis Cursos',
   detalle_curso: 'Detalle Curso',
@@ -112,8 +112,8 @@ const BreadcrumbALDASA = () => {
 
   const { darkMode } = useTheme();
   const logo = darkMode
-    ? 'assets/images/favicon-aldasape.png'
-    : 'assets/images/favicon-aldasape.png';
+    ? '../assets/images/favicon-aldasape.png'
+    : '../assets/images/favicon-aldasape.png';
 
   return (
     

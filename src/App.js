@@ -65,6 +65,7 @@ import Club from './pages/enlaces/club';
 import Inversiones from './pages/enlaces/Inversiones';
 import ProyectosUsuario from './pages/dashboard/administracion/inversiones/ProyectosUsuario';
 import ProyectoDetalle from './components/proyecto_detalle/ProyectoDetalle';
+import PropertyClub from './components/propiedad_club/PropertyClub';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -160,6 +161,7 @@ function AppRoutes() {
             element={usuario ? <Navigate to="/dashboard" /> : <Home />}
           />
           <Route path="/anuncio/:slug" element={<PropertyDetail />} />
+          
 
           <Route path="/terminos-condiciones" element={<TerminosCondiciones />} />
           <Route path="/publica-tu-aviso" element={<Publicatuanuncio />} />
@@ -200,6 +202,8 @@ function AppRoutes() {
               path="/adm-planes"
               element={<RutaProtegida element={PlanesList} />}
             />
+
+            
 
             <Route
               path="/adm-usuarios"
@@ -336,7 +340,7 @@ function AppRoutes() {
               path="/aldasainversioens"
               element={<RutaProtegida element={ProyectosUsuario} />}
             />
-            
+            <Route path="/propiedadremates/:slug" element={<PropertyClub />} />
 
           </Route>
         )}

@@ -8,10 +8,12 @@ import config from "../../../config";
 import Cargando from "../../cargando";
 
 export default function ContactBoxclub({ anuncio }) {
+
+  
   const [cargando, setCargando] = useState(false);
 
-  const whatsappUrl = `https://wa.me/${anuncio.perfilanunciante.telefono_movil}?text=Hola%20${anuncio.perfilanunciante.nombre},%20vi%20tu%20anuncio%20sobre%20${anuncio.operaciones}%20de%20${anuncio.titulo}%20en%20*ALDASA.PE*`;
-  const callUrl = `tel:${anuncio.perfilanunciante.telefono_movil}`;
+  const whatsappUrl = `https://wa.me/${anuncio?.perfilanunciante?.telefono_movil}?text=Hola%20${anuncio?.perfilanunciante?.nombre},%20vi%20tu%20anuncio%20sobre%20${anuncio.operaciones}%20de%20${anuncio.titulo}%20en%20*ALDASA.PE*`;
+  const callUrl = `tel:${anuncio?.perfilanunciante?.telefono_movil}`;
 
   const formik = useFormik({
     initialValues: {
@@ -123,11 +125,11 @@ export default function ContactBoxclub({ anuncio }) {
             <div className="item-logo">
               <img
                 src={
-                  anuncio.perfilanunciante.imagen
-                    ? anuncio.perfilanunciante.imagen
+                  anuncio?.perfilanunciante?.imagen
+                    ? anuncio?.perfilanunciante?.imagen
                     : "/img/default-user.png"
                 }
-                alt={anuncio.perfilanunciante.nombre}
+                alt={anuncio?.perfilanunciante?.nombre}
                 width="100"
                 height="100"
                 className="rounded-circle"
@@ -135,14 +137,14 @@ export default function ContactBoxclub({ anuncio }) {
             </div>
           </div>
           <div className="media-body flex-grow-1 ms-3">
-            <h4 className="item-title">{anuncio.perfilanunciante.nombre}</h4>
+            <h4 className="item-title">{anuncio?.perfilanunciante?.nombre}</h4>
             <div className="item-phn">
-              {anuncio.perfilanunciante.telefono_movil}{" "}
+              {anuncio?.perfilanunciante?.telefono_movil}{" "}
               <a href={callUrl}>
                 <span>(Llamar)</span>
               </a>
             </div>
-            <div className="item-mail">{anuncio.perfilanunciante.email}</div>
+            <div className="item-mail">{anuncio?.perfilanunciante?.email}</div>
           </div>
         </div>
 

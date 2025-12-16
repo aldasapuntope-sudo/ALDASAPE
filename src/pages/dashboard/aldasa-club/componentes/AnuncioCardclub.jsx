@@ -14,11 +14,13 @@ import config from "../../../../config";
 import Switch from "@mui/material/Switch";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useUsuario } from "../../../../context/UserContext";
 
 
-export default function AnuncioCard({ anuncio }) {
+export default function AnuncioCardclub({ anuncio }) {
+    const { usuario } = useUsuario(); 
+    const esAdmin = usuario?.usuarioaldasa?.perfil_id === 1;
 
- 
   const imagen = anuncio.imagen
   ? `${config.urlserver}${anuncio.imagen}`
   : "https://aldasa.pe/wp-content/themes/theme_aldasape/img/comprar-inmueble.jpg";
@@ -35,7 +37,7 @@ export default function AnuncioCard({ anuncio }) {
 
 
   const slug = generarSlug(anuncio.id, anuncio.titulo, anuncio.ubicacion);
-const urlAmigable = `/anuncio/${slug}`;
+const urlAmigable = `/propiedadremates/${slug}`;
 
  const toggleVendido = async (id, isChecked) => {
     try {
@@ -49,10 +51,12 @@ const urlAmigable = `/anuncio/${slug}`;
 
       // Enviar petición
       await axios.post(
-        `${config.apiUrl}api/misanuncios/vendido/${id}`,
+        `${config.apiUrl}api/aldasaclub/vendido/${id}`,
         { vendido: isChecked },
         { headers: { "Content-Type": "application/json" } }
       );
+
+      console.log(`${config.apiUrl}api/aldasaclub/vendido/${id}`);
 
       // Cerrar el loader
       Swal.close();
@@ -89,7 +93,7 @@ const urlAmigable = `/anuncio/${slug}`;
 
   return (
     <>
-      <Card
+        <Card
       className="property-box2 shadow-sm border-0 rounded-4 overflow-hidden h-100"
       style={{ cursor: "pointer" }}
       onClick={() => (window.location.href = urlAmigable)}
@@ -199,6 +203,7 @@ const urlAmigable = `/anuncio/${slug}`;
 
 
       </Card.Body>
+      
     </Card>
     {/* Switch VENDIDO / NO VENDIDO */}
         <div className="d-flex justify-content-end align-items-center mt-3">
@@ -213,12 +218,13 @@ const urlAmigable = `/anuncio/${slug}`;
             // 🔘 NO VENDIDO → Mostrar SWITCH
             <>
               <span className="me-2 fw-semibold">No vendido</span>
-
-              <Switch
-                checked={anuncio.vendido === true}
-                onChange={(e) => toggleVendido(anuncio.id, e.target.checked)}
-                color="success"
-              />
+              {esAdmin && (
+                <Switch
+                    checked={anuncio.vendido === true}
+                    onChange={(e) => toggleVendido(anuncio.id, e.target.checked)}
+                    color="success"
+                />
+              )}
             </>
           )}
 
