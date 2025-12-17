@@ -28,6 +28,9 @@ export default function Club() {
   const [verificandoMembresia, setVerificandoMembresia] = useState(true);
   const [membresiaActiva, setMembresiaActiva] = useState(false);
 
+  // PAGOS PLANES
+  const [planes, setPlanes] = useState([]);
+  const [cargandoPlanes, setCargandoPlanes] = useState(false);
   /* ----------------------------------
      NEWSLETTER
   ---------------------------------- */
@@ -52,8 +55,8 @@ export default function Club() {
     }
 
     try {
-      await axios.post(`${config.apiUrl}api/suscripciones`, {
-        correo: emailSubs,
+      await axios.post(`${config.apiUrl}api/paginaprincipal/suscripciones`, {
+        email: emailSubs,
       });
 
       Swal.fire({
@@ -71,6 +74,73 @@ export default function Club() {
         text: "Ocurrió un problema al suscribirte.",
       });
     }
+  };
+
+
+  useEffect(() => {
+    const fetchPlanes = async () => {
+      setCargandoPlanes(true);
+      try {
+        const res = await axios.get(`${config.apiUrl}api/planes/listarclub`);
+        setPlanes(res.data);
+      } catch (error) {
+        Swal.fire("Error", "No se pudieron cargar los planes", "error");
+      } finally {
+        setCargandoPlanes(false);
+      }
+    };
+
+    fetchPlanes();
+  }, []);
+
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.culqi.com/js/v3";
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+
+  const handlePagoCulqi = (plan) => {
+    if (!window.Culqi) {
+      Swal.fire("Error", "Culqi aún no está listo.", "error");
+      return;
+    }
+
+    window.Culqi.publicKey = "pk_test_1234567890abcdef0123456789abcdef";
+
+    window.Culqi.settings({
+      title: plan.nombre,
+      currency: "PEN",
+      description: plan.descripcion,
+      amount: plan.precio, // en centavos
+      order_id: `plan_${plan.id}_${Date.now()}`,
+    });
+
+    window.Culqi.open();
+
+    window.culqi = function () {
+      if (window.Culqi.token) {
+        const token = window.Culqi.token.id;
+
+        Swal.fire({
+          icon: "success",
+          title: "Pago realizado",
+          text: `Tu ${plan.nombre} se activará pronto.`,
+        });
+
+        // 👉 aquí luego envías el token al backend
+        window.Culqi.close();
+      } else if (window.Culqi.error) {
+        Swal.fire("Error", "No se pudo completar el pago", "error");
+        window.Culqi.close();
+      }
+    };
   };
 
   const modalNewsletter = (
@@ -191,21 +261,42 @@ export default function Club() {
      CONTENIDO DE PLANES
   ---------------------------------- */
   const contenidoPrecios = (
-    <div className="container">
+    <div className="container py-4">
       <h2 className="text-center mb-4">Planes de precios</h2>
 
-      <div className="row justify-content-center">
-        {["BASIC", "STANDARD", "PREMIUM"].map((plan, i) => (
-          <div className="col-md-4" key={i}>
-            <div className="pricing-box1">
-              <h3>{plan}</h3>
-              <p>Acceso exclusivo a propiedades</p>
+      {cargandoPlanes ? (
+        <div className="text-center">
+          <span className="spinner-border text-success"></span>
+        </div>
+      ) : (
+        <div className="row justify-content-center g-4">
+          {planes.map((plan) => (
+            <div className="col-md-4" key={plan.id}>
+              <div className="pricing-box1 text-center shadow-sm rounded-4 p-4 h-100">
+                <h3 className="fw-bold text-primary">{plan.nombre}</h3>
+
+                <h4 className="fw-bold text-success my-3">
+                  S/ {(plan.precio / 100).toFixed(2)}
+                </h4>
+
+                <p className="text-muted">{plan.descripcion}</p>
+
+                {usuario && (
+                  <button
+                    className="btn btn-success mt-3 fw-bold"
+                    onClick={() => handlePagoCulqi(plan)}
+                  >
+                    Pagar con Culqi
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
+
 
   /* ----------------------------------
      BOTÓN PLAN

@@ -118,7 +118,7 @@ export default function ProyectoGallery({ imagenes }) {
             </button>
 
             <button
-              className="btn-close"
+              className="btn-close2"
               onClick={(e) => {
                 e.stopPropagation();
                 cerrarModal();

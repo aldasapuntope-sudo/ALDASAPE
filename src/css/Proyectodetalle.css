@@ -56,32 +56,33 @@ li.list-group-item.d-flex.justify-content-between.align-items-center.list-group-
   right: -60px;
 }
 
-.btn-close {
-  position: absolute;
-  top: -55px;
-  right: -55px;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background: white;
-  border: none;
-  color: #000;
-  font-size: 22px;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  transition: transform 0.2s ease, background 0.2s ease;
+.btn-close2 {
+    position: absolute;
+    right: 9px;
+    top: 5px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: var(--green);
+    border: none;
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, background 0.2s ease;
 }
 
-.btn-close:hover {
+.btn-close2:hover {
   background: #f1f1f1;
   transform: scale(1.1);
+  color: var(--green)
 }
 
-.btn-close:active {
+.btn-close2:active {
   transform: scale(0.95);
 }
 

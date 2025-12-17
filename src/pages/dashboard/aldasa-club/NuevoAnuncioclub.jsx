@@ -144,8 +144,8 @@ const NuevoAnuncioclub = ({ anuncio = null, onClose, onRefresh }) => {
 
     // 9️⃣ Endpoint Laravel
     const url = anuncio
-      ? `${config.apiUrl}api/misanuncios/actualizar/${anuncio.id}`
-      : `${config.apiUrl}api/misanuncios/registrar`;
+      ? `${config.apiUrl}api/aldasaclub/actualizar/${anuncio.id}`
+      : `${config.apiUrl}api/aldasaclub/registrar`;
 
     if (anuncio) formData.append("_method", "PUT");
 
@@ -257,8 +257,8 @@ useEffect(() => {
 
       // Trae características principales y secundarias relacionadas al tipo
       const [resCarac, resAmenities] = await Promise.all([
-        axios.get(`${config.apiUrl}api/misanuncios/caracteristicas-catalogo/${tipoId}`),
-        axios.get(`${config.apiUrl}api/misanuncios/propiedad_amenities/${tipoId}`), // si amenities son generales
+        axios.get(`${config.apiUrl}api/aldasaclub/caracteristicas-catalogo/${tipoId}`),
+        axios.get(`${config.apiUrl}api/aldasaclub/propiedad_amenities/${tipoId}`), // si amenities son generales
       ]);
 
       setCaracteristicas(resCarac.data.data || resCarac.data);
@@ -279,10 +279,10 @@ useEffect(() => {
     setCargando(true);
     try {
       const [resTipos, resOps, resUbic, resMonedas, resCarac, resAmenities] = await Promise.all([
-        axios.get(`${config.apiUrl}api/misanuncios/tipos-propiedad`),
-        axios.get(`${config.apiUrl}api/misanuncios/tipos-operacion`),
-        axios.get(`${config.apiUrl}api/misanuncios/tipos-ubicaciones`),
-        axios.get(`${config.apiUrl}api/misanuncios/monedas`),
+        axios.get(`${config.apiUrl}api/aldasaclub/tipos-propiedad`),
+        axios.get(`${config.apiUrl}api/aldasaclub/tipos-operacion`),
+        axios.get(`${config.apiUrl}api/aldasaclub/tipos-ubicaciones`),
+        axios.get(`${config.apiUrl}api/aldasaclub/monedas`),
        // axios.get(`${config.apiUrl}api/misanuncios/caracteristicas-catalogo/${anuncio.tipo_id}`),
        // axios.get(`${config.apiUrl}api/misanuncios/propiedad_amenities`),
       ]);
@@ -298,10 +298,10 @@ useEffect(() => {
       if (anuncio && anuncio.id) {
         // Cargar planos, características, amenities e imágenes secundarias al mismo tiempo
         const [resPlanos, resCaracid, resAmenitiesId, resImagenesSecundarias] = await Promise.all([
-          axios.get(`${config.apiUrl}api/misanuncios/lplanos/${anuncio.id}`),
-          axios.get(`${config.apiUrl}api/misanuncios/caracteristicas-catalogoid/${anuncio.id}`),
-          axios.get(`${config.apiUrl}api/misanuncios/propiedad_amenitiesid/${anuncio.id}`),
-          axios.get(`${config.apiUrl}api/misanuncios/limagenesecundarias/${anuncio.id}`), // 👈 NUEVA PETICIÓN
+          axios.get(`${config.apiUrl}api/aldasaclub/lplanos/${anuncio.id}`),
+          axios.get(`${config.apiUrl}api/aldasaclub/caracteristicas-catalogoid/${anuncio.id}`),
+          axios.get(`${config.apiUrl}api/aldasaclub/propiedad_amenitiesid/${anuncio.id}`),
+          axios.get(`${config.apiUrl}api/aldasaclub/limagenesecundarias/${anuncio.id}`), // 👈 NUEVA PETICIÓN
         ]);
 
         // Guardar los resultados en los estados correspondientes
@@ -390,7 +390,7 @@ useEffect(() => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.delete(`${config.apiUrl}api/misanuncios/eimagenesecundarias/${imagenId}`);
+          const response = await axios.delete(`${config.apiUrl}api/aldasaclub/eimagenesecundarias/${imagenId}`);
           if (response.data.success) {
             setImagenesSecundarias(imagenesSecundarias.filter((i) => i.id !== imagenId));
             Swal.fire({
@@ -426,7 +426,7 @@ useEffect(() => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.delete(`${config.apiUrl}api/misanuncios/eplanos/${planoId}`);
+          const response = await axios.delete(`${config.apiUrl}api/aldasaclub/eplanos/${planoId}`);
           if (response.data.success) {
             // Actualiza la lista
             setPlanosExistentes(planosExistentes.filter(p => p.id !== planoId));

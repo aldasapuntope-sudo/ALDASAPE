@@ -125,12 +125,12 @@ const AnunciosListclub = ({ isPublish }) => {
           </span>
         ),
     },
-
+    
     {
       name: "Acciones",
       center: true,
       cell: (row) =>
-        row.isPublish !== 2 ? (
+        esAdmin == 1 ? (
           <Button
             variant="outline-success"
             size="sm"
