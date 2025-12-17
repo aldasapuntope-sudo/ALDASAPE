@@ -108,7 +108,7 @@ const AnunciosListclub = ({ isPublish }) => {
     { name: "Operación", selector: (row) => row.operacion, sortable: true },
     { name: "Precio", selector: (row) => `S/ ${row.precio}`, sortable: true },
     { name: "Ubicación", selector: (row) => row.ubicacion },
-    {
+    /*{
       name: "Estado",
       cell: (row) =>
         row.isPublish === 1 ? (
@@ -124,7 +124,7 @@ const AnunciosListclub = ({ isPublish }) => {
             <FaEye className="me-1" /> Vendido
           </span>
         ),
-    },
+    },*/
     
     {
       name: "Acciones",

@@ -120,7 +120,7 @@ const urlAmigable = `/propiedadremates/${slug}`;
         </div>
 
         {/* Íconos */}
-        <div className="position-absolute top-0 end-0 m-2 d-flex gap-2">
+        {/*<div className="position-absolute top-0 end-0 m-2 d-flex gap-2">
         {anuncio.isPublish === 1 ? (
             <span
             className="bg-success text-light px-2 py-1 rounded text-uppercase small d-flex align-items-center"
@@ -134,7 +134,7 @@ const urlAmigable = `/propiedadremates/${slug}`;
             <FaEye className="me-1" /> En revisión
             </span>
         )}
-        </div>
+        </div> */}
 
       </div>
 

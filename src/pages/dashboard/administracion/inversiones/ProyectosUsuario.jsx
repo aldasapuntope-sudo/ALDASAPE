@@ -1,7 +1,9 @@
 // src/.../ProyectosUsuario.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Alert, Modal } from "react-bootstrap";
+
+import { FaThLarge, FaList, FaEye, FaEdit, FaPlus } from "react-icons/fa"; // 👈 Se agregó FaPlus
+import { Alert, Modal, Button } from "react-bootstrap";
 import config from "../../../../config";
 import ProyectoCardUsuario from "./componentes/ProyectoCardUsuario";
 import { useUsuario } from "../../../../context/UserContext";
@@ -82,9 +84,15 @@ export default function ProyectosUsuario() {
               <h3 className="fw-bold">Proyectos</h3>
 
               {esAdmin && (
-                <button className="btn btn-primary" onClick={handleNuevo}>
-                  ➕ Nuevo Proyecto
-                </button>
+                <Button
+                    variant="success"
+                    size="sm"
+                    className="fw-bold d-flex align-items-center"
+                    onClick={handleNuevo}
+                    >
+                    <FaPlus className="me-2" /> Nuevo Proyecto
+                    </Button>
+                
               )}
             </div>
 
