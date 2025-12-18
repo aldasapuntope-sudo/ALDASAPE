@@ -66,6 +66,10 @@ import Inversiones from './pages/enlaces/Inversiones';
 import ProyectosUsuario from './pages/dashboard/administracion/inversiones/ProyectosUsuario';
 import ProyectoDetalle from './components/proyecto_detalle/ProyectoDetalle';
 import PropertyClub from './components/propiedad_club/PropertyClub';
+import PlanesListclub from './pages/dashboard/administracion/PlanesListclub';
+import UsuariosPlanesListclub from './pages/dashboard/administracion/UsuariosPlanesListclub';
+import CaracteristicaListclub from './pages/dashboard/administracion/CaracteristicaListclub';
+import ServicioListclub from './pages/dashboard/administracion/AmenityListclub';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -203,6 +207,11 @@ function AppRoutes() {
               element={<RutaProtegida element={PlanesList} />}
             />
 
+            <Route
+              path="/adm-planes-club"
+              element={<RutaProtegida element={PlanesListclub} />}
+            />
+
             
 
             <Route
@@ -217,6 +226,10 @@ function AppRoutes() {
               element={<RutaProtegida element={UsuariosPlanesList} />}
             />
             
+            <Route
+              path="/adm-usuarioplanes-club"
+              element={<RutaProtegida element={UsuariosPlanesListclub} />}
+            />
 
             <Route
               path="/adm-tdocumento"
@@ -237,10 +250,18 @@ function AppRoutes() {
               path="/adm-amenities"
               element={<RutaProtegida element={AmenityList} />}
             />
+            <Route
+              path="/adm-amenities-club"
+              element={<RutaProtegida element={ServicioListclub} />}
+            />
             
             <Route
               path="/adm-caracteristicas"
               element={<RutaProtegida element={CaracteristicaList} />}
+            />
+            <Route
+              path="/adm-caracteristicas-club"
+              element={<RutaProtegida element={CaracteristicaListclub} />}
             />
             
 
@@ -263,12 +284,6 @@ function AppRoutes() {
               path="/adm-popupsconfig"
               element={<RutaProtegida element={ConfigPopupList} />}
             />
-
-
-            
-            
-
-            
 
             <Route
               path="/adm-configuraciones"
@@ -340,6 +355,7 @@ function AppRoutes() {
               path="/aldasainversioens"
               element={<RutaProtegida element={ProyectosUsuario} />}
             />
+            
             <Route path="/propiedadremates/:slug" element={<PropertyClub />} />
 
           </Route>

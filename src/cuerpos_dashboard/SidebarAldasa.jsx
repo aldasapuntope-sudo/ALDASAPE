@@ -243,13 +243,72 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
             
 
             {/* Aldasa Club */}
-            <Link
-              to="/aldasaclub"
-              className={`menu-btn ${location.pathname === '/aldasaclub' ? 'active' : ''}`}
-              onClick={() => cambiarModo('gestion')}
-            >
-              <FaHome className="me-2" /> Aldasa Club
-            </Link>
+            {usuario?.usuarioaldasa?.perfil_id === 1 ? (
+              <div className="menu-group">
+                <button
+                  className="menu-btn"
+                  onClick={() => toggleMenu('aldasaclub')}
+                >
+                  <FaHome className="me-2" /> Aldasa Club
+                  {openMenu === 'aldasaclub'
+                    ? <FaChevronDown className="ms-auto" />
+                    : <FaChevronRight className="ms-auto" />}
+                </button>
+
+                <ul className={`submenu ${openMenu === 'aldasaclub' ? 'open' : ''}`}>
+                  <li
+                    className={`submenu-link ${location.pathname === '/aldasaclub' ? 'active' : ''}`}
+                  >
+                    <Link to="/aldasaclub" onClick={toggleSidebar}>
+                      Inicio Aldasa Club
+                    </Link>
+                  </li>
+
+                  <li
+                    className={`submenu-link ${location.pathname === '/adm-planes-club' ? 'active' : ''}`}
+                  >
+                    <Link to="/adm-planes-club" onClick={toggleSidebar}>
+                      Planes
+                    </Link>
+                  </li>
+
+                  <li
+                    className={`submenu-link ${location.pathname === '/adm-usuarioplanes-club' ? 'active' : ''}`}
+                  >
+                    <Link to="/adm-usuarioplanes-club" onClick={toggleSidebar}>
+                      Planes Usuarios
+                    </Link>
+                  </li>
+
+                  <li
+                    className={`submenu-link ${location.pathname === '/adm-caracteristicas-club' ? 'active' : ''}`}
+                  >
+                    <Link to="/adm-caracteristicas-club" onClick={toggleSidebar}>
+                      Características
+                    </Link>
+                  </li>
+
+                  <li
+                    className={`submenu-link ${location.pathname === '/adm-amenities-club' ? 'active' : ''}`}
+                  >
+                    <Link to="/adm-amenities-club" onClick={toggleSidebar}>
+                      Servicios
+                    </Link>
+                  </li>
+
+                  
+                </ul>
+              </div>
+            ) : (
+              <Link
+                to="/aldasaclub"
+                className={`menu-btn ${location.pathname === '/aldasaclub' ? 'active' : ''}`}
+                onClick={() => cambiarModo('gestion')}
+              >
+                <FaHome className="me-2" /> Aldasa Club
+              </Link>
+            )}
+
 
             {/* Aldasa Inversiones */}
             <Link
