@@ -102,9 +102,17 @@ export default function PlanesListclub() {
     },
     {
       name: "Descripción",
-      selector: (row) => row.descripcion,
+      selector: (row) => {
+        if (!row.descripcion) return "-";
+
+        const textoPlano = row.descripcion.replace(/<[^>]*>?/gm, "");
+        return textoPlano.length > 20
+          ? textoPlano.substring(0, 20) + "..."
+          : textoPlano;
+      },
       wrap: true,
     },
+
     {
       name: "Precio (S/)",
       selector: (row) => row.precio,

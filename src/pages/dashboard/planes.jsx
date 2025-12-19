@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Card, Button, Row, Col, Spinner } from "react-bootstrap";
 import Swal from "sweetalert2";
 import BreadcrumbALDASA from "../../cuerpos_dashboard/BreadcrumbAldasa";
 import axios from "axios";
@@ -10,15 +9,17 @@ const Planes = () => {
   const [planes, setPlanes] = useState([]);
   const [cargando, setCargando] = useState(false);
 
-  // Cargar planes desde la API
+  /* ----------------------------
+     OBTENER PLANES
+  ---------------------------- */
   useEffect(() => {
     const fetchPlanes = async () => {
       setCargando(true);
       try {
-        const response = await axios.get(`${config.apiUrl}api/planes/listar`); // Cambia la URL a tu endpoint real
-        setPlanes(response.data); // Asegúrate que la API devuelva un array de planes
+        const res = await axios.get(`${config.apiUrl}api/planes/listar`);
+        setPlanes(res.data);
       } catch (error) {
-        console.error("Error al obtener planes:", error);
+        console.error(error);
         Swal.fire("Error", "No se pudieron cargar los planes", "error");
       } finally {
         setCargando(false);
@@ -28,25 +29,29 @@ const Planes = () => {
     fetchPlanes();
   }, []);
 
-  // Cargar Culqi JS dinámicamente
+  /* ----------------------------
+     CARGAR CULQI
+  ---------------------------- */
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://checkout.culqi.com/js/v3";
     script.async = true;
     document.body.appendChild(script);
 
-    return () => {
-      document.body.removeChild(script);
-    };
+    return () => document.body.removeChild(script);
   }, []);
 
-  const handlePagoCulqui = (plan) => {
+  /* ----------------------------
+     PAGO CULQI
+  ---------------------------- */
+  const handlePagoCulqi = (plan) => {
     if (!window.Culqi) {
-      Swal.fire("Error", "Culqui JS aún no está cargado, espera unos segundos.", "error");
+      Swal.fire("Error", "Culqi aún no está listo.", "error");
       return;
     }
 
-    window.Culqi.publicKey = "pk_test_1234567890abcdef0123456789abcdef"; // Reemplaza con tu public key
+    window.Culqi.publicKey = "pk_test_1234567890abcdef0123456789abcdef";
+
     window.Culqi.settings({
       title: plan.nombre,
       currency: "PEN",
@@ -58,70 +63,114 @@ const Planes = () => {
     window.Culqi.open();
 
     window.culqi = function () {
-  if (window.Culqi.token) {
-    const token = window.Culqi.token.id;
-    console.log("Token Culqi:", token);
-
-    Swal.fire({
-      icon: "success",
-      title: "Pago realizado",
-      text: `Tu ${plan.nombre} se activará pronto.`,
-    });
-
-    // Aquí puedes enviar el token a tu backend para confirmar el pago
-    window.Culqi.close(); // ✅ Esto sí cierra el modal
-  } else if (window.Culqi.error) {
-    console.error("Error Culqi:", window.Culqi.error);
-    Swal.fire("Error", "No se pudo completar el pago.", "error");
-    window.Culqi.close();
-  }
-};
-
+      if (window.Culqi.token) {
+        Swal.fire(
+          "Pago realizado",
+          `Tu ${plan.nombre} se activará pronto.`,
+          "success"
+        );
+        window.Culqi.close();
+      } else if (window.Culqi.error) {
+        Swal.fire("Error", "No se pudo completar el pago", "error");
+        window.Culqi.close();
+      }
+    };
   };
+
+  /* ----------------------------
+     UTIL
+  ---------------------------- */
+  const cortarDescripcion = (html) => {
+    if (!html) return "-";
+    const texto = html.replace(/<[^>]*>?/gm, "");
+    return texto.length > 20 ? texto.substring(0, 20) + "..." : texto;
+  };
+
+  const decodeHTML3 = (html) => {
+      if (!html) return "";
+
+      // Decodifica entidades HTML
+      const txt = document.createElement("textarea");
+      txt.innerHTML = html;
+      let decoded = txt.value;
+
+      // Limpia caracteres NO-BREAK SPACE, unicode invisibles, etc.
+      decoded = decoded.replace(/\u00A0/g, " "); // reemplaza NBSP por espacio normal
+      decoded = decoded.replace(/\u200B/g, "");  // elimina zero-width
+      decoded = decoded.replace(/\s+/g, " ");    // limpia espacios repetidos
+      decoded = decoded.replace(/<br\s*\/?>/gi, "");
+
+      return decoded;
+    };
 
   return (
     <>
       <BreadcrumbALDASA />
+
       <div className="container py-5">
-        <h2 className="text-center mb-5 text-success fw-bold">Selecciona un Plan</h2>
+        <h2 className="text-center mb-5 fw-bold text-success">
+          Selecciona un Plan
+        </h2>
 
         {cargando ? (
           <Cargando visible={cargando} />
         ) : (
-          <Row className="g-4 justify-content-center">
-            {planes.map((plan) => (
-              <Col key={plan.id} md={4}>
-                <Card className="shadow-lg border-0 rounded-4 text-center p-4 plan-card h-100">
-                  <Card.Body className="d-flex flex-column justify-content-between">
-                    <div>
-                      <Card.Title className="fw-bold text-primary mb-3 fs-3">{plan.nombre}</Card.Title>
-                      <Card.Text className="fs-2 fw-bold text-success mb-3">
-                        S/ {(plan.precio / 100).toFixed(2)}
-                      </Card.Text>
-                      <Card.Text className="text-muted mb-4">{plan.descripcion}</Card.Text>
+          <div className="card shadow-sm border-0 rounded-4">
+            <div className="card-body">
+                <div className="row justify-content-center g-4">
+                  {planes.map((plan) => (
+                    <div className="col-md-4" key={plan.id}>
+                      <div
+                        className="pricing-box1 wow zoomIn h-100"
+                        data-wow-delay=".3s"
+                      >
+                        {/* ENCABEZADO */}
+                        <div className="heading-title text-center">
+                          <h3 className="item-title">{plan.nombre}</h3>
+
+                          <div className="item-price">
+                            S/ {(plan.precio / 100).toFixed(2)}
+                            <span> / mes</span>
+                          </div>
+
+                          {/*<p title={plan.descripcion}>
+                            {cortarDescripcion(plan.descripcion)}
+                          </p> */}
+                        </div>
+
+                        {/* SHAPE */}
+                        <div className="shape-img1 text-center my-3">
+                          <img
+                            src="/assets/images/favicon-aldasape.png"
+                            alt="shape"
+                            width="56"
+                            height="64"
+                          />
+                        </div>
+
+                        {/* BENEFICIOS (FIJOS POR AHORA) */}
+                        <div
+                          className="container"
+                          dangerouslySetInnerHTML={{ __html: decodeHTML3(plan.descripcion) }}
+                        />
+
+                        {/* BOTÓN */}
+                        <div className="pricing-button text-center mt-4">
+                          <button
+                            className="item-btn"
+                            onClick={() => handlePagoCulqi(plan)}
+                          >
+                            Pagar con Culqi
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                    <Button
-                      variant="success"
-                      className="fw-bold px-4 py-2 mt-3"
-                      onClick={() => handlePagoCulqui(plan)}
-                    >
-                      Pagar con Culqui
-                    </Button>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
-          </Row>
+                  ))}
+                </div>
+            </div>
+          </div>
         )}
       </div>
-
-      <style jsx>{`
-        .plan-card:hover {
-          transform: translateY(-8px);
-          transition: all 0.3s ease;
-          box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
-        }
-      `}</style>
     </>
   );
 };

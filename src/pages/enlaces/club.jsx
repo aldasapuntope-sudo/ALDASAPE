@@ -257,45 +257,91 @@ export default function Club() {
     return txt.value;
   };
 
+  const decodeHTML3 = (html) => {
+      if (!html) return "";
+
+      // Decodifica entidades HTML
+      const txt = document.createElement("textarea");
+      txt.innerHTML = html;
+      let decoded = txt.value;
+
+      // Limpia caracteres NO-BREAK SPACE, unicode invisibles, etc.
+      decoded = decoded.replace(/\u00A0/g, " "); // reemplaza NBSP por espacio normal
+      decoded = decoded.replace(/\u200B/g, "");  // elimina zero-width
+      decoded = decoded.replace(/\s+/g, " ");    // limpia espacios repetidos
+      decoded = decoded.replace(/<br\s*\/?>/gi, "");
+
+      return decoded;
+    };
+
+
   /* ----------------------------------
      CONTENIDO DE PLANES
   ---------------------------------- */
   const contenidoPrecios = (
-    <div className="container py-4">
-      <h2 className="text-center mb-4">Planes de precios</h2>
+  <div className="container py-4">
+    <h2 className="text-center mb-4">Planes de precios</h2>
 
-      {cargandoPlanes ? (
-        <div className="text-center">
-          <span className="spinner-border text-success"></span>
-        </div>
-      ) : (
-        <div className="row justify-content-center g-4">
-          {planes.map((plan) => (
-            <div className="col-md-4" key={plan.id}>
-              <div className="pricing-box1 text-center shadow-sm rounded-4 p-4 h-100">
-                <h3 className="fw-bold text-primary">{plan.nombre}</h3>
+    {cargandoPlanes ? (
+      <div className="text-center">
+        <span className="spinner-border text-success"></span>
+      </div>
+    ) : (
+      <div className="row justify-content-center g-4">
+        {planes.map((plan) => (
+          <div className="col-md-4" key={plan.id}>
+            <div
+              className="pricing-box1 wow zoomIn h-100"
+              data-wow-delay=".3s"
+            >
+              {/* ENCABEZADO */}
+              <div className="heading-title text-center">
+                <h3 className="item-title">{plan.nombre}</h3>
 
-                <h4 className="fw-bold text-success my-3">
+                <div className="item-price">
                   S/ {(plan.precio / 100).toFixed(2)}
-                </h4>
+                  <span> / mes</span>
+                </div>
 
-                <p className="text-muted">{plan.descripcion}</p>
+                
+              </div>
 
-                {usuario && (
+              {/* SHAPE */}
+              <div className="shape-img1 text-center my-3">
+                <img
+                  src="/assets/images/favicon-aldasape.png"
+                  alt="shape"
+                  width="50"
+                />
+              </div>
+            
+              <div
+          className="container"
+          dangerouslySetInnerHTML={{ __html: decodeHTML3(plan.descripcion) }}
+        />
+              {/*<p>{plan.descripcion}</p> */}
+              {/* LISTA DE BENEFICIOS */}
+              
+
+              {/* BOTÓN */}
+              {usuario && (
+                <div className="pricing-button text-center mt-4">
                   <button
-                    className="btn btn-success mt-3 fw-bold"
+                    className="item-btn"
                     onClick={() => handlePagoCulqi(plan)}
                   >
                     Pagar con Culqi
                   </button>
-                )}
-              </div>
+                </div>
+              )}
             </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+);
+
 
 
   /* ----------------------------------

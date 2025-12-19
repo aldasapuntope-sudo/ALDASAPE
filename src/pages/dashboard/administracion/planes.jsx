@@ -102,7 +102,14 @@ export default function PlanesList() {
     },
     {
       name: "Descripción",
-      selector: (row) => row.descripcion,
+      selector: (row) => {
+        if (!row.descripcion) return "-";
+
+        const textoPlano = row.descripcion.replace(/<[^>]*>?/gm, "");
+        return textoPlano.length > 20
+          ? textoPlano.substring(0, 20) + "..."
+          : textoPlano;
+      },
       wrap: true,
     },
     {
