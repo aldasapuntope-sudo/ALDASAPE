@@ -162,7 +162,7 @@ export default function BuscadorAvanzado({
               <option value="">Tipo de Propiedad</option>
               {tiposPropiedad.length > 0 ? (
                 tiposPropiedad.map((t) => (
-                  <option key={t.id} value={t.id}>
+                  <option key={t.id} value={t.nombre}>
                     {t.nombre}
                   </option>
                 ))

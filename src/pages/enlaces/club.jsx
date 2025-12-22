@@ -13,6 +13,7 @@ import AnunciosActivosclub from "../dashboard/aldasa-club/AnunciosActivosclub";
 
 export default function Club() {
   const { usuario } = useUsuario();
+  const esAdmin = usuario?.usuarioaldasa?.perfil_id === 1;
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   //console.log(usuario);
@@ -216,6 +217,14 @@ export default function Club() {
       setVerificandoMembresia(false);
       return;
     }
+
+    
+  // 👑 ADMIN: acceso directo
+  if (esAdmin) {
+    setMembresiaActiva(true);
+    setVerificandoMembresia(false);
+    return;
+  }
     
     axios
       .get(`${config.apiUrl}api/aldasaclub/estado-membresia/${usuario.usuarioaldasa.id}`)
@@ -324,7 +333,7 @@ export default function Club() {
               
 
               {/* BOTÓN */}
-              {usuario && (
+              {usuario && !esAdmin && (
                 <div className="pricing-button text-center mt-4">
                   <button
                     className="item-btn"
