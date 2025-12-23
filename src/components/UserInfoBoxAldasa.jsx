@@ -254,7 +254,7 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
 
       {/* 👤 USUARIO */}
       <div className="d-flex flex-column text-end me-2">
-        <span style={{ color: '#252526', fontWeight: '900', fontSize: '12px' }}>{nombre}</span>
+        <span style={{ color: '#252526', fontWeight: '900', fontSize: '12px' }}>{nombre.length > 9 ? `${nombre.slice(0, 10)}…` : nombre}</span>
         <span style={{ color: '#ffffffff', fontSize: '10px' }}>{escuela}</span>
       </div>
 

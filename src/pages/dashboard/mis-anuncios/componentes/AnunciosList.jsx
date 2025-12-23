@@ -30,8 +30,13 @@ const AnunciosList = ({ isPublish }) => {
   const cargarDatos = async () => {
     setCargando(true);
     try {
+      const userId = usuario.usuarioaldasa.perfil_id === 1
+      ? 0   // 👑 ADMIN → ve todo
+      : usuario.usuarioaldasa.id;
+
+      
       const res = await axios.get(
-        `${config.apiUrl}api/misanuncios/listar/${isPublish}/${usuario.usuarioaldasa.id}`
+        `${config.apiUrl}api/misanuncios/listar/${isPublish}/${userId}`
       );
 
       // Axios ya convierte la respuesta a JSON automáticamente

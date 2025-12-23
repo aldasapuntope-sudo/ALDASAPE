@@ -31,6 +31,24 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
   const { usuario } = useUsuario();
   const navigate = useNavigate();
 
+
+  const esAdmin = usuario?.usuarioaldasa?.perfil_id === 1;
+
+  useEffect(() => {
+    // 🔒 Si no hay usuario → fuera
+    if (!usuario) {
+      Swal.fire("Acceso denegado", "Debes iniciar sesión", "warning");
+      navigate("/login");
+      return;
+    }
+
+    // 👑 ADMIN: acceso total
+    if (esAdmin) return;
+
+    // 👤 Usuario normal: aquí podrías validar membresía si deseas
+  }, [usuario]);
+
+
   // 🖼️ IMÁGENES ADICIONALES
   const [imagenesSecundarias, setImagenesSecundarias] = useState([]);
   /*const addImagenSecundaria = () => setImagenesSecundarias([...imagenesSecundarias, null]);*/
@@ -59,6 +77,9 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
     updated[index] = e.target.files[0];
     setPlanos(updated);
   };
+
+
+  
 
   // 🎥 VIDEO
   const [videoUrl, setVideoUrl] = useState("");

@@ -124,7 +124,7 @@ export default function SearchFilter({ mode, setMode }) {
         >
           <option value="">Seleccione tipo</option>
           {tipos.map((t) => (
-            <option key={t.id} value={t.id}>
+            <option key={t.id} value={t.nombre}>
               {t.nombre.charAt(0).toUpperCase() + t.nombre.slice(1)}
             </option>
           ))}
