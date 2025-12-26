@@ -276,6 +276,9 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
             Mi Perfil
           </Dropdown.Item>
           <Dropdown.Item onClick={() => window.location.reload()}>Recargar</Dropdown.Item>
+          <Dropdown.Item as={Link} to="dashboard">
+            Mis servicios
+          </Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item onClick={abrirModal}>Cerrar sesión</Dropdown.Item>
         </Dropdown.Menu>

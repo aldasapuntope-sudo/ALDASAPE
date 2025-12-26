@@ -160,10 +160,9 @@ function AppRoutes() {
             </>
           }
         >
-          <Route
-            path="/"
-            element={usuario ? <Navigate to="/dashboard" /> : <Home />}
-          />
+         
+
+          <Route path="/" element={<Home />} />
           <Route path="/anuncio/:slug" element={<PropertyDetail />} />
           
 
