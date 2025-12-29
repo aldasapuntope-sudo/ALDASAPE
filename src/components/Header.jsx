@@ -149,14 +149,23 @@ export default function HeaderAldasa({ abrirModal }) {
           <div className="d-flex align-items-center gap-2">
             {!user ? (
               <>
-                <button className="btn btn-outline-success">
+                <NavLink to="/club" className="btn btn-outline-success">
                   Inversiones TOP
-                </button>
+                </NavLink>
 
+                <NavLink to="/publica-tu-anuncio" className="btn-publicar">
+                  <FaPlus /> Publicar Anuncio
+                </NavLink>
+                {/*<button className="btn btn-outline-success">
+                  Inversiones TOP
+                </button> 
+                
                 <button className="btn-publicar">
                   <FaPlus /> Publicar Anuncio
                 </button>
+                */}
 
+                
                 {/* ===== DROPDOWN USUARIO (HOVER) ===== */}
                 <div
                   className={`dropdown login-icon-wrapper ms-2 ${

@@ -70,6 +70,8 @@ import PlanesListclub from './pages/dashboard/administracion/PlanesListclub';
 import UsuariosPlanesListclub from './pages/dashboard/administracion/UsuariosPlanesListclub';
 import CaracteristicaListclub from './pages/dashboard/administracion/CaracteristicaListclub';
 import ServicioListclub from './pages/dashboard/administracion/AmenityListclub';
+import SeleccionPerfil from './components/SeleccionPerfil';
+import ParticularPage from './components/ParticularPage/ParticularPage';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -174,6 +176,8 @@ function AppRoutes() {
           <Route path="/club" element={<Club />} />
           <Route path="/politicas-de-privacidad" element={<PoliticasPrivacidad />} />
           <Route path="/buscar" element={<BuscarPage />} />
+          <Route path="/publica-tu-anuncio" element={<SeleccionPerfil />} />
+          <Route path="/particular" element={<ParticularPage />} />
           
 
           {!usuario && (
