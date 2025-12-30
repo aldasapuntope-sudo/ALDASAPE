@@ -72,6 +72,7 @@ import CaracteristicaListclub from './pages/dashboard/administracion/Caracterist
 import ServicioListclub from './pages/dashboard/administracion/AmenityListclub';
 import SeleccionPerfil from './components/SeleccionPerfil';
 import ParticularPage from './components/ParticularPage/ParticularPage';
+import ChatBox from './components/ChatBox';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -124,6 +125,7 @@ function AppRoutes() {
   const [showAlert, setShowAlert] = useState(false);
   const [mostrarModal, setMostrarModal] = useState(false);
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
 
 
 
@@ -367,6 +369,17 @@ function AppRoutes() {
         {/* ❌ Ruta no encontrada */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
+
+       {/* 💬 CHAT SOLO PARA WEB PÚBLICA */}
+  {!usuario && (
+    <>
+      <button className="chat-fab" onClick={() => setOpen(!open)}>
+        💬
+      </button>
+
+      {open && <ChatBox />}
+    </>
+  )}
 
       {/* ⚠️ Modal de cierre de sesión */}
       <CerrarSesionModal

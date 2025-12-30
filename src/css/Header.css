@@ -17,6 +17,23 @@
   border: none;
   border-radius: 0;
 }
+.login-icon-wrapper {
+  position: relative;
+}
+
+.login-icon-wrapper .dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  z-index: 9999;
+}
+
+/* Evitar que se monte sobre el icono */
+.login-icon-wrapper .dropdown-menu.show {
+  position: absolute;
+}
+
 
 /* ====== HOVER EN ESCRITORIO ====== */
 @media (min-width: 992px) {

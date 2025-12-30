@@ -75,13 +75,13 @@
   left: 0;
   height: 6px;
   width: 100%;
-  background: #0c5f3d;
+  background: var(--green);
   border-radius: 8px 8px 0 0;
 }
 
 .perfil-icon {
   margin: 30px 0 20px;
-  color: #000;
+  color: var(--green);
 }
 
 .perfil-card h3 {
@@ -153,6 +153,74 @@
 
 .fade-in {
   animation: fadeIn 0.6s ease-in-out;
+}
+
+
+/* FAQ */
+.faq-wrapper {
+  max-width: 1000px;
+}
+
+.faq-card {
+  background: var(--green);
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.faq-card:hover {
+  transform: translateY(-2px);
+}
+
+.faq-card.active {
+  border-left: 4px solid var(--green);
+  background: white;
+}
+
+.faq-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.faq-card.active h6 {
+    color: black;
+}
+
+.faq-header h6 {
+  font-weight: 600;
+  color: white;
+}
+
+.faq-arrow {
+  font-size: 18px;
+  transition: transform 0.3s ease;
+}
+
+.faq-arrow.open {
+  transform: rotate(90deg);
+}
+
+.faq-body {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: all 0.4s ease;
+}
+
+.faq-body.show {
+  max-height: 200px;
+  opacity: 1;
+  margin-top: 12px;
+}
+
+.faq-body p {
+  margin: 0;
+  color: #6c757d;
+  line-height: 1.6;
 }
 
 @keyframes fadeIn {

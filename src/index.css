@@ -470,6 +470,10 @@ body.dark-mode .salir-btn {
   z-index: 9999999999999999999999999999999;
 }
 
+.btn-outline-success:hover {
+    background: var(--green);
+}
+
 
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.9); }

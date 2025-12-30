@@ -115,7 +115,7 @@ export default function PasosPublicar() {
       </div>
 
       <div className="text-center mt-4">
-        <Link to="/nuevo-anuncio" className="btn btn-success px-5">
+        <Link to="/login" className="btn btn-success px-5">
           Publicar mi inmueble
         </Link>
       </div>
