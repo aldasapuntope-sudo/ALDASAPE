@@ -1,85 +1,56 @@
-import React, { useEffect, useState } from 'react';
-import '../../css/Login.css';
-import BotonGoogle from './componentes/LoginBotonGoogle';
-import Formulario from './componentes/LoginForm';
-import BotonFacebook from './componentes/BotonFacebook';
-import HeaderAldasa from '../../components/Header';
-import CerrarSesionModal from '../../components/modales/CerrarSesionModal';
-import Footerblanco from '../../components/Footerblanco';
+import React, { useEffect } from "react";
+import "../../css/Login.css";
+import BotonGoogle from "./componentes/LoginBotonGoogle";
+import Formulario from "./componentes/LoginForm";
+import BotonFacebook from "./componentes/BotonFacebook";
+import BotonGooglemodal from "./componentes/LoginBotonGooglemodal";
 
-
-export default function Login() {
-  const [alert, setAlert] = useState({ show: false, message: '', type: '' });
-  const [usuario, setUsuario] = useState(null);
-  const [mostrarModal, setMostrarModal] = useState(false);
-
-  const abrirModalCerrarSesion = () => setMostrarModal(true);
-
-  const confirmarCerrarSesion = () => {
-    localStorage.removeItem("usuario");
-    setUsuario(null);
-    window.location.href = "/";
-  };
-
+export default function LoginModal({ show, onClose, setUsuario  }) {
   useEffect(() => {
-    document.body.style.backgroundImage = "url('image/back-03_0002.svg')";
-    const data = localStorage.getItem("usuario");
-    if (data) setUsuario(JSON.parse(data));
-  }, []);
+    if (show) document.body.style.overflow = "hidden";
+    return () => (document.body.style.overflow = "auto");
+  }, [show]);
 
-
+  if (!show) return null;
+  
   return (
+    <div
+      className="modal fade show d-block"
+      style={{
+        background: "rgba(0,0,0,.6)",
+        zIndex: 99999,
+      }}
+    >
+      <div className="modal-dialog modal-dialog-centered modal-md">
+        <div className="modal-content rounded-4 shadow-lg">
 
-    <>
-      <HeaderAldasa abrirModal={abrirModalCerrarSesion} />
-    
-      <div className="auth-page">
-        <div className="auth-overlay"></div>
-        <div className="auth-container">
-          <div className="auth-card shadow-lg rounded-4 p-4">
-            <h2 className="text-center mb-4 fw-bold text-success">Iniciar sesión</h2>
+          <div className="modal-header">
+            <h5 className="modal-title text-success fw-bold">
+              Iniciar sesión
+            </h5>
+            <button className="btn-close" onClick={onClose}></button>
+          </div>
 
-            {/* Formulario de correo y contraseña */}
+          <div className="modal-body">
             <Formulario />
 
-            <div className="text-center my-3 text-black-50"></div>
+            <div className="my-3 text-center text-muted">o</div>
 
-            {/* Botón de Google */}
-            <BotonGoogle setUsuario={setUsuario} />
-            
-            <div className="my-2 text-center text-black-50">o</div>
-            <BotonFacebook setUsuario={setUsuario} />
-            <div className="text-center mt-3 text-black">
-              <small>¿No tienes una cuenta?</small> <br />
-              <a href="/registro" className="text-success fw-semibold">Regístrate</a>
+            <BotonGooglemodal setUsuario={setUsuario} />
+            <div className="my-1 text-center text-muted">o</div>
+            <BotonFacebook />
+
+            <div className="text-center mt-3">
+              <small>¿No tienes una cuenta?</small>
+              <br />
+              <a href="/registro" className="text-success fw-semibold">
+                Regístrate
+              </a>
             </div>
           </div>
 
-          {/* 🔹 Alerta visual de Bootstrap */}
-          {alert.show && (
-            <div
-              className={`alert alert-${alert.type} alert-dismissible fade show position-fixed bottom-0 start-50 translate-middle-x mb-3 w-75`}
-              role="alert"
-              style={{ zIndex: 9999 }}
-            >
-              {alert.message}
-              <button
-                type="button"
-                className="btn-close"
-                onClick={() => setAlert({ show: false })}
-              ></button>
-            </div>
-          )}
         </div>
       </div>
-
-      <Footerblanco />
-
-      <CerrarSesionModal
-        show={mostrarModal}
-        onConfirm={confirmarCerrarSesion}
-        onCancel={() => setMostrarModal(false)}
-      />
-    </>
+    </div>
   );
 }

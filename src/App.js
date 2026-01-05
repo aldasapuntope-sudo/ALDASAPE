@@ -73,6 +73,8 @@ import ServicioListclub from './pages/dashboard/administracion/AmenityListclub';
 import SeleccionPerfil from './components/SeleccionPerfil';
 import ParticularPage from './components/ParticularPage/ParticularPage';
 import ChatBox from './components/ChatBox';
+import HeaderAldasa from './components/Header';
+import Loginmodal from './pages/iniciosession/Loginmodal';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -126,8 +128,9 @@ function AppRoutes() {
   const [mostrarModal, setMostrarModal] = useState(false);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-
-
+  
+  
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const abrirModalCerrarSesion = () => setMostrarModal(true);
 
@@ -151,14 +154,27 @@ function AppRoutes() {
       <Preloader />
 
       <Routes>
-        {!usuario && (
+        {!usuario && ( 
         <Route path="/login" element={<Login />} />
         )}
         {/* 🌐 Páginas públicas con Header y Footer */}
         <Route
           element={
             <>
-              <Header abrirModal={abrirModalCerrarSesion} />
+              <Header
+                abrirModal={abrirModalCerrarSesion}
+                abrirLoginModal={() => setShowLoginModal(true)}
+              />
+              
+
+            
+
+            <Loginmodal
+              show={showLoginModal}
+              onClose={() => setShowLoginModal(false)}
+              setUsuario={setUsuario}
+            />
+
               <Outlet />
               <Footer />
             </>

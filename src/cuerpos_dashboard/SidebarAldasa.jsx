@@ -4,6 +4,7 @@ import '../css/SidebarALDASA.css';
 import {
   FaChevronDown,
   FaChevronRight,
+  FaLifeRing,
   FaSignOutAlt,
   FaHome,
   FaBookOpen,
@@ -14,13 +15,14 @@ import {
 } from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
 import { useUsuario } from '../context/UserContext';
+import SoporteModal from '../components/modales/SoporteModal';
 
 const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
   const { usuario } = useUsuario();
   const [openMenu, setOpenMenu] = useState(null);
   const [modo, setModo] = useState('gestion'); // gestion o evaluacion
   const location = useLocation();
- 
+  const [mostrarSoporte, setMostrarSoporte] = useState(false);
   const { darkMode } = useTheme();
   const logo = darkMode
     ? '../assets/images/logo-aldasape-color.png'
@@ -47,13 +49,23 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
   };
 
   return (
-    <div className="sidebar">
+    <>
+      <div className="sidebar">
       <div className="sidebar-content">
         <img
           alt="Logo UNJ"
           className="logounj mb-3"
           src={logo}
         />
+
+        {/* Dashboard */}
+        <Link
+          to="/dashboard"
+          className={`menu-btn ${location.pathname === '/dashboard' ? 'active' : ''}`}
+          onClick={() => cambiarModo('gestion')}
+        >
+          <FaHome className="me-2" /> Dashboard
+        </Link>
 
         {/* PRINCIPAL */}
         <Link
@@ -359,6 +371,12 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
             <FaClipboardList className="me-2" /> Evaluación Docente
           </Link>
         )}
+        <button
+          className="menu-btn"
+          onClick={() => setMostrarSoporte(true)}
+        >
+          <FaLifeRing className="me-2" /> Soporte y Ayuda
+        </button>
 
         <hr className="my-3" />
 
@@ -366,8 +384,14 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
         <button className="salir-btn mt-auto w-100" onClick={abrirModal}>
           Salir <FaSignOutAlt className="me-2" />
         </button>
+        
       </div>
     </div>
+    <SoporteModal
+      show={mostrarSoporte}
+      onClose={() => setMostrarSoporte(false)}
+    />
+    </>
   );
 };
 

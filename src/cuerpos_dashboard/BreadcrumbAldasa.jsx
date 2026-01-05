@@ -62,8 +62,8 @@ const BreadcrumbALDASA = () => {
   // Página Principal
   breadcrumbs.push(
     <li key="home" className="breadcrumb-item">
-      <Link to="/" style={{ color: 'hsl(0deg 0% 40%)', textDecoration: 'none' }}>
-        <FaLaptop className="me-2" /> Principal
+      <Link to="/dashboard" style={{ color: 'hsl(0deg 0% 40%)', textDecoration: 'none' }}>
+        <FaLaptop className="me-2" /> Dashboard
       </Link>
     </li>
   );

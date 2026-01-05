@@ -1,3 +1,8 @@
+.navbar,
+.navbar .container,
+.navbar-collapse {
+  overflow: visible !important;
+}
 /* ====== ANIMACIÓN BASE ====== */
 .fade-up {
   opacity: 0;
@@ -17,8 +22,55 @@
   border: none;
   border-radius: 0;
 }
+
+/* contenedor padre */
 .login-icon-wrapper {
   position: relative;
+}
+
+/* menú oculto */
+.user-menu-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 260px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all 0.2s ease;
+  z-index: 9999;
+}
+
+/* menú visible */
+.user-menu-panel.visible {
+    position: fixed;
+    top: 42px !important;
+    right: 292px !important;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+/* header interno */
+.user-dropdown-header {
+  padding: 16px;
+}
+
+/* botones */
+.user-menu-panel .dropdown-item {
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+}
+
+.user-menu-panel .dropdown-item:hover {
+  background-color: #f5f5f5;
 }
 
 .login-icon-wrapper .dropdown-menu {
@@ -33,6 +85,8 @@
 .login-icon-wrapper .dropdown-menu.show {
   position: absolute;
 }
+
+
 
 
 /* ====== HOVER EN ESCRITORIO ====== */
@@ -288,4 +342,51 @@
   font-weight: 500;
   text-decoration: none;
   transition: all 0.3s ease;
+}
+
+
+/* CONTENEDOR DEL DROPDOWN */
+
+.user-dropdown-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 9999;
+}
+
+/* Botón icono */
+.user-icon-btn {
+  width: 32px;
+  height: 32px;
+}
+
+/* Icono usuario */
+.login-icon {
+  color: #fff;
+}
+/* CONTENEDOR DEL DROPDOWN */
+.login-icon-wrapper {
+  position: relative; /* 🔑 CLAVE */
+}
+
+
+@media (max-width: 768px) {
+  .user-dropdown-panel {
+    top: 50px;      /* ajusta a tu gusto */
+    right: 0;       /* pegado al borde derecho */
+    left: auto;
+    width: 95vw;    /* casi todo el ancho */
+    max-width: 360px;
+  }
+
+  .user-menu-panel.visible {
+      position: fixed;
+      top: 64px !important;
+      right: 0px !important;
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      opacity: 1 !important;
+      visibility: visible !important;
+  }
 }
