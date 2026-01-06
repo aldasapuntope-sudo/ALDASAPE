@@ -203,6 +203,14 @@ export default function HeaderAldasa({ abrirModal, abrirLoginModal }) {
                     {darkMode ? <FaSun /> : <FaMoon />}
                   </button>
                   <UserInfoBoxAldasa abrirModal={abrirModal} />
+                  <button
+  ref={userBtnRef}
+  className="border-0 bg-transparent p-0"
+  onMouseEnter={abrirUserMenu}
+  onMouseLeave={cerrarUserMenu}
+>
+  {/* avatar o imagen */}
+</button>
                 </>
               )}
             </div>
@@ -260,6 +268,73 @@ export default function HeaderAldasa({ abrirModal, abrirLoginModal }) {
               Ajustes de notificaciones
             </small>
           </div>
+        </div>
+      )}
+
+      {/* ================== DROPDOWN USUARIO LOGUEADO ================== */}
+      {showUserMenu && user && (
+        <div
+          className="user-menu-panel visible"
+          style={{
+            position: "fixed",
+            top: `${menuPos.top}px`,
+            left: `${menuPos.left}px`,
+            zIndex: 99999,
+            width: "280px",
+          }}
+          onMouseEnter={abrirUserMenu}
+          onMouseLeave={cerrarUserMenu}
+        >
+          {/* HEADER USUARIO */}
+          <div className="user-dropdown-header">
+            <strong className="d-block">
+              {user.nombre || user.name}
+            </strong>
+            <small className="text-muted">
+              {user.email}
+            </small>
+          </div>
+
+          <hr />
+
+          <button
+            className="dropdown-item"
+            onClick={() => {
+              cerrarUserMenu();
+              window.location.href = "/mi-perfil";
+            }}
+          >
+            Mi Perfil
+          </button>
+
+          <button
+            className="dropdown-item"
+            onClick={() => window.location.reload()}
+          >
+            Recargar
+          </button>
+
+          <button
+            className="dropdown-item"
+            onClick={() => {
+              cerrarUserMenu();
+              window.location.href = "/dashboard";
+            }}
+          >
+            Mis servicios
+          </button>
+
+          <hr />
+
+          <button
+            className="dropdown-item text-danger"
+            onClick={() => {
+              cerrarUserMenu();
+              abrirModal();
+            }}
+          >
+            Cerrar sesión
+          </button>
         </div>
       )}
     </>

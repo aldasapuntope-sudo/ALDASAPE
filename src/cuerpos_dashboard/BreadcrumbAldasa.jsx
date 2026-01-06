@@ -32,6 +32,7 @@ const nombresPersonalizados = {
   'aldasaclub': 'Aldasa Club',
   'aldasainversioens': 'Aldasa Inversiones',
   'propiedadremates': 'Remate',
+  'soporte-mensajes': 'Soporte Mensajes',
   detalle_guia: 'Detalle Guías',
   curso: 'Mis Cursos',
   detalle_curso: 'Detalle Curso',

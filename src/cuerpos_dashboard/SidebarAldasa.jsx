@@ -371,12 +371,48 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
             <FaClipboardList className="me-2" /> Evaluación Docente
           </Link>
         )}
-        <button
-          className="menu-btn"
-          onClick={() => setMostrarSoporte(true)}
-        >
-          <FaLifeRing className="me-2" /> Soporte y Ayuda
-        </button>
+
+        {/* SOPORTE Y AYUDA */}
+        <div className="menu-group">
+          <button
+            className="menu-btn"
+            onClick={() => toggleMenu('soporte')}
+          >
+            <FaLifeRing className="me-2" /> Soporte y Ayuda
+            {openMenu === 'soporte'
+              ? <FaChevronDown className="ms-auto" />
+              : <FaChevronRight className="ms-auto" />}
+          </button>
+
+          <ul className={`submenu ${openMenu === 'soporte' ? 'open' : ''}`}>
+            {/* Ir a mensajes */}
+            <li
+              className={`submenu-link ${
+                location.pathname.startsWith('/soporte-mensajes') ? 'active' : ''
+              }`}
+            >
+              <Link to="/soporte-mensajes" onClick={toggleSidebar}>
+                Ir a mensajes
+              </Link>
+            </li>
+
+            {/* Registrar nueva consulta */}
+            <li className="submenu-link">
+              <Link
+                to="#"
+                className="submenu-link"
+                onClick={(e) => {
+                  e.preventDefault();      // ⛔ evita navegación
+                  setMostrarSoporte(true); // ✅ abre modal
+                  setOpenMenu(null);       // ✅ cierra submenu
+                }}
+              >
+                Registrar nueva consulta
+              </Link>
+
+            </li>
+          </ul>
+        </div>
 
         <hr className="my-3" />
 

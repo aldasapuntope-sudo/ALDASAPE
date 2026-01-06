@@ -25,17 +25,18 @@ export default function LoginModal({ show, onClose, setUsuario  }) {
         <div className="modal-content rounded-4 shadow-lg">
 
           <div className="modal-header">
-            <h5 className="modal-title text-success fw-bold">
+            <h5 className="modal-title text-white fw-bold">
               Iniciar sesión
             </h5>
             <button className="btn-close" onClick={onClose}></button>
           </div>
 
           <div className="modal-body">
+            
             <Formulario />
 
-            <div className="my-3 text-center text-muted">o</div>
-
+            
+            <div className="text-center my-3 text-black-50"></div>
             <BotonGooglemodal setUsuario={setUsuario} />
             <div className="my-1 text-center text-muted">o</div>
             <BotonFacebook />

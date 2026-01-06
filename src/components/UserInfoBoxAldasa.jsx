@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Dropdown, Image, Badge, Button } from 'react-bootstrap';
+import {  Image, Badge, Button } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaEnvelope, FaHeart } from 'react-icons/fa';
+import { FaEnvelope, FaHeart, FaUserCircle, FaRegAddressBook,
+  FaBell,
+  FaHistory,
+  FaCog,
+  FaQuestionCircle,
+  FaSignOutAlt, } from 'react-icons/fa';
 import config from '../config';
 import axios from 'axios';
 import { useUsuario } from '../context/UserContext';
+import Dropdown from "react-bootstrap/Dropdown";
 
 export default function UserInfoBoxAldasa({ abrirModal }) {
   const { usuario } = useUsuario();
@@ -271,17 +277,73 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
           />
         </Dropdown.Toggle>
 
-        <Dropdown.Menu>
-          <Dropdown.Item as={Link} to="/mi-perfil">
-            Mi Perfil
-          </Dropdown.Item>
-          <Dropdown.Item onClick={() => window.location.reload()}>Recargar</Dropdown.Item>
-          <Dropdown.Item as={Link} to="dashboard">
-            Mis servicios
-          </Dropdown.Item>
-          <Dropdown.Divider />
-          <Dropdown.Item onClick={abrirModal}>Cerrar sesión</Dropdown.Item>
-        </Dropdown.Menu>
+        <Dropdown.Menu
+  className="shadow rounded-4 p-0"
+  style={{ width: 280 }}
+>
+  {/* 🔹 HEADER USUARIO */}
+  <div className="px-3 py-3 border-bottom">
+    <strong className="d-block">
+      {usuario?.name || "macahsoft company"}
+    </strong>
+    <small className="text-muted">
+      {usuario?.email || "macahsoftcompany@gmail.com"}
+    </small>
+  </div>
+
+  {/* 🔹 OPCIONES PRINCIPALES */}
+  <Dropdown.Item as={Link} to="/mis-contactos" className="d-flex align-items-center gap-2 py-2">
+    <FaRegAddressBook />
+    Mis contactos
+  </Dropdown.Item>
+
+  <Dropdown.Item as={Link} to="/favoritos" className="d-flex align-items-center gap-2 py-2">
+    <FaHeart />
+    Favoritos
+  </Dropdown.Item>
+
+  <Dropdown.Item as={Link} to="/busquedas-alertas" className="d-flex align-items-center gap-2 py-2">
+    <FaBell />
+    Búsquedas y alertas
+  </Dropdown.Item>
+
+  <Dropdown.Item as={Link} to="/historial" className="d-flex align-items-center gap-2 py-2">
+    <FaHistory />
+    Historial
+  </Dropdown.Item>
+
+  <Dropdown.Divider />
+
+  {/* 🔹 MI CUENTA */}
+  <div className="px-3 pt-2 pb-1 text-muted small">
+    Mi cuenta
+  </div>
+
+  <Dropdown.Item as={Link} to="/mi-perfil" className="d-flex align-items-center gap-2 py-2">
+    <FaCog />
+    Mi Perfil
+  </Dropdown.Item>
+
+  <Dropdown.Divider />
+
+  {/* 🔹 AYUDA */}
+  <Dropdown.Item as={Link} to="/soporte" className="d-flex align-items-center gap-2 py-2">
+    <FaQuestionCircle />
+    ¿Podemos ayudarte?
+  </Dropdown.Item>
+
+  <Dropdown.Divider />
+
+  {/* 🔹 CERRAR SESIÓN */}
+  <Dropdown.Item
+    className="d-flex align-items-center gap-2 py-2 text-danger"
+    onClick={abrirModal}
+  >
+    <FaSignOutAlt />
+    Cerrar sesión
+  </Dropdown.Item>
+</Dropdown.Menu>
+
       </Dropdown>
     </div>
   );

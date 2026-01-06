@@ -1,0 +1,61 @@
+.cuenta-container {
+  display: flex;
+  gap: 24px;
+}
+
+.cuenta-sidebar {
+  width: 100%;
+  background: #f7f9fa;
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.cuenta-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.cuenta-link:hover {
+  background: #eef2f3;
+}
+
+/* 🔥 ACTIVO (igual Urbania) */
+.cuenta-link.active {
+  background: #ffffff;
+  border-left: 4px solid #198754;
+  font-weight: 700;
+}
+
+
+
+.contacto-card {
+  background: #fff;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #eaeaea;
+}
+
+.contacto-img {
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+
+.contacto-hover {
+  transition: all 0.25s ease;
+}
+
+.contacto-hover:hover {
+  background-color: #f8fdfb;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}

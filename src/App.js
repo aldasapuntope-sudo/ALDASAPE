@@ -75,6 +75,10 @@ import ParticularPage from './components/ParticularPage/ParticularPage';
 import ChatBox from './components/ChatBox';
 import HeaderAldasa from './components/Header';
 import Loginmodal from './pages/iniciosession/Loginmodal';
+import SoporteMensajesPage from './pages/dashboard/administracion/SoporteMensajesPage';
+import CuentaLayout from './components/Paginasopcionales/CuentaLayout';
+import MisContactos from './components/Paginasopcionales/componentes/MisContactos';
+import MisFavoritos2 from './components/Paginasopcionales/componentes/Misfavoritos2';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -365,6 +369,11 @@ function AppRoutes() {
               element={<RutaProtegida element={MensajesPage} />}
             />
 
+            <Route
+              path="/soporte-mensajes"
+              element={<RutaProtegida element={SoporteMensajesPage} />}
+            />
+
 
             <Route 
               path="/aldasaclub" 
@@ -378,7 +387,11 @@ function AppRoutes() {
             />
             
             <Route path="/propiedadremates/:slug" element={<PropertyClub />} />
-
+            
+            <Route element={<CuentaLayout />}>
+              <Route path="/mis-contactos" element={<MisContactos />} />
+              <Route path="/favoritos" element={<MisFavoritos2 />} />
+            </Route>
           </Route>
         )}
 
