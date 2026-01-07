@@ -117,6 +117,11 @@ export default function SliderList() {
       sortable: true,
     },
     {
+      name: "Descripcion",
+      selector: (row) => row.descripcion,
+      sortable: true,
+    },
+    {
       name: "Orden",
       selector: (row) => row.orden,
       sortable: true,

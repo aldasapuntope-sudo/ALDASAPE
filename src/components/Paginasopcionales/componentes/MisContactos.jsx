@@ -3,10 +3,14 @@ import axios from "axios";
 import { Alert, Button } from "react-bootstrap";
 import { FaWhatsapp } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+
 import config from "../../../config";
 import { useUsuario } from "../../../context/UserContext";
 import Cargando from "../../../components/cargando";
+import { CardSkeleton } from "../../../components/TablaSkeleton";
+
 import "../../../css/CuentaLayout.css";
+
 const generarSlug = (texto) =>
   texto
     ?.toLowerCase()
@@ -51,14 +55,19 @@ const MisContactos = () => {
     <div>
       <div className="card shadow-sm border-0 rounded-4">
         <div className="card-body p-4">
+
           {/* HEADER */}
           <div className="d-flex justify-content-between align-items-center mb-4">
             <h4 className="fw-bold text-success mb-0">Mis contactos</h4>
             <small className="text-muted">Ordenar ⬍</small>
           </div>
 
+          {/* CONTENIDO */}
           {cargando ? (
-            <Cargando visible={cargando} />
+            <>
+              <Cargando visible />
+              <CardSkeleton cards={5} />
+            </>
           ) : contactos.length === 0 ? (
             <Alert variant="light" className="text-center py-5 rounded-4 border-0">
               <img
@@ -116,7 +125,7 @@ const MisContactos = () => {
                     variant="success"
                     size="sm"
                     onClick={(e) => {
-                      e.stopPropagation(); // ⛔ evita redirección
+                      e.stopPropagation();
                       window.open(`https://wa.me/${c.telefono}`, "_blank");
                     }}
                   >
@@ -126,6 +135,7 @@ const MisContactos = () => {
               ))}
             </div>
           )}
+
         </div>
       </div>
     </div>

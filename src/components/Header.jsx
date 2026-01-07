@@ -154,15 +154,50 @@ export default function HeaderAldasa({ abrirModal, abrirLoginModal }) {
                 </>
               ) : (
                 <>
+                  {menuData &&
+                    Object.entries(menuData).map(([key, value]) => {
+                      const hasSubmenu =
+                        Array.isArray(value) || typeof value === "object";
+
+                      return (
+                        <li
+                          key={key}
+                          className="nav-item dropdown position-static"
+                        >
+                          <NavLink
+                            className="nav-link dropdown-toggle text-capitalize d-flex align-items-center"
+                            to="#"
+                            onClick={() =>
+                              isMobile && hasSubmenu && toggleMenu(key)
+                            }
+                          >
+                            {key}
+                            {isMobile && hasSubmenu && (
+                              <FaChevronDown
+                                className={`ms-1 ${
+                                  activeMenu === key ? "rotate-180" : ""
+                                }`}
+                                size={12}
+                              />
+                            )}
+                          </NavLink>
+
+                          {hasSubmenu && (
+                            <MegaDropdown
+                              data={value}
+                              mode={key}
+                              isMobile={isMobile}
+                              isOpen={activeMenu === key}
+                            />
+                          )}
+                        </li>
+                      );
+                    })}
+
                   <li className="nav-item">
-                    <NavLink className="nav-link" to="/nuevo-anuncio">
-                      Subir anuncios
-                    </NavLink>
-                  </li>
-                  <li className="nav-item">
-                    <NavLink className="nav-link" to="/anuncios-activos">
-                      Mis anuncios
-                    </NavLink>
+                    <a className="nav-link" href="https://aldasa.pe/proyectos">
+                      Proyectos
+                    </a>
                   </li>
                 </>
               )}

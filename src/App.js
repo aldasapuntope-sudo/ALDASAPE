@@ -79,6 +79,7 @@ import SoporteMensajesPage from './pages/dashboard/administracion/SoporteMensaje
 import CuentaLayout from './components/Paginasopcionales/CuentaLayout';
 import MisContactos from './components/Paginasopcionales/componentes/MisContactos';
 import MisFavoritos2 from './components/Paginasopcionales/componentes/Misfavoritos2';
+import HistorialVisitas from './components/Paginasopcionales/componentes/HistorialVisitas';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -391,6 +392,8 @@ function AppRoutes() {
             <Route element={<CuentaLayout />}>
               <Route path="/mis-contactos" element={<MisContactos />} />
               <Route path="/favoritos" element={<MisFavoritos2 />} />
+              <Route path="/historial" element={<HistorialVisitas />} />
+              
             </Route>
           </Route>
         )}

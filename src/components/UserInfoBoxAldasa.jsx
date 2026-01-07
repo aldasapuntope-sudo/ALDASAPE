@@ -6,7 +6,8 @@ import { FaEnvelope, FaHeart, FaUserCircle, FaRegAddressBook,
   FaHistory,
   FaCog,
   FaQuestionCircle,
-  FaSignOutAlt, } from 'react-icons/fa';
+  FaSignOutAlt,  FaHome,
+  FaBullhorn} from 'react-icons/fa';
 import config from '../config';
 import axios from 'axios';
 import { useUsuario } from '../context/UserContext';
@@ -277,72 +278,87 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
           />
         </Dropdown.Toggle>
 
-        <Dropdown.Menu
-  className="shadow rounded-4 p-0"
-  style={{ width: 280 }}
->
-  {/* 🔹 HEADER USUARIO */}
-  <div className="px-3 py-3 border-bottom">
-    <strong className="d-block">
-      {usuario?.name || "macahsoft company"}
-    </strong>
-    <small className="text-muted">
-      {usuario?.email || "macahsoftcompany@gmail.com"}
-    </small>
-  </div>
+        <Dropdown.Menu className="shadow rounded-3">
 
-  {/* 🔹 OPCIONES PRINCIPALES */}
-  <Dropdown.Item as={Link} to="/mis-contactos" className="d-flex align-items-center gap-2 py-2">
-    <FaRegAddressBook />
-    Mis contactos
-  </Dropdown.Item>
+          <Dropdown.Item
+            as={Link}
+            to="/dashboard"
+            className="d-flex align-items-center gap-2 py-2 fw-semibold"
+          >
+            <FaHome />
+            Dashboard
+          </Dropdown.Item>
 
-  <Dropdown.Item as={Link} to="/favoritos" className="d-flex align-items-center gap-2 py-2">
-    <FaHeart />
-    Favoritos
-  </Dropdown.Item>
+          <Dropdown.Divider />
 
-  <Dropdown.Item as={Link} to="/busquedas-alertas" className="d-flex align-items-center gap-2 py-2">
-    <FaBell />
-    Búsquedas y alertas
-  </Dropdown.Item>
+          <Dropdown.Item as={Link} to="/mis-contactos" className="d-flex align-items-center gap-2 py-2">
+            <FaRegAddressBook />
+            Mis contactos
+          </Dropdown.Item>
 
-  <Dropdown.Item as={Link} to="/historial" className="d-flex align-items-center gap-2 py-2">
-    <FaHistory />
-    Historial
-  </Dropdown.Item>
+          <Dropdown.Item as={Link} to="/favoritos" className="d-flex align-items-center gap-2 py-2">
+            <FaHeart />
+            Favoritos
+          </Dropdown.Item>
 
-  <Dropdown.Divider />
+          <Dropdown.Item as={Link} to="/busquedas-alertas" className="d-flex align-items-center gap-2 py-2">
+            <FaBell />
+            Búsquedas y alertas
+          </Dropdown.Item>
 
-  {/* 🔹 MI CUENTA */}
-  <div className="px-3 pt-2 pb-1 text-muted small">
-    Mi cuenta
-  </div>
+          <Dropdown.Item as={Link} to="/historial" className="d-flex align-items-center gap-2 py-2">
+            <FaHistory />
+            Historial
+          </Dropdown.Item>
 
-  <Dropdown.Item as={Link} to="/mi-perfil" className="d-flex align-items-center gap-2 py-2">
-    <FaCog />
-    Mi Perfil
-  </Dropdown.Item>
+          <Dropdown.Divider />
 
-  <Dropdown.Divider />
+          <div className="px-3 pt-2 pb-1 text-muted small">
+            Mis anuncios
+          </div>
 
-  {/* 🔹 AYUDA */}
-  <Dropdown.Item as={Link} to="/soporte" className="d-flex align-items-center gap-2 py-2">
-    <FaQuestionCircle />
-    ¿Podemos ayudarte?
-  </Dropdown.Item>
+          <Dropdown.Item as={Link} to="/nuevo-anuncio" className="d-flex align-items-center gap-2 py-2">
+            <FaBullhorn />
+            Subir anuncio
+          </Dropdown.Item>
 
-  <Dropdown.Divider />
+          <Dropdown.Item as={Link} to="/anuncios-activos" className="d-flex align-items-center gap-2 py-2">
+            <FaBullhorn />
+            Mis anuncios
+          </Dropdown.Item>
 
-  {/* 🔹 CERRAR SESIÓN */}
-  <Dropdown.Item
-    className="d-flex align-items-center gap-2 py-2 text-danger"
-    onClick={abrirModal}
-  >
-    <FaSignOutAlt />
-    Cerrar sesión
-  </Dropdown.Item>
-</Dropdown.Menu>
+          <Dropdown.Divider />
+
+          <div className="px-3 pt-2 pb-1 text-muted small">
+            Mi cuenta
+          </div>
+
+          <Dropdown.Item as={Link} to="/mi-perfil" className="d-flex align-items-center gap-2 py-2">
+            <FaCog />
+            Mi perfil
+          </Dropdown.Item>
+
+          <Dropdown.Divider />
+
+         
+          <Dropdown.Item as={Link} to="/soporte" className="d-flex align-items-center gap-2 py-2">
+            <FaQuestionCircle />
+            ¿Podemos ayudarte?
+          </Dropdown.Item>
+
+          <Dropdown.Divider />
+
+          {/* 🔹 CERRAR SESIÓN */}
+          <Dropdown.Item
+            className="d-flex align-items-center gap-2 py-2 text-danger fw-semibold"
+            onClick={abrirModal}
+          >
+            <FaSignOutAlt />
+            Cerrar sesión
+          </Dropdown.Item>
+
+        </Dropdown.Menu>
+
 
       </Dropdown>
     </div>

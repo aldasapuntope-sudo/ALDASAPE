@@ -42,7 +42,7 @@ export default function Hero() {
   };
 
   if (slides.length === 0) return null;
-
+console.log(slides);
   return (
     <section
       className="hero-section"
@@ -78,15 +78,23 @@ export default function Hero() {
       <div className="hero-overlay" />
 
       <div className="hero-content">
-        <h1>Encuentra tu próximo lugar</h1>
-        <p style={{ textAlign: 'center' }}>
-          Explora miles de inmuebles para comprar, alquilar o invertir
+        <h1>
+          {slides[index]?.titulo
+            ? slides[index].titulo.charAt(0).toUpperCase() +
+              slides[index].titulo.slice(1)
+            : "Encuentra tu próximo lugar"}
+        </h1>
+
+        <p style={{ textAlign: "center" }}>
+          {slides[index]?.descripcion ||
+            "Explora miles de inmuebles para comprar, alquilar o invertir"}
         </p>
 
         <div className="search-box-wrapper">
           <SearchFilter mode={mode} setMode={setMode} />
         </div>
       </div>
+
     </section>
   );
 }

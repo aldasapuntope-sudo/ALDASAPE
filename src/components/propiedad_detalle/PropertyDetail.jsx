@@ -23,6 +23,7 @@ import PropertyTour360 from "./componentes/PropertyTour360";
 import ContactBox from "./componentes/ContactBox";
 import PropiedadesRelacionadas from "./componentes/PropiedadesRelacionadas";
 import { SkeletonInformacionPropiedaddetalle } from "../TablaSkeleton";
+import { useUsuario } from "../../context/UserContext";
 
 
 export default function PropertyDetail() {
@@ -32,7 +33,7 @@ export default function PropertyDetail() {
   const [loading, setLoading] = useState(true);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const llamadaRealizada = useRef(false);
-
+  const { usuario } = useUsuario();
   useEffect(() => {
     if (!id) return;
 
@@ -51,8 +52,11 @@ export default function PropertyDetail() {
     if (!anuncio?.id) return;
 
     if (!llamadaRealizada.current) {
+
+      const userId = usuario?.usuarioaldasa?.id ?? 0;
+
       llamadaRealizada.current = true; // Evita segunda ejecución
-      axios.post(`${config.apiUrl}api/paginaprincipal/propiedades/visita/${anuncio.id}`)
+      axios.post(`${config.apiUrl}api/paginaprincipal/propiedades/visita/${anuncio.id}/${userId}`)
         .then(res => console.log("Visita registrada:", res.data))
         .catch(err => console.error("Error al registrar visita:", err));
     }

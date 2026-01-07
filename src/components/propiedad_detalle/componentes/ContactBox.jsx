@@ -6,21 +6,23 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import config from "../../../config";
 import Cargando from "../../cargando";
+import { useUsuario } from "../../../context/UserContext";
 
 export default function ContactBox({ anuncio }) {
   const [cargando, setCargando] = useState(false);
-
-  const whatsappUrl = `https://wa.me/${anuncio.perfilanunciante.telefono_movil}?text=Hola%20${anuncio.perfilanunciante.nombre},%20vi%20tu%20anuncio%20sobre%20${anuncio.operaciones}%20de%20${anuncio.titulo}%20en%20*ALDASA.PE*`;
+  const { usuario } = useUsuario();
+  
   const callUrl = `tel:${anuncio.perfilanunciante.telefono_movil}`;
 
   const formik = useFormik({
     initialValues: {
-      email: "",
-      nombre: "",
-      telefono: "",
-      dni: "",
+      email: usuario?.usuarioaldasa?.email || "",
+      nombre: usuario?.usuarioaldasa?.nombre || "",
+      telefono: usuario?.usuarioaldasa?.telefono || "",
+      dni: usuario?.usuarioaldasa?.numero_documento || "",
       mensaje: "",
     },
+    enableReinitialize: true,
     validationSchema: Yup.object({
       email: Yup.string().email("Correo inválido").required("El correo es obligatorio"),
       nombre: Yup.string().required("Tu nombre es obligatorio"),
@@ -28,8 +30,30 @@ export default function ContactBox({ anuncio }) {
         .matches(/^[0-9]{9}$/, "Debe tener 9 dígitos")
         .required("El teléfono es obligatorio"),
       dni: Yup.string()
-        .matches(/^[0-9]{8}$/, "Debe tener 8 dígitos")
-        .required("El DNI es obligatorio"),
+        .required("El documento es obligatorio")
+        .test(
+          "documento-valido",
+          usuario?.usuarioaldasa?.tipo_documento_id === 2
+            ? "El RUC debe tener 11 dígitos"
+            : "El DNI debe tener 8 dígitos",
+          (value) => {
+            if (!value) return false;
+
+            const tipo = usuario?.usuarioaldasa?.tipo_documento_id;
+
+            // DNI
+            if (tipo === 1) {
+              return /^[0-9]{8}$/.test(value);
+            }
+
+            // RUC
+            if (tipo === 2) {
+              return /^[0-9]{11}$/.test(value);
+            }
+
+            return false;
+          }
+        ),
       mensaje: Yup.string().required("Debes escribir un mensaje"),
     }),
     onSubmit: async (values, { resetForm }) => {
@@ -111,6 +135,21 @@ export default function ContactBox({ anuncio }) {
   const nombreOk = emailOk && formik.values.nombre && !formik.errors.nombre;
   const telefonoOk = nombreOk && formik.values.telefono && !formik.errors.telefono;
   const dniOk = telefonoOk && formik.values.dni && !formik.errors.dni;
+  const formularioCompleto = dniOk && formik.values.mensaje;
+
+  const mensajeWhatsapp = encodeURIComponent(
+    `Hola, soy ${formik.values.nombre}.
+  Mi teléfono es ${formik.values.telefono}.
+
+  Estoy interesado en el anuncio:
+  ${anuncio.operaciones} de ${anuncio.titulo}
+
+  Mensaje:
+  ${formik.values.mensaje}`
+  );
+
+  const whatsappUrl = `https://wa.me/${anuncio.perfilanunciante.telefono_movil}?text=${mensajeWhatsapp}`;
+
 
   return (
     <>
@@ -193,12 +232,29 @@ export default function ContactBox({ anuncio }) {
         ))}
 
         <button
-            type="submit"
-            className="btn btn-success w-100"
-            disabled={!dniOk || !formik.values.mensaje}
+          type="submit"
+          className="btn btn-success w-100"
+          disabled={!dniOk || !formik.values.mensaje}
         >
-            <FaEnvelope className="me-2" /> Enviar mensaje
+          <FaEnvelope className="me-2" /> Enviar mensaje
         </button>
+
+        {/* 🔹 BOTÓN WHATSAPP (NUEVO) */}
+        <a
+          href={formularioCompleto ? whatsappUrl : "#"}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn w-100 mt-2 d-flex align-items-center justify-content-center"
+          style={{
+            backgroundColor: formularioCompleto ? "#25D366" : "#ccc",
+            color: "#fff",
+            pointerEvents: formularioCompleto ? "auto" : "none",
+          }}
+        >
+          <FaWhatsapp className="me-2 fs-5" />
+          Contactar por WhatsApp
+        </a>
+
         </form>
 
       </div>
@@ -241,7 +297,7 @@ export default function ContactBox({ anuncio }) {
           background: #f3f3f3 !important;
           cursor: not-allowed;
         }
-      `}</style>
+      `}</style>a
     </>
   );
 }
