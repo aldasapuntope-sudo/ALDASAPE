@@ -304,7 +304,7 @@
   }
   .dropdown-toggle::after {
       /*color: var(--green);*/
-      color: white !important
+      color: rgb(0, 0, 0) !important
   }
   .list-group-item.active {
       background-color: var(--green) !important;

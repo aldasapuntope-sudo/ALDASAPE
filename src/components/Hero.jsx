@@ -42,7 +42,7 @@ export default function Hero() {
   };
 
   if (slides.length === 0) return null;
-console.log(slides);
+
   return (
     <section
       className="hero-section"

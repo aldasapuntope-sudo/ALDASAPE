@@ -146,11 +146,11 @@ export default function HeaderAldasa({ abrirModal, abrirLoginModal }) {
                       );
                     })}
 
-                  <li className="nav-item">
+                  {/*<li className="nav-item">
                     <a className="nav-link" href="https://aldasa.pe/proyectos">
                       Proyectos
                     </a>
-                  </li>
+                  </li> */}
                 </>
               ) : (
                 <>
@@ -194,11 +194,11 @@ export default function HeaderAldasa({ abrirModal, abrirLoginModal }) {
                       );
                     })}
 
-                  <li className="nav-item">
+                  {/*<li className="nav-item">
                     <a className="nav-link" href="https://aldasa.pe/proyectos">
                       Proyectos
                     </a>
-                  </li>
+                  </li> */}
                 </>
               )}
             </ul>
@@ -229,23 +229,23 @@ export default function HeaderAldasa({ abrirModal, abrirLoginModal }) {
                 </>
               ) : (
                 <>
-                  <button
+                  {/*<button
                     className={`btn btn-${
                       darkMode ? "warning" : "secondary"
                     }`}
                     onClick={toggleDarkMode}
                   >
                     {darkMode ? <FaSun /> : <FaMoon />}
-                  </button>
+                  </button> */}
                   <UserInfoBoxAldasa abrirModal={abrirModal} />
                   <button
-  ref={userBtnRef}
-  className="border-0 bg-transparent p-0"
-  onMouseEnter={abrirUserMenu}
-  onMouseLeave={cerrarUserMenu}
->
-  {/* avatar o imagen */}
-</button>
+                    ref={userBtnRef}
+                    className="border-0 bg-transparent p-0"
+                    onMouseEnter={abrirUserMenu}
+                    onMouseLeave={cerrarUserMenu}
+                  >
+                    {/* avatar o imagen */}
+                  </button>
                 </>
               )}
             </div>
@@ -299,9 +299,7 @@ export default function HeaderAldasa({ abrirModal, abrirLoginModal }) {
 
           <div className="px-3 pb-2">
             <small className="text-muted d-block">Mi cuenta</small>
-            <small className="text-muted d-block">
-              Ajustes de notificaciones
-            </small>
+            
           </div>
         </div>
       )}

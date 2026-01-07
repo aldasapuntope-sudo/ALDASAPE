@@ -12,6 +12,7 @@ import config from '../config';
 import axios from 'axios';
 import { useUsuario } from '../context/UserContext';
 import Dropdown from "react-bootstrap/Dropdown";
+import SoporteModal from './modales/SoporteModal';
 
 export default function UserInfoBoxAldasa({ abrirModal }) {
   const { usuario } = useUsuario();
@@ -19,6 +20,7 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
   const [mensajesNoLeidos, setMensajesNoLeidos] = useState(0);
   const [favoritos, setFavoritos] = useState([]);
   const navigate = useNavigate();
+  const [showSoporte, setShowSoporte] = useState(false);
   
 
   const abrirFavorito = (fav) => {
@@ -119,7 +121,8 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
  
 
   return (
-    <div className="d-flex align-items-center me-1">
+    <>
+      <div className="d-flex align-items-center me-1">
       {/* 🔔 MENSAJES */}
       <Dropdown align="end" className="me-2">
         <Dropdown.Toggle
@@ -279,7 +282,15 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
         </Dropdown.Toggle>
 
         <Dropdown.Menu className="shadow rounded-3">
-
+          {/* 🔹 HEADER USUARIO */}
+          <div className="px-3 py-3 border-bottom">
+            <div className="fw-semibold">
+              {usuario?.usuarioaldasa?.nombre}
+            </div>
+            <div className="text-muted small">
+              {usuario?.usuarioaldasa?.email}
+            </div>
+          </div>
           <Dropdown.Item
             as={Link}
             to="/dashboard"
@@ -341,10 +352,14 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
           <Dropdown.Divider />
 
          
-          <Dropdown.Item as={Link} to="/soporte" className="d-flex align-items-center gap-2 py-2">
+          <Dropdown.Item
+            className="d-flex align-items-center gap-2 py-2"
+            onClick={() => setShowSoporte(true)}
+          >
             <FaQuestionCircle />
             ¿Podemos ayudarte?
           </Dropdown.Item>
+
 
           <Dropdown.Divider />
 
@@ -362,5 +377,11 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
 
       </Dropdown>
     </div>
+
+    <SoporteModal
+      show={showSoporte}
+      onClose={setShowSoporte}
+    />
+    </>
   );
 }
