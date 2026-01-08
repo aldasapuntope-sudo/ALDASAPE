@@ -182,6 +182,12 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
                       <Link to="/adm-ubicaciones" onClick={toggleSidebar}>Gestionar Ubicaciones</Link>
                     </li>
 
+                    <li
+                      className={`submenu-link ${location.pathname.startsWith('/adm-motivosp') ? 'active' : ''}`}
+                    >
+                      <Link to="/adm-motivosp" onClick={toggleSidebar}>Gestionar Motivos Soporte</Link>
+                    </li>
+
 
                     <li
                       className={`submenu-link ${location.pathname.startsWith('/adm-configuraciones') ? 'active' : ''}`}
@@ -222,11 +228,11 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
               
                 <ul className={`submenu ${openMenu === 'mis-anuncios' ? 'open' : ''}`}>
                   
-                  <li
+                  {/*<li
                     className={`submenu-link ${location.pathname.startsWith('/mis-favoritos') ? 'active' : ''}`}
                   >
                     <Link to="/mis-favoritos" onClick={toggleSidebar}>Mis Anuncios Favoritos</Link>
-                  </li>
+                  </li> */}
                   <li
                     className={`submenu-link ${location.pathname.startsWith('/nuevo-anuncio') ? 'active' : ''}`}
                   >

@@ -125,7 +125,7 @@ export default function ProyectosUsuario() {
       <Modal
         show={showModal}
         onHide={() => setShowModal(false)}
-        size="lg"
+        size="xl"
         centered
       >
         <NuevoProyecto

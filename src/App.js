@@ -80,6 +80,7 @@ import CuentaLayout from './components/Paginasopcionales/CuentaLayout';
 import MisContactos from './components/Paginasopcionales/componentes/MisContactos';
 import MisFavoritos2 from './components/Paginasopcionales/componentes/Misfavoritos2';
 import HistorialVisitas from './components/Paginasopcionales/componentes/HistorialVisitas';
+import SoporteMotivoList from './pages/dashboard/administracion/SoporteMotivosList';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -309,6 +310,11 @@ function AppRoutes() {
             <Route
               path="/adm-popupsconfig"
               element={<RutaProtegida element={ConfigPopupList} />}
+            />
+
+            <Route
+              path="/adm-motivosp"
+              element={<RutaProtegida element={SoporteMotivoList} />}
             />
 
             <Route
