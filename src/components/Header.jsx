@@ -165,7 +165,7 @@ export default function HeaderAldasa({ abrirModal, abrirLoginModal }) {
                           className="nav-item dropdown position-static"
                         >
                           <NavLink
-                            className="nav-link dropdown-toggle text-capitalize d-flex align-items-center"
+                            className="nav-link  text-capitalize d-flex align-items-center"
                             to="#"
                             onClick={() =>
                               isMobile && hasSubmenu && toggleMenu(key)

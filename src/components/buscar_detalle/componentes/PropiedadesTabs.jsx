@@ -16,7 +16,6 @@ export default function PropiedadesTabs({ resultados }) {
   const [aceptaTerminos, setAceptaTerminos] = useState(false);
   const [autorizaUso, setAutorizaUso] = useState(false);
 
-  console.log(usuario?.usuarioaldasa?.email);
   useEffect(() => {
     if (usuario && showWhatsappModal) {
       setEmail(usuario?.usuarioaldasa?.email || "");

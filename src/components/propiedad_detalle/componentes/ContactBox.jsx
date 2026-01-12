@@ -154,7 +154,7 @@ export default function ContactBox({ anuncio }) {
   return (
     <>
       <Cargando visible={cargando} />
-      <div className="widget widget-contact-box d-none d-md-block">
+      <div className="widget widget-contact-box d-none d-md-block mb-4">
         <h3 className="widget-subtitle">Contactar anunciante</h3>
 
         <div className="media d-flex align-items-center">
@@ -297,7 +297,7 @@ export default function ContactBox({ anuncio }) {
           background: #f3f3f3 !important;
           cursor: not-allowed;
         }
-      `}</style>a
+      `}</style>
     </>
   );
 }

@@ -28,6 +28,14 @@ export default function PropertyCard({ anuncio }) {
     navigate(`/anuncio/${anuncio.id}-${slugTitulo}-${slugUbicacion}`);
   };
 
+  const formatearPrecio = (precio) => {
+    return new Intl.NumberFormat("es-PE", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(precio);
+  };
+
+
   return (
    <Card
       className="property-box2 shadow-sm border-0 rounded-2 overflow-hidden h-100 property-card-hover"
@@ -50,7 +58,7 @@ export default function PropertyCard({ anuncio }) {
         </div>
 
         <div className="position-absolute bottom-0 start-0 bg-dark bg-opacity-75 text-white px-3 py-2 rounded-end">
-          <strong>{anuncio.simbolo} {anuncio.precio}</strong>
+          <strong>{anuncio.simbolo} {formatearPrecio(anuncio.precio)}</strong>
         </div>
       </div>
 

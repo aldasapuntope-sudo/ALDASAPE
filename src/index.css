@@ -33,7 +33,7 @@ p {
     padding: 13px 15px;
     border: none;
 }
-.btn-green:hover{background:var(--green-dark)}
+.btn-green:hover{background:var(--green)}
 
 /* Hero / slider */
 /*.hero-section{position:relative; height:520px; display:flex; align-items:center; justify-content:center; overflow:hidden}

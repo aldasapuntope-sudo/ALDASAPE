@@ -163,7 +163,7 @@ function AppRoutes() {
         {!usuario && ( 
         <Route path="/login" element={<Login />} />
         )}
-        {/* 🌐 Páginas públicas con Header y Footer */}
+        {/*  Páginas públicas con Header y Footer */}
         <Route
           element={
             <>

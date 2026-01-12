@@ -22,8 +22,6 @@ export default function SoporteMensajesPage() {
   const [mensajesChat, setMensajesChat] = useState([]);
   const [nuevoMensaje, setNuevoMensaje] = useState("");
   const [cargando, setCargando] = useState(false);
-
-  // Modal soporte
   const [mostrarSoporte, setMostrarSoporte] = useState(false);
 
   const mensajesRef = useRef(null);
@@ -36,13 +34,14 @@ export default function SoporteMensajesPage() {
     : `${config.apiUrl}api/soporte/tickets/${usuario?.usuarioaldasa?.id}`;
 
   /* =========================
-     TICKETS EN TIEMPO REAL
+     TICKETS
   ==========================*/
   useEffect(() => {
     if (!usuario) return;
 
     const cargarTickets = async () => {
       try {
+       
         const res = await axios.get(ticketsUrl);
         setTickets(res.data);
       } catch (error) {
@@ -56,7 +55,7 @@ export default function SoporteMensajesPage() {
   }, [usuario, ticketsUrl]);
 
   /* =========================
-     MENSAJES EN TIEMPO REAL
+     MENSAJES
   ==========================*/
   useEffect(() => {
     if (!ticketSeleccionado) return;
@@ -91,6 +90,7 @@ export default function SoporteMensajesPage() {
      ENVIAR MENSAJE
   ==========================*/
   const enviarMensaje = async () => {
+    if (cargando) return;
     if (!nuevoMensaje.trim() || !ticketSeleccionado) return;
 
     try {
@@ -127,23 +127,18 @@ export default function SoporteMensajesPage() {
         {/* =========================
             TICKETS
         ==========================*/}
-        <Col md={4}>
+        <Col md={4} className="mb-4">
           <Card style={{ height: "100%" }}>
-            <Card.Header>
-              <div className="d-flex justify-content-between align-items-center">
-                <strong>Tickets de soporte</strong>
-                <Button
-                  size="sm"
-                  onClick={() => setMostrarSoporte(true)}
-                  style={{
-                    backgroundColor: "var(--green)",
-                    border: "none",
-                  }}
-                >
-                  <FaPlus className="me-1" />
-                  Nueva consulta
-                </Button>
-              </div>
+            <Card.Header className="d-flex justify-content-between align-items-center">
+              <strong>Tickets de soporte</strong>
+              <Button
+                size="sm"
+                onClick={() => setMostrarSoporte(true)}
+                style={{ backgroundColor: "var(--green)", border: "none" }}
+              >
+                <FaPlus className="me-1" />
+                Nueva consulta
+              </Button>
             </Card.Header>
 
             <ListGroup style={{ overflowY: "auto", maxHeight: "70vh" }}>
@@ -172,14 +167,42 @@ export default function SoporteMensajesPage() {
         ==========================*/}
         <Col md={8}>
           <Card style={{ height: "100%" }}>
-            <Card.Header>
-              {ticketSeleccionado
-                ? ticketSeleccionado.titulo
-                : "Selecciona un ticket"}
+            <Card.Header >
+              {ticketSeleccionado ? (
+                <>
+                  <h6 className="mb-1 fw-semibold">
+                    {ticketSeleccionado.titulo}
+                  </h6>
+                  <div className="text-muted" style={{ fontSize: "0.85rem" }}>
+                    {ticketSeleccionado.descripcion}
+                  </div>
+                  {esAdmin && (
+                    <div
+                      className="text-success mt-1"
+                      style={{ fontSize: "0.75rem", fontWeight: 500 }}
+                    >
+                      Consulta de: {ticketSeleccionado.usuario}
+                    </div>
+                  )}
+                </>
+              ) : (
+                "Selecciona un ticket"
+              )}
             </Card.Header>
 
-            <Card.Body className="d-flex flex-column">
-              <div ref={mensajesRef} style={{ flex: 1, overflowY: "auto" }}>
+            <Card.Body
+              className="d-flex flex-column"
+              style={{ overflow: "hidden" }}
+            >
+              {/* MENSAJES */}
+              <div
+                  ref={mensajesRef}
+                  style={{
+                    flex: 1,
+                    overflowY: "auto",
+                    paddingRight: 10,
+                  }}
+                >
                 {mensajesChat.map((msg) => {
                   const esMio =
                     msg.user_id === usuario.usuarioaldasa.id;
@@ -193,26 +216,43 @@ export default function SoporteMensajesPage() {
                           : "justify-content-start"
                       }`}
                     >
-                      <div
-                        className={`p-2 rounded ${
-                          esMio ? "chat-mio" : "bg-light"
-                        }`}
-                        style={{ maxWidth: "70%" }}
-                      >
-                        {msg.mensaje}
+                      <div style={{ maxWidth: "70%" }}>
+                        <div
+                          className={`mb-1 ${
+                            esMio ? "text-end text-success" : "text-muted"
+                          }`}
+                          style={{
+                            fontSize: "0.75rem",
+                            fontWeight: 500,
+                          }}
+                        >
+                          {msg.nombrecompleto}
+                        </div>
+
+                        <div
+                          className={`p-2 rounded ${
+                            esMio ? "chat-mio" : "bg-light"
+                          }`}
+                        >
+                          {msg.mensaje}
+                        </div>
                       </div>
                     </div>
                   );
                 })}
               </div>
 
+              {/* INPUT */}
               {ticketSeleccionado && (
                 <div className="d-flex align-items-center gap-2 mt-2">
                   <Form.Control
                     as="textarea"
                     rows={1}
-                    placeholder="Escribe un mensaje"
+                    placeholder={
+                      cargando ? "Enviando mensaje..." : "Escribe un mensaje"
+                    }
                     value={nuevoMensaje}
+                    disabled={cargando}
                     onChange={(e) => setNuevoMensaje(e.target.value)}
                     onKeyDown={manejarEnter}
                     style={{ resize: "none" }}
@@ -220,16 +260,17 @@ export default function SoporteMensajesPage() {
 
                   <Button
                     onClick={enviarMensaje}
-                    disabled={!nuevoMensaje.trim() || cargando}
+                    disabled={cargando || !nuevoMensaje.trim()}
                     className="rounded-circle d-flex align-items-center justify-content-center"
                     style={{
                       width: 45,
                       height: 45,
                       backgroundColor: "var(--green)",
                       border: "none",
+                      opacity: cargando ? 0.7 : 1,
                     }}
                   >
-                    <FaPaperPlane />
+                    {cargando ? "..." : <FaPaperPlane />}
                   </Button>
                 </div>
               )}
@@ -238,9 +279,7 @@ export default function SoporteMensajesPage() {
         </Col>
       </Row>
 
-      {/* =========================
-          MODAL SOPORTE REAL
-      ==========================*/}
+      {/* MODAL */}
       <SoporteModal
         show={mostrarSoporte}
         onClose={() => setMostrarSoporte(false)}

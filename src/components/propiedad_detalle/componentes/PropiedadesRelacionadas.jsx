@@ -34,6 +34,14 @@ export default function PropiedadesRelacionadas({ tipoId, idpropiedad, operacion
   const principal = propiedades[0];
   const restantes = propiedades.slice(1);
 
+  const formatearPrecio = (precio) => {
+    return new Intl.NumberFormat("es-PE", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(precio);
+  };
+
+
   return (
     <div className="widget widget-listing-box1">
       <h3 className="widget-subtitle">Propiedades relacionadas</h3>
@@ -71,7 +79,7 @@ export default function PropiedadesRelacionadas({ tipoId, idpropiedad, operacion
           {principal.direccion}
         </div>
         <div className="item-price">
-          {principal.moneda_simbolo} {Number(principal.precio).toLocaleString()}
+          {principal.moneda_simbolo} {formatearPrecio(principal.precio)}
           
         </div>
       </div>
@@ -101,7 +109,7 @@ export default function PropiedadesRelacionadas({ tipoId, idpropiedad, operacion
               {item.direccion}
             </div>
             <div className="item-price">
-              {principal.moneda_simbolo} {Number(item.precio).toLocaleString()}
+              {principal.moneda_simbolo} {formatearPrecio(item.precio)}
             </div>
           </div>
         </div>
