@@ -148,35 +148,55 @@ export default function PropiedadesTabs({ resultados }) {
                         ))}
                       </ul>
                     </div>
-                    <div className="d-flex justify-content-between align-items-start mt-2">
-                      <div className="item-categoery4">
-                       
-                      </div>
+                    <div className="d-flex justify-content-between align-items-center mt-2">
 
-                      {/* BOTONES DERECHA */}
-                      <div className="d-flex gap-2">
-                        {/* WhatsApp */}
-                        {propiedad.perfilanunciante?.telefono_movil && (
-                          <button
-                            className="btn btn-success btn-sm"
-                            onClick={() => openWhatsappModal(propiedad)}
-                          >
-                            Whatsapp
-                            <i className="fab fa-whatsapp"></i>
-                          </button>
-                        )}
+                        {/* IZQUIERDA → FOTO USUARIO */}
+                        <div className="d-flex align-items-center gap-2">
+                          <img
+                            src={getImagenPerfil(propiedad.perfilanunciante?.imagen)}
+                            alt="Anunciante"
+                            width="40"
+                            height="40"
+                            className="rounded-circle object-fit-cover"
+                            onClick={(e) => e.stopPropagation()}
+                            onError={(e) => {
+                              e.target.src = `${config.urlserver}uploads/avatar-default.png`;
+                            }}
+                          />
 
-                        {/* Llamar */}
-                        {propiedad.perfilanunciante?.telefono && (
-                          <a
-                            href={`tel:${propiedad.perfilanunciante.telefono}`}
-                            className="btn btn-outline-success btn-sm"
-                          >
-                            <i className="fas fa-phone"></i>
-                          </a>
-                        )}
+                          <span className="fw-semibold small">
+                            {propiedad.perfilanunciante?.nombre || "Anunciante"}
+                          </span>
+                        </div>
+
+                        {/* DERECHA → BOTONES */}
+                        <div className="d-flex gap-2">
+
+                          {propiedad.perfilanunciante?.telefono_movil && (
+                            <button
+                              className="btn btn-success btn-sm d-flex align-items-center gap-1"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openWhatsappModal(propiedad);
+                              }}
+                            >
+                              <i className="fab fa-whatsapp"></i>
+                              WhatsApp
+                            </button>
+                          )}
+
+                          {propiedad.perfilanunciante?.telefono && (
+                            <a
+                              href={`tel:${propiedad.perfilanunciante.telefono}`}
+                              className="btn btn-outline-success btn-sm d-flex align-items-center"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <i className="fas fa-phone"></i>
+                            </a>
+                          )}
+
+                        </div>
                       </div>
-                    </div>
 
                   </div>
                 </div>

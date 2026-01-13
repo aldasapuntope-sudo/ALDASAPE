@@ -3,24 +3,30 @@ import { FaRegSurprise, FaTimes } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import config from "../../config";
+
 import PropiedadesRow from "./componentes/PropiedadesRow";
 import BuscadorAvanzado from "./componentes/BuscadorAvanzado";
-import "../../css/Buscadordetalle.css";
 import SkeletonBuscarPage from "../TablaSkeleton";
+
+import "../../css/Buscadordetalle.css";
 
 export default function BuscarPage() {
   const location = useLocation();
   const navigate = useNavigate();
+
   const [resultados, setResultados] = useState([]);
   const [filtrados, setFiltrados] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Guarda filtros activos
   const filtrosActuales = useRef({});
 
-  // 🔎 Efecto principal: obtener propiedades desde el backend
+  // 🔎 OBTENER DATOS DESDE BACKEND
   useEffect(() => {
     const params = new URLSearchParams(location.search);
+
     const q = params.get("q") || "";
-    const tipo = params.get("tipo") || "";
+    const tipo = params.getAll("tipo"); // ✅ array correcto
     const mode = params.get("mode") || "";
 
     let cancelado = false;
@@ -28,93 +34,135 @@ export default function BuscarPage() {
     const obtenerDatos = async () => {
       try {
         setLoading(true);
+
         const res = await axios.get(
-          `${config.apiUrl}api/paginaprincipal/propiedades/buscar?q=${q}&tipo=${tipo}&mode=${mode}`
+          `${config.apiUrl}api/paginaprincipal/propiedades/buscar`,
+          {
+            params: { q, tipo, mode },
+          }
         );
+
         if (cancelado) return;
 
         const data = res.data?.data || [];
         setResultados(data);
-        setFiltrados(data);
+        if (
+  filtrosActuales.current &&
+  Object.values(filtrosActuales.current).some(
+    (v) =>
+      (Array.isArray(v) && v.length > 0) ||
+      (!Array.isArray(v) && v)
+  )
+) {
+  manejarFiltro(filtrosActuales.current);
+} else {
+  setFiltrados(data);
+}
       } catch (error) {
-        if (!cancelado) console.error("❌ Error al obtener propiedades:", error);
+        if (!cancelado) {
+          console.error("❌ Error al obtener propiedades:", error);
+        }
       } finally {
         if (!cancelado) setLoading(false);
       }
     };
 
     obtenerDatos();
+
     return () => {
       cancelado = true;
     };
   }, [location.search]);
 
-  // 📍 Filtrado local
+  // 📍 FILTRADO LOCAL
   const manejarFiltro = (filtros) => {
-    filtrosActuales.current = filtros;
+  filtrosActuales.current = filtros;
 
-    const busq = (filtros.busqueda || "").toLowerCase();
-    const categoriaFilter = (filtros.categoria || "").toLowerCase();
-    const ciudadFilter = (filtros.ciudad || "").toLowerCase();
-    const precioMin = filtros.precioMin ?? null;
-    const precioMax = filtros.precioMax ?? null;
+  const busq = (filtros.busqueda || "").toLowerCase();
+  const ciudadFilter = (filtros.ciudad || "").toLowerCase();
+  const modeFilter = (filtros.mode || "").toLowerCase();
+  const precioMin =
+    typeof filtros.precioMin === "number" ? filtros.precioMin : null;
 
-    const filtradosTemp = resultados.filter((prop) => {
-      const titulo = (prop.titulo || "").toLowerCase();
-      const descripcion = (prop.descripcion || "").toLowerCase();
-      const ubicacion = (prop.ubicacion || "").toLowerCase();
-      const operacion = (prop.operaciones || prop.operacion || "").toLowerCase();
-      const precio = parseFloat(prop.precio) || 0;
+  const precioMax =
+    typeof filtros.precioMax === "number" ? filtros.precioMax : null;
 
-      const tipoFilter = filtros.tipo?.toString().toLowerCase() || "";
-      const tipoPropId = prop.id_tipopropiedad?.toString().toLowerCase() || "";
-      const tipoProp = (prop.tipo_propiedad || "").toLowerCase();
 
-      const okTipo =
-        !tipoFilter ||
-        tipoPropId === tipoFilter ||
-        tipoProp === tipoFilter;
-      const okBusqueda =
-        !busq ||
-        titulo.includes(busq) ||
-        descripcion.includes(busq) ||
-        tipoProp.includes(busq) ||
-        ubicacion.includes(busq) ||
-        operacion.includes(busq);
-      const okCategoria = !categoriaFilter || operacion === categoriaFilter;
-      const okCiudad = !ciudadFilter || ubicacion.includes(ciudadFilter);
-      const okPrecio =
-        (precioMin === null || precio >= precioMin) &&
-        (precioMax === null || precio <= precioMax);
+  const tiposFiltro = Array.isArray(filtros.tipos)
+    ? filtros.tipos.map((t) => t.toLowerCase())
+    : [];
 
-      return okBusqueda && okTipo && okCategoria && okCiudad && okPrecio;
-    });
+  const filtradosTemp = resultados.filter((prop) => {
+    const titulo = (prop.titulo || "").toLowerCase();
+    const descripcion = (prop.descripcion || "").toLowerCase();
+    const ubicacion = (prop.ubicacion || "").toLowerCase();
+    const tipoProp = (prop.tipo_propiedad || "").toLowerCase();
+    const operacion = (prop.operaciones || "").toLowerCase();
+    const precio = parseFloat(prop.precio) || 0;
 
-    setFiltrados(filtradosTemp);
-  };
+    const okBusqueda =
+      !busq ||
+      titulo.includes(busq) ||
+      descripcion.includes(busq) ||
+      ubicacion.includes(busq) ||
+      tipoProp.includes(busq);
 
-  // 🔁 Reaplicar filtros al cambiar resultados
+    const okCiudad = !ciudadFilter || ubicacion.includes(ciudadFilter);
+
+    const okPrecio =
+      (precioMin === null || precio >= precioMin) &&
+      (precioMax === null || precio <= precioMax);
+
+    const okTipo =
+      tiposFiltro.length === 0 || tiposFiltro.includes(tipoProp);
+
+    const okOperacion =
+    !modeFilter || operacion.toLowerCase() === modeFilter;
+
+
+    return okBusqueda && okCiudad && okPrecio && okTipo && okOperacion;
+  });
+
+  setFiltrados(filtradosTemp);
+};
+
+
+
+
+
+  // 🔁 Reaplicar filtros cuando cambian los resultados
   useEffect(() => {
-    if (resultados.length > 0) {
-      if (Object.keys(filtrosActuales.current).length > 0) {
-        manejarFiltro(filtrosActuales.current);
-      } else {
-        setFiltrados(resultados);
-      }
+    if (!resultados.length) return;
+
+    if (
+      filtrosActuales.current &&
+      Object.values(filtrosActuales.current).some(
+        (v) =>
+          (Array.isArray(v) && v.length > 0) ||
+          (!Array.isArray(v) && v !== "" && v !== null && v !== undefined)
+      )
+
+    ) {
+      manejarFiltro(filtrosActuales.current);
+    } else {
+      setFiltrados(resultados);
     }
   }, [resultados]);
 
-  // 🧹 Eliminar un filtro individualmente
+  // 🧹 Eliminar filtro desde URL
   const eliminarFiltro = (nombre) => {
     const params = new URLSearchParams(location.search);
     params.delete(nombre);
     navigate(`/buscar?${params.toString()}`);
   };
 
-  // 💀 Mostrar skeleton si está cargando
-  if (loading) return <SkeletonBuscarPage />;
+  // 💀 Skeleton
+  if (loading) {
+    return <SkeletonBuscarPage />;
+  }
+  console.log(resultados.length);
 
-  // 🧩 Mostrar mensaje si no hay resultados
+  // 🚫 SIN RESULTADOS
   if (!filtrados.length) {
     const params = new URLSearchParams(location.search);
     const filtrosActivos = Object.fromEntries(
@@ -125,50 +173,31 @@ export default function BuscarPage() {
       <section className="grid-wrap3 py-5">
         <div className="container">
           <div className="row gutters-40">
-            <div className="col-lg-4 widget-break-lg sidebar-widget mb-4 mb-lg-0">
+            <div className="col-lg-4 sidebar-widget mb-4 mb-lg-0">
               <BuscadorAvanzado onFiltrar={manejarFiltro} />
             </div>
-            <div className="col-lg-8 d-flex flex-column text-center">
-              <div
-                className="d-flex flex-column align-items-center justify-content-center p-5 rounded-4 shadow-sm bg-light"
-                style={{ minHeight: "320px" }}
-              >
-                <FaRegSurprise
-                  size={80}
-                  color="#28a745"
-                  className="mb-3 animate__animated animate__bounceIn"
-                />
-                <h4 className="fw-bold mb-2 text-success">
+
+            <div className="col-lg-8 d-flex justify-content-center">
+              <div className="text-center p-5 rounded-4 shadow-sm bg-light w-100">
+                <FaRegSurprise size={80} color="#28a745" className="mb-3" />
+                <h4 className="fw-bold text-success">
                   ¡Ups! No encontramos propiedades
                 </h4>
-                <p className="text-muted mb-3">
-                  Intenta ajustar los filtros o busca en otra ubicación.
-                </p>
 
-                {/* 🏷️ Filtros activos */}
                 {Object.keys(filtrosActivos).length > 0 && (
                   <div className="d-flex flex-wrap justify-content-center gap-2 mt-3">
                     {Object.entries(filtrosActivos).map(([key, value]) => (
                       <span
                         key={key}
                         className="badge bg-light text-dark border px-3 py-2 d-flex align-items-center"
-                        style={{
-                          borderRadius: "20px",
-                          gap: "6px",
-                          fontSize: "15px",
-                        }}
                       >
-                        <strong className="text-success">
-                          {key.charAt(0).toUpperCase() + key.slice(1)}:
-                        </strong>{" "}
+                        <strong className="text-success">{key}:</strong>
                         {value}
                         <FaTimes
-                          onClick={() => eliminarFiltro(key)}
-                          className="ms-2 cursor-pointer"
                           size={14}
-                          color="#dc3545"
+                          className="ms-2"
                           style={{ cursor: "pointer" }}
-                          title="Eliminar filtro"
+                          onClick={() => eliminarFiltro(key)}
                         />
                       </span>
                     ))}
@@ -182,12 +211,12 @@ export default function BuscarPage() {
     );
   }
 
-  // ✅ Mostrar resultados normales
+  // ✅ RESULTADOS 
   return (
     <section className="grid-wrap3">
       <div className="container">
         <div className="row gutters-40">
-          <div className="col-lg-4 widget-break-lg sidebar-widget">
+          <div className="col-lg-4 sidebar-widget">
             <BuscadorAvanzado onFiltrar={manejarFiltro} />
           </div>
           <div className="col-lg-8">
