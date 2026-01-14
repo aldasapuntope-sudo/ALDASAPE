@@ -116,16 +116,39 @@ export default function Footer({ fondo = "imagen" }) {
               <div className="footer-contact footer-contact-style-2">
                 <h3 className="footer-title">Contacto</h3>
                 <ul className="footer-location">
-                  <li><FaMapMarkerAlt /> {configuracion.direccion || "Dirección no disponible"}</li>
+                  <li>
+                    <FaMapMarkerAlt /> {configuracion.direccion || "Dirección no disponible"}
+                  </li>
+
                   {configuracion.correo && (
-                    <li><a href={`mailto:${configuracion.correo}`}><FaEnvelope /> {configuracion.correo}</a></li>
+                    <li>
+                      <a href={`mailto:${configuracion.correo}`}>
+                        <FaEnvelope /> {configuracion.correo}
+                      </a>
+                    </li>
                   )}
+
                   {configuracion.telefono && (
-                    <li><FaPhoneAlt /> {configuracion.telefono}</li>
+                    <li>
+                      <FaPhoneAlt /> {configuracion.telefono}
+                    </li>
                   )}
                 </ul>
+
+                {/* LIBRO DE RECLAMACIONES */}
+                <div className="mt-3">
+                  <Link to="/libro-de-reclamaciones">
+                    <img
+                      src="/assets/images/libro-reclamaciones.png"
+                      alt="Libro de Reclamaciones"
+                      className="img-fluid"
+                      style={{ maxWidth: "180px", cursor: "pointer", background: "white", padding: "7px 24px", borderRadius: "8px" }}
+                    />
+                  </Link>
+                </div>
               </div>
             </div>
+
 
           </div>
         </div>

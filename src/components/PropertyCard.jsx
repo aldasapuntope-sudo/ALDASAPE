@@ -1,25 +1,54 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import "../css/PropertyCard.css";
 import { Card } from "react-bootstrap";
 import config from "../config";
 import { useNavigate } from "react-router-dom";
+import { useUsuario } from "../context/UserContext";
+import WhatsappModal from "./modales/WhatsappModal";
 
 export default function PropertyCard({ anuncio }) {
   const navigate = useNavigate();
+  const [showWhatsappModal, setShowWhatsappModal] = useState(false);
+  const [propiedadSeleccionada, setPropiedadSeleccionada] = useState(null);
+  const { usuario } = useUsuario();
+  const [email, setEmail] = useState("");
+  const [nombre, setNombre] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [aceptaTerminos, setAceptaTerminos] = useState(false);
+    const [autorizaUso, setAutorizaUso] = useState(false);
 
   const imagen = anuncio.imagen
     ? `${config.urlserver}${anuncio.imagen}`
     : "https://aldasa.pe/wp-content/themes/theme_aldasape/img/comprar-inmueble.jpg";
 
 
-  // 🔹 Función para crear slug (nombre amigable)
+  const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const nombreValido = nombre.trim().length >= 3;
+  const telefonoValido = telefono.trim().length >= 9;
+
+  const formularioValido =
+    emailValido &&
+    nombreValido &&
+    telefonoValido &&
+    aceptaTerminos &&
+    autorizaUso;
+   // 🔹 Función para crear slug (nombre amigable)
   const crearSlug = (texto) => {
     return texto
       ?.toLowerCase()
       .replace(/[^a-z0-9]+/g, "-") // reemplaza todo lo que no sea letra o número por guiones
       .replace(/^-+|-+$/g, ""); // elimina guiones del inicio y fin
   };
+
+  
+    useEffect(() => {
+      if (usuario && showWhatsappModal) {
+        setEmail(usuario?.usuarioaldasa?.email || "");
+        setNombre(usuario?.usuarioaldasa?.nombre || "");
+        setTelefono(usuario?.usuarioaldasa?.telefono_movil || "");
+      }
+    }, [usuario, showWhatsappModal]);
 
   const handleClick = () => {
     const slugTitulo = crearSlug(anuncio.titulo);
@@ -35,9 +64,30 @@ export default function PropertyCard({ anuncio }) {
     }).format(precio);
   };
 
+  const getImagenPerfil = (imagen) => {
+    if (!imagen) return `${config.urlserver}uploads/avatar-default.png`;
 
+    // Si ya es una URL externa (Google, Facebook, etc.)
+    if (imagen.startsWith("http://") || imagen.startsWith("https://")) {
+      return imagen;
+    }
+
+    // Si es imagen local
+    return `${config.urlserver}${imagen}`;
+  };
+
+
+  const openWhatsappModal = (propiedad) => {
+    setPropiedadSeleccionada(propiedad);
+    setShowWhatsappModal(true);
+  };
+
+
+
+  console.log(anuncio);
   return (
-   <Card
+   <>
+    <Card
       className="property-box2 shadow-sm border-0 rounded-2 overflow-hidden h-100 property-card-hover"
       style={{ cursor: "pointer" }}
       onClick={() => {
@@ -100,7 +150,7 @@ export default function PropertyCard({ anuncio }) {
             ))}
         </ul>
 
-        <div className="d-flex flex-wrap gap-2 mt-2" style={{ float: "right" }}>
+        {/* <div className="d-flex flex-wrap gap-2 mt-2" style={{ float: "right" }}>
           {anuncio.caracteristicas_secundarios?.length > 0 &&
             anuncio.caracteristicas_secundarios.map((amenity, index) => (
               <div
@@ -113,20 +163,79 @@ export default function PropertyCard({ anuncio }) {
                   fontWeight: "500",
                 }}
               >
-                {/*amenity.icon_url && (
-                  <img
-                    src={amenity.icon_url}
-                    alt={amenity.nombre}
-                    width="18"
-                    height="18"
-                    style={{ filter: "invert(1)", opacity: 0.9 }}
-                  />
-                )*/}
+                
                 <span>{amenity.nombre}</span>
               </div>
             ))}
-        </div>
+        </div> */}
+        <div className="d-flex justify-content-between align-items-center mt-4">
+
+                        {/* IZQUIERDA → FOTO USUARIO */}
+                        <div className="d-flex align-items-center gap-2">
+                          <img
+                            src={getImagenPerfil(anuncio.perfilanunciante?.imagen)}
+                            alt="Anunciante"
+                            width="40"
+                            height="40"
+                            className="rounded-circle object-fit-cover"
+                            onClick={(e) => e.stopPropagation()}
+                            onError={(e) => {
+                              e.target.src = `${config.urlserver}uploads/avatar-default.png`;
+                            }}
+                          />
+
+                          <span className="fw-semibold small">
+                            {anuncio.perfilanunciante?.nombre || "Anunciante"}
+                          </span>
+                        </div>
+
+                        {/* DERECHA → BOTONES */}
+                        <div className="d-flex gap-2">
+
+                          {anuncio.perfilanunciante?.telefono_movil && (
+                            <button
+                              className="btn btn-success btn-sm d-flex align-items-center gap-1"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openWhatsappModal(anuncio);
+                              }}
+                            >
+                              <i className="fab fa-whatsapp"></i>
+                              WhatsApp
+                            </button>
+                          )}
+
+                          {anuncio.perfilanunciante?.telefono && (
+                            <a
+                              href={`tel:${anuncio.perfilanunciante.telefono}`}
+                              className="btn btn-outline-success btn-sm d-flex align-items-center"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <i className="fas fa-phone"></i>
+                            </a>
+                          )}
+
+                        </div>
+                      </div>
       </Card.Body>
     </Card>
+    <WhatsappModal
+      show={showWhatsappModal}
+      onClose={() => setShowWhatsappModal(false)}
+      email={email}
+      setEmail={setEmail}
+      nombre={nombre}
+      setNombre={setNombre}
+      telefono={telefono}
+      setTelefono={setTelefono}
+      aceptaTerminos={aceptaTerminos}
+      setAceptaTerminos={setAceptaTerminos}
+      autorizaUso={autorizaUso}
+      setAutorizaUso={setAutorizaUso}
+      formularioValido={formularioValido}
+      propiedad={propiedadSeleccionada}
+    />
+
+   </>
   );
 }

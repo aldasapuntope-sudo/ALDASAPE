@@ -74,6 +74,7 @@ export default function BuscarPage() {
     };
   }, [location.search]);
 
+  
   // 📍 FILTRADO LOCAL
   const manejarFiltro = (filtros) => {
   filtrosActuales.current = filtros;

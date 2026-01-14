@@ -61,6 +61,7 @@ export default function PropertyList() {
           : "https://aldasa.pe/wp-content/themes/theme_aldasape/img/comprar-inmueble.jpg",
         caracteristicas: a.caracteristicas || [],
         caracteristicas_secundarios: a.amenities || [],
+        perfilanunciante: a.perfilanunciante || [],
       }));
 
       setAnuncios(adaptados);

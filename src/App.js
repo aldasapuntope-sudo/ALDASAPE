@@ -81,6 +81,7 @@ import MisContactos from './components/Paginasopcionales/componentes/MisContacto
 import MisFavoritos2 from './components/Paginasopcionales/componentes/Misfavoritos2';
 import HistorialVisitas from './components/Paginasopcionales/componentes/HistorialVisitas';
 import SoporteMotivoList from './pages/dashboard/administracion/SoporteMotivosList';
+import LibroReclamaciones from './pages/enlaces/LibroReclamaciones';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -193,6 +194,7 @@ function AppRoutes() {
           
 
           <Route path="/terminos-condiciones" element={<TerminosCondiciones />} />
+          <Route path="/libro-de-reclamaciones" element={<LibroReclamaciones />} />
           <Route path="/publica-tu-aviso" element={<Publicatuanuncio />} />
           <Route path="/nosotros" element={<Nosotros />} />
           <Route path="/inversiones" element={<Inversiones />} />
