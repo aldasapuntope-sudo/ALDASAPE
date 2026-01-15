@@ -391,7 +391,7 @@ function AppRoutes() {
 
             
             <Route
-              path="/aldasainversioens"
+              path="/aldasainversiones"
               element={<RutaProtegida element={ProyectosUsuario} />}
             />
             

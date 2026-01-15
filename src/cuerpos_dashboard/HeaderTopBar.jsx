@@ -45,13 +45,13 @@ function HeaderTopBar({ toggleSidebar, sidebarOpen, abrirModal }) {
               >
                 <FaBars />
           </Button>
-          <Button
+          {/*<Button
             variant={darkMode ? 'warning' : 'blancounj'}
             onClick={toggleDarkMode}
             className="me-2"
           >
             {darkMode ? <FaSun /> : <FaMoon />}
-          </Button>
+          </Button> */}
 
           {/* Aquí puedes agregar más botones o íconos a la izquierda */}
           {/* <Button className="me-2">Otro Icono</Button> */}

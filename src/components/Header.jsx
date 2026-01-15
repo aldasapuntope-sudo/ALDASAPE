@@ -237,6 +237,13 @@ export default function HeaderAldasa({ abrirModal, abrirLoginModal }) {
                   >
                     {darkMode ? <FaSun /> : <FaMoon />}
                   </button> */}
+                  <NavLink to="/aldasaclub" className="btn btn-outline-success">
+                    Inversiones TOP
+                  </NavLink>
+
+                  <NavLink to="/publica-tu-anuncio" className="btn-publicar">
+                    <FaPlus /> Publicar Anuncio
+                  </NavLink>
                   <UserInfoBoxAldasa abrirModal={abrirModal} />
                   <button
                     ref={userBtnRef}

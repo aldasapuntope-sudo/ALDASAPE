@@ -330,8 +330,8 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
 
             {/* Aldasa Inversiones */}
             <Link
-              to="/aldasainversioens"
-              className={`menu-btn ${location.pathname === '/aldasainversioens' ? 'active' : ''}`}
+              to="/aldasainversiones"
+              className={`menu-btn ${location.pathname === '/aldasainversiones' ? 'active' : ''}`}
               onClick={() => cambiarModo('gestion')}
             >
               <FaHome className="me-2" /> Aldasa Inversiones
