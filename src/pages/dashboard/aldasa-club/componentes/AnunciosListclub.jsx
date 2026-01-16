@@ -14,6 +14,7 @@ import Swal from "sweetalert2";
 import AnuncioCardclub from "./AnuncioCardclub";
 import NuevoAnuncio from "../../mis-anuncios/nuevo-anuncio";
 import NuevoAnuncioclub from "../NuevoAnuncioclub";
+import EmptyState from "../../../../components/EmptyState";
 
 
 const AnunciosListclub = ({ isPublish }) => {
@@ -215,7 +216,7 @@ const AnunciosListclub = ({ isPublish }) => {
                 <CardSkeleton cards={6} />
               </>
             ) : anuncios.length === 0 ? (
-              <Alert variant="info" className="text-center py-4 rounded-3 shadow-sm">
+              /*<Alert variant="info" className="text-center py-4 rounded-3 shadow-sm">
                 <p className="mb-0">
                   {isPublish === 1
                     ? "Actualmente no tienes anuncios activos."
@@ -223,7 +224,14 @@ const AnunciosListclub = ({ isPublish }) => {
                       ? "No tienes anuncios en revisión por el momento."
                       : "No tienes anuncios vendidos por el momento."}
                 </p>
-              </Alert>
+              </Alert> */
+
+              <EmptyState
+                image="/assets/images/empty-property.png"
+                title="No hay propiedades en remate disponibles"
+                description="En este momento no contamos con propiedades en remates. Pronto tendremos nuevas opciones para ti."
+                
+              />
             ) : view === "list" ? (
               <DataTable
                 columns={columns}

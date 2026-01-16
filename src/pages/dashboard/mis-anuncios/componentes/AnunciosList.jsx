@@ -12,6 +12,7 @@ import NuevoAnuncio from "../nuevo-anuncio";
 import { CardSkeleton } from "../../../../components/TablaSkeleton";
 import useVerificarPlan from "../../../../hooks/useVerificarPlan";
 import Swal from "sweetalert2";
+import EmptyState from "../../../../components/EmptyState";
 
 
 const AnunciosList = ({ isPublish }) => {
@@ -238,7 +239,25 @@ const AnunciosList = ({ isPublish }) => {
                 <CardSkeleton cards={6} />
               </>
             ) : anuncios.length === 0 ? (
-              <Alert variant="info" className="text-center py-4 rounded-3 shadow-sm">
+              <EmptyState
+                image="/assets/images/empty-property.png"
+                title={
+                  isPublish === 1
+                    ? "No tienes anuncios activos"
+                    : isPublish === 0
+                      ? "No tienes anuncios en revisión"
+                      : "No tienes anuncios vendidos"
+                }
+                description={
+                  isPublish === 1
+                    ? "Actualmente no cuentas con anuncios activos. Publica uno nuevo para empezar a recibir contactos."
+                    : isPublish === 0
+                      ? "En este momento no tienes anuncios en revisión. Cuando envíes uno, lo evaluaremos rápidamente."
+                      : "Aún no tienes anuncios vendidos. Sigue publicando y pronto llegarán los resultados."
+                }
+              />
+
+              /*<Alert variant="info" className="text-center py-4 rounded-3 shadow-sm">
                 <p className="mb-0">
                   {isPublish === 1
                     ? "Actualmente no tienes anuncios activos."
@@ -246,7 +265,9 @@ const AnunciosList = ({ isPublish }) => {
                       ? "No tienes anuncios en revisión por el momento."
                       : "No tienes anuncios vendidos por el momento."}
                 </p>
-              </Alert>
+              </Alert> */
+
+              
             ) : view === "list" ? (
               <DataTable
                 columns={columns}

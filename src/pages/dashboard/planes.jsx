@@ -1,49 +1,112 @@
-import React, { useEffect, useState } from "react";
-import Swal from "sweetalert2";
-import BreadcrumbALDASA from "../../cuerpos_dashboard/BreadcrumbAldasa";
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import axios from "axios";
+import "../../css/TerminosCondiciones.css";
+import Breadcrumb from "../../components/Breadcrumb";
+import NotFound from "../../components/NotFound";
+import { SkeletonInformacion } from "../../components/TablaSkeleton";
+import { useUsuario } from "../../context/UserContext";
 import config from "../../config";
-import Cargando from "../../components/cargando";
+import BreadcrumbALDASA from "../../cuerpos_dashboard/BreadcrumbAldasa";
+import Swal from "sweetalert2";
+import AnunciosActivosclub from "../dashboard/aldasa-club/AnunciosActivosclub";
 
-const Planes = () => {
+export default function Planes() {
+  const { usuario } = useUsuario();
+  const esAdmin = usuario?.usuarioaldasa?.perfil_id === 1;
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  //console.log(usuario);
+  // UI
+  const [mostrarPrecios, setMostrarPrecios] = useState(false);
+  const [abrirPopup, setAbrirPopup] = useState(false);
+  const [mostrarNewsletter, setMostrarNewsletter] = useState(false);
+
+  // Newsletter
+  const [emailSubs, setEmailSubs] = useState("");
+
+  // 🔑 MEMBRESÍA
+  const [verificandoMembresia, setVerificandoMembresia] = useState(true);
+  const [membresiaActiva, setMembresiaActiva] = useState(false);
+
+  // PAGOS PLANES
   const [planes, setPlanes] = useState([]);
-  const [cargando, setCargando] = useState(false);
+  const [cargandoPlanes, setCargandoPlanes] = useState(false);
+  /* ----------------------------------
+     NEWSLETTER
+  ---------------------------------- */
+  const handleSuscribir = async () => {
+    if (!emailSubs.trim()) {
+      Swal.fire({
+        icon: "warning",
+        title: "Campo vacío",
+        text: "Por favor ingresa un correo electrónico.",
+      });
+      return;
+    }
 
-  /* ----------------------------
-     OBTENER PLANES
-  ---------------------------- */
+    const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!regexCorreo.test(emailSubs)) {
+      Swal.fire({
+        icon: "error",
+        title: "Correo inválido",
+        text: "Por favor ingresa un correo electrónico válido.",
+      });
+      return;
+    }
+
+    try {
+      await axios.post(`${config.apiUrl}api/paginaprincipal/suscripciones`, {
+        email: emailSubs,
+      });
+
+      Swal.fire({
+        icon: "success",
+        title: "Suscripción exitosa",
+        text: "Gracias por suscribirte a Aldasa Club!",
+      });
+
+      setEmailSubs("");
+      //setMostrarNewsletter(false);
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Ocurrió un problema al suscribirte.",
+      });
+    }
+  };
+
+
   useEffect(() => {
     const fetchPlanes = async () => {
-      setCargando(true);
+      setCargandoPlanes(true);
       try {
         const res = await axios.get(`${config.apiUrl}api/planes/listar`);
         setPlanes(res.data);
       } catch (error) {
-        console.error(error);
         Swal.fire("Error", "No se pudieron cargar los planes", "error");
       } finally {
-        setCargando(false);
+        setCargandoPlanes(false);
       }
     };
 
     fetchPlanes();
   }, []);
 
-  /* ----------------------------
-     CARGAR CULQI
-  ---------------------------- */
+
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://checkout.culqi.com/js/v3";
     script.async = true;
     document.body.appendChild(script);
 
-    return () => document.body.removeChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
   }, []);
 
-  /* ----------------------------
-     PAGO CULQI
-  ---------------------------- */
+
   const handlePagoCulqi = (plan) => {
     if (!window.Culqi) {
       Swal.fire("Error", "Culqi aún no está listo.", "error");
@@ -56,7 +119,7 @@ const Planes = () => {
       title: plan.nombre,
       currency: "PEN",
       description: plan.descripcion,
-      amount: plan.precio,
+      amount: plan.precio, // en centavos
       order_id: `plan_${plan.id}_${Date.now()}`,
     });
 
@@ -64,11 +127,15 @@ const Planes = () => {
 
     window.culqi = function () {
       if (window.Culqi.token) {
-        Swal.fire(
-          "Pago realizado",
-          `Tu ${plan.nombre} se activará pronto.`,
-          "success"
-        );
+        const token = window.Culqi.token.id;
+
+        Swal.fire({
+          icon: "success",
+          title: "Pago realizado",
+          text: `Tu ${plan.nombre} se activará pronto.`,
+        });
+
+        // 👉 aquí luego envías el token al backend
         window.Culqi.close();
       } else if (window.Culqi.error) {
         Swal.fire("Error", "No se pudo completar el pago", "error");
@@ -77,13 +144,93 @@ const Planes = () => {
     };
   };
 
-  /* ----------------------------
+  const modalNewsletter = (
+  <section className="newsletter-wrap1 p-4">
+    <div className="container">
+      <div className="row align-items-center">
+        <div className="col-lg-12">
+          <div className="newsletter-layout1">
+            <div className="item-heading">
+              <h2 className="item-title">Suscribirse al boletín de Aldasa Planes</h2>
+              <h3 className="item-subtitle">Obtén las últimas noticias y actualizaciones</h3>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-lg-12">
+          <div className="newsletter-form">
+            <div className="input-group">
+              
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Ingresa tu correo"
+                value={emailSubs}
+                onChange={(e) => setEmailSubs(e.target.value)}
+              />
+
+              <button
+                className="btn btn-outline-secondary"
+                onClick={handleSuscribir}
+              >
+                Subscribe
+              </button>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+);
+
+  /* ----------------------------------
+     OBTENER CONTENIDO CLUB
+  ---------------------------------- */
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(`${config.apiUrl}api/paginaprincipal/planesanuncio`);
+        setData(res.data[0]);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+
+    /*const timer = setTimeout(() => {
+      setMostrarNewsletter(true);
+    }, 3000);
+
+    return () => clearTimeout(timer);*/
+  }, []);
+
+  /* ----------------------------------
+     VALIDAR MEMBRESÍA
+  ---------------------------------- */
+
+  /* ----------------------------------
+     CORTES DE RENDER
+  ---------------------------------- */
+  if (loading) return <SkeletonInformacion />;
+  if (!data) return <NotFound />;
+
+  // 👑 USUARIO CON MEMBRESÍA ACTIVA
+
+
+
+  /* ----------------------------------
      UTIL
-  ---------------------------- */
-  const cortarDescripcion = (html) => {
-    if (!html) return "-";
-    const texto = html.replace(/<[^>]*>?/gm, "");
-    return texto.length > 20 ? texto.substring(0, 20) + "..." : texto;
+  ---------------------------------- */
+  const decodeHTML2 = (html) => {
+    if (!html) return "";
+    const txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
   };
 
   const decodeHTML3 = (html) => {
@@ -103,76 +250,161 @@ const Planes = () => {
       return decoded;
     };
 
-  return (
-    <>
-      <BreadcrumbALDASA />
 
-      <div className="container py-5">
-        <h2 className="text-center mb-5 fw-bold text-success">
-          Selecciona un Plan
-        </h2>
+  /* ----------------------------------
+     CONTENIDO DE PLANES
+  ---------------------------------- */
+  const contenidoPrecios = (
+  <div className="container py-4">
+    <h2 className="text-center mb-4">Planes de precios</h2>
 
-        {cargando ? (
-          <Cargando visible={cargando} />
-        ) : (
-          <div className="card shadow-sm border-0 rounded-4">
-            <div className="card-body">
-                <div className="row justify-content-center g-4">
-                  {planes.map((plan) => (
-                    <div className="col-md-4" key={plan.id}>
-                      <div
-                        className="pricing-box1 wow zoomIn h-100"
-                        data-wow-delay=".3s"
-                      >
-                        {/* ENCABEZADO */}
-                        <div className="heading-title text-center">
-                          <h3 className="item-title">{plan.nombre}</h3>
+    {cargandoPlanes ? (
+      <div className="text-center">
+        <span className="spinner-border text-success"></span>
+      </div>
+    ) : (
+      <div className="row justify-content-center g-4">
+        {planes.map((plan) => (
+          <div className="col-md-4" key={plan.id}>
+            <div
+              className="pricing-box1 wow zoomIn h-100"
+              data-wow-delay=".3s"
+            >
+              {/* ENCABEZADO */}
+              <div className="heading-title text-center">
+                <h3 className="item-title">{plan.nombre}</h3>
 
-                          <div className="item-price">
-                            S/ {(plan.precio / 100).toFixed(2)}
-                            <span> / mes</span>
-                          </div>
-
-                          {/*<p title={plan.descripcion}>
-                            {cortarDescripcion(plan.descripcion)}
-                          </p> */}
-                        </div>
-
-                        {/* SHAPE */}
-                        <div className="shape-img1 text-center my-3">
-                          <img
-                            src="/assets/images/favicon-aldasape.png"
-                            alt="shape"
-                            width="56"
-                            height="64"
-                          />
-                        </div>
-
-                        {/* BENEFICIOS (FIJOS POR AHORA) */}
-                        <div
-                          className="container"
-                          dangerouslySetInnerHTML={{ __html: decodeHTML3(plan.descripcion) }}
-                        />
-
-                        {/* BOTÓN */}
-                        <div className="pricing-button text-center mt-4">
-                          <button
-                            className="item-btn"
-                            onClick={() => handlePagoCulqi(plan)}
-                          >
-                            Pagar con Culqi
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                <div className="item-price">
+                  S/ {(plan.precio / 100).toFixed(2)}
+                  <span> / mes</span>
                 </div>
+
+                
+              </div>
+
+              {/* SHAPE */}
+              <div className="shape-img1 text-center my-3">
+                <img
+                  src="/assets/images/favicon-aldasape.png"
+                  alt="shape"
+                  width="50"
+                />
+              </div>
+            
+              <div
+          className="container"
+          dangerouslySetInnerHTML={{ __html: decodeHTML3(plan.descripcion) }}
+        />
+              {/*<p>{plan.descripcion}</p> */}
+              {/* LISTA DE BENEFICIOS */}
+              
+
+              {/* BOTÓN */}
+              {usuario && !esAdmin && (
+                <div className="pricing-button text-center mt-4">
+                  <button
+                    className="item-btn"
+                    onClick={() => handlePagoCulqi(plan)}
+                  >
+                    Pagar con Culqi
+                  </button>
+                </div>
+              )}
             </div>
           </div>
-        )}
+        ))}
       </div>
+    )}
+  </div>
+);
+
+
+
+  /* ----------------------------------
+     BOTÓN PLAN
+  ---------------------------------- */
+  const botonPlan = (
+    <div className="pricing-button text-center mt-3">
+      {!usuario ? (
+        <div className="about-button">
+          <a 
+            className="item-btn" 
+            onClick={() => setMostrarPrecios(!mostrarPrecios)}
+          >
+            Ver precios
+          </a>
+        </div>
+      ) : (
+        <div className="about-button">
+          <a 
+            className="item-btn" 
+            onClick={() => setAbrirPopup(true)}
+          >
+            Ver planes
+          </a>
+        </div>
+      )}
+
+    </div>
+  );
+
+  /* ----------------------------------
+     RENDER NORMAL
+  ---------------------------------- */
+  return (
+    <>
+      <div className="container mt-4">
+        {usuario ? <BreadcrumbALDASA /> : <Breadcrumb />}
+      </div>
+
+      <section className="about-wrap2 rounded-4 py-5 mt-5" style={{ background: "white" }}>
+        <h2 className="text-center fw-bold mb-4" style={{ color: "var(--green)" }}>
+          {data.titulo}
+        </h2>
+
+        <div
+          className="container"
+          dangerouslySetInnerHTML={{ __html: decodeHTML2(data.contenido) }}
+        />
+
+        {botonPlan}
+      </section>
+
+      {!usuario && mostrarPrecios && (
+        <motion.section
+          className="pricing-wrap1 rounded-4 mt-4"
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: "auto", opacity: 1 }}
+        >
+          {contenidoPrecios}
+        </motion.section>
+      )}
+
+      {usuario && abrirPopup && (
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <button className="cerrar-popup" onClick={() => setAbrirPopup(false)}>
+              ✖
+            </button>
+            {contenidoPrecios}
+          </div>
+        </div>
+      )}
+
+      {mostrarNewsletter && (
+        <div className="popup-overlay">
+          <div className="popup-content" style={{ maxWidth: "700px" }}>
+            <button
+              className="cerrar-popup"
+              onClick={() => setMostrarNewsletter(false)}
+            >
+              ✖
+            </button>
+
+            {modalNewsletter}
+          </div>
+        </div>
+      )}
     </>
   );
-};
-
-export default Planes;
+}

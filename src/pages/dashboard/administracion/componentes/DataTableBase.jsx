@@ -6,6 +6,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { FaFileExcel, FaFilePdf, FaSearch } from "react-icons/fa";
 import config from "../../../../config";
+import EmptyState from "../../../../components/EmptyState";
 
 export default function DataTableBase({
   title,
@@ -250,7 +251,7 @@ export default function DataTableBase({
         {loading ? (
           <TablaSkeleton filas={6} columnas={finalColumns.length} />
         ) : (
-          <DataTable
+          /*<DataTable
             columns={finalColumns}
             data={filteredData}
             pagination={pagination}
@@ -260,6 +261,25 @@ export default function DataTableBase({
             noDataComponent={
               <div className="text-muted py-3">
                 No se encontraron resultados.
+              </div>
+            }
+            customStyles={customStyles}
+          /> */
+
+          <DataTable
+            columns={finalColumns}
+            data={filteredData}
+            pagination={pagination}
+            highlightOnHover
+            responsive
+            striped
+            noDataComponent={
+              <div className="w-100 d-flex justify-content-center py-4">
+                <EmptyState
+                  image="/assets/images/empty-sinresult.png"
+                  title="Sin resultados"
+                  description="No se encontraron resultados que coincidan con tu búsqueda. Intenta modificar los filtros."
+                />
               </div>
             }
             customStyles={customStyles}

@@ -119,6 +119,33 @@
 }
 
 
+
+
+@media only screen and (max-width: 767px) {
+    /*.sidebar {
+        left: 0px;
+    }*/
+    .chat-fab {
+      position: fixed;
+      bottom: 25px;
+      right: 45px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--green); /* verde bootstrap */
+      color: #fff;
+      font-size: 26px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+}
+
+
 @keyframes fadeUp {
   from {
     opacity: 0;

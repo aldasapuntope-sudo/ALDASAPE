@@ -30,7 +30,7 @@ const nombresPersonalizados = {
   'adm-usuarios': 'Gestión de Usuarios',
   'adm-scripts': 'Gestión de Scripts',
   'aldasaclub': 'Aldasa Club',
-  'aldasainversioens': 'Aldasa Inversiones',
+  'aldasainversiones': 'Aldasa Inversiones',
   'propiedadremates': 'Remate',
   'soporte-mensajes': 'Soporte Mensajes',
   detalle_guia: 'Detalle Guías',

@@ -9,6 +9,7 @@ import BuscadorAvanzado from "./componentes/BuscadorAvanzado";
 import SkeletonBuscarPage from "../TablaSkeleton";
 
 import "../../css/Buscadordetalle.css";
+import EmptyState from "../EmptyState";
 
 export default function BuscarPage() {
   const location = useLocation();
@@ -180,10 +181,16 @@ export default function BuscarPage() {
 
             <div className="col-lg-8 d-flex justify-content-center">
               <div className="text-center p-5 rounded-4 shadow-sm bg-light w-100">
-                <FaRegSurprise size={80} color="#28a745" className="mb-3" />
+              {/*<FaRegSurprise size={80} color="#28a745" className="mb-3" />
                 <h4 className="fw-bold text-success">
                   ¡Ups! No encontramos propiedades
-                </h4>
+                </h4> */}
+                <EmptyState
+                  image="/assets/images/empty-sinresult.png"
+                  title="¡Ups! No encontramos propiedades"
+                  description="En este momento no encontramos propiedades. realice un nuevo filtro."
+                  
+                />
 
                 {Object.keys(filtrosActivos).length > 0 && (
                   <div className="d-flex flex-wrap justify-content-center gap-2 mt-3">

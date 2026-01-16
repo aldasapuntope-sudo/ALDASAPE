@@ -4,6 +4,7 @@ import "../css/property.css";
 import config from "../config";
 import Cargando from "./cargando";
 import { CardSkeleton } from "./TablaSkeleton";
+import EmptyState from "./EmptyState";
 
 export default function PropertyList() {
   const [filter, setFilter] = useState("all");
@@ -134,9 +135,12 @@ export default function PropertyList() {
             <CardSkeleton cards={6} />
           </>
         ) : filtered.length === 0 ? (
-          <p className="text-center text-muted py-4">
-            No hay propiedades disponibles.
-          </p>
+          <EmptyState
+              image="/assets/images/empty-property.png"
+              title="No hay propiedades disponibles"
+              description="En este momento no contamos con propiedades para esta categoría. Pronto tendremos nuevas opciones para ti."
+              
+            />
         ) : (
           <div className="row">
             {filtered.map((p, i) => (

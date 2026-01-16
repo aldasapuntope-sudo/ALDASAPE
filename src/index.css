@@ -479,6 +479,22 @@ body.dark-mode .salir-btn {
   color: white;
 }
 
+.empty-state img {
+  animation: float 2.5s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
 
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.9); }

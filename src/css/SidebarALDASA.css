@@ -137,7 +137,8 @@
   
   .menu-btn {
     /*background-color: #d3f0fe;*/
-    background: linear-gradient(90deg, rgb(5, 200, 81), rgb(83, 217, 135));
+    /*background: linear-gradient(90deg, rgb(5, 200, 81), rgb(83, 217, 135));*/
+    background: linear-gradient(90deg, var(--green), var(--green));
     border: none;
     color: #ffffff;
     width: 100%;

@@ -17,14 +17,29 @@ export default function MiPerfil() {
   const [tiposUsuario, setTiposUsuario] = useState([]);
   const [condicionesFiscales, setCondicionesFiscales] = useState([]);
   const [condicionesFiltradas, setCondicionesFiltradas] = useState([]);
-
+  const [perfilCargado, setPerfilCargado] = useState(false);
   const esRuc = datos.tipodocumento === "RUC";
   const incompleto = !datos.documento; // si no hay documento, el usuario es nuevo
+  //const incompleto = !datos?.documento || datos?.documento === '';
+
     const navigate = useNavigate();
   // 🔹 Cargar combos
   useEffect(() => {
     cargarCombos();
   }, []);
+
+  useEffect(() => {
+    if (perfilCargado && incompleto) {
+      Swal.fire({
+        icon: "warning",
+        title: "Perfil incompleto",
+        text: "Es necesario completar tu perfil para navegar libremente por la plataforma.",
+        confirmButtonText: "Completar ahora",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+      });
+    }
+  }, [perfilCargado, incompleto]);
 
   async function cargarCombos() {
     try {
@@ -61,6 +76,7 @@ export default function MiPerfil() {
     } catch (error) {
       console.error("Error cargando datos:", error);
     } finally {
+      setPerfilCargado(true); // 👈 CLAVE
       setCargando(false);
     }
   }
