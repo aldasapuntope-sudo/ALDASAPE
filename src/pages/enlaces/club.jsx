@@ -113,36 +113,56 @@ export default function Club() {
       return;
     }
 
-    window.Culqi.publicKey = "pk_test_1234567890abcdef0123456789abcdef";
+    window.Culqi.publicKey = "pk_test_aDdnZvQQ5srem5oX";
 
     window.Culqi.settings({
       title: plan.nombre,
       currency: "PEN",
       description: plan.descripcion,
-      amount: plan.precio, // en centavos
-      order_id: `plan_${plan.id}_${Date.now()}`,
+      amount: plan.precio, // centavos
+      order_id: `club_${plan.id}_${Date.now()}`,
     });
 
     window.Culqi.open();
 
-    window.culqi = function () {
+    window.culqi = async function () {
       if (window.Culqi.token) {
-        const token = window.Culqi.token.id;
+        const culqi_token = window.Culqi.token.id;
 
-        Swal.fire({
-          icon: "success",
-          title: "Pago realizado",
-          text: `Tu ${plan.nombre} se activará pronto.`,
-        });
+        try {
+          await axios.post(
+            `${config.apiUrl}api/administracion/culqiclub`,
+            {
+              culqi_token,
+              plan_id: plan.id,
+            }
+          );
 
-        // 👉 aquí luego envías el token al backend
+          setAbrirPopup(false);
+
+          Swal.fire({
+            icon: "success",
+            title: "Pago realizado",
+            text: `Tu membresía ${plan.nombre} fue activada correctamente.`,
+            confirmButtonText: "Continuar",
+          }).then(() => {
+            // 👉 recargar para que se valide membresía
+            window.location.reload();
+          });
+
+        } catch (error) {
+          Swal.fire("Error", "No se pudo registrar el pago", "error");
+        }
+
         window.Culqi.close();
-      } else if (window.Culqi.error) {
-        Swal.fire("Error", "No se pudo completar el pago", "error");
+      } 
+      else if (window.Culqi.error) {
+        Swal.fire("Error", window.Culqi.error.user_message, "error");
         window.Culqi.close();
       }
     };
   };
+
 
   const modalNewsletter = (
   <section className="newsletter-wrap1 p-4">

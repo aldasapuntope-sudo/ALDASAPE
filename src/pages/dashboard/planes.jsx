@@ -10,12 +10,14 @@ import config from "../../config";
 import BreadcrumbALDASA from "../../cuerpos_dashboard/BreadcrumbAldasa";
 import Swal from "sweetalert2";
 import AnunciosActivosclub from "../dashboard/aldasa-club/AnunciosActivosclub";
+import { useNavigate } from "react-router-dom";
 
 export default function Planes() {
   const { usuario } = useUsuario();
   const esAdmin = usuario?.usuarioaldasa?.perfil_id === 1;
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   //console.log(usuario);
   // UI
   const [mostrarPrecios, setMostrarPrecios] = useState(false);
@@ -32,6 +34,9 @@ export default function Planes() {
   // PAGOS PLANES
   const [planes, setPlanes] = useState([]);
   const [cargandoPlanes, setCargandoPlanes] = useState(false);
+  const token = localStorage.getItem("usuario");
+
+  console.log(token);
   /* ----------------------------------
      NEWSLETTER
   ---------------------------------- */
@@ -113,7 +118,7 @@ export default function Planes() {
       return;
     }
 
-    window.Culqi.publicKey = "pk_test_1234567890abcdef0123456789abcdef";
+    window.Culqi.publicKey = "pk_test_aDdnZvQQ5srem5oX";
 
     window.Culqi.settings({
       title: plan.nombre,
@@ -125,24 +130,44 @@ export default function Planes() {
 
     window.Culqi.open();
 
-    window.culqi = function () {
+    window.culqi = async function () {
       if (window.Culqi.token) {
-        const token = window.Culqi.token.id;
+        const culqi_token = window.Culqi.token.id;
 
-        Swal.fire({
-          icon: "success",
-          title: "Pago realizado",
-          text: `Tu ${plan.nombre} se activará pronto.`,
-        });
+        try {
+          await axios.post(
+            `${config.apiUrl}api/administracion/culqi`,
+            {
+              culqi_token,
+              plan_id: plan.id,
+            }
+          );
 
-        // 👉 aquí luego envías el token al backend
+          setAbrirPopup(false);
+
+          Swal.fire({
+            icon: "success",
+            title: "Pago realizado",
+            text: `Tu ${plan.nombre} fue activado correctamente.`,
+            confirmButtonText: "Continuar",
+          }).then(() => {
+            navigate("/nuevo-anuncio");
+          });
+        } catch (error) {
+          Swal.fire("Error", "No se pudo registrar el pago", "error");
+        }
+
         window.Culqi.close();
-      } else if (window.Culqi.error) {
-        Swal.fire("Error", "No se pudo completar el pago", "error");
+      } 
+      else if (window.Culqi.error) {
+        Swal.fire("Error", window.Culqi.error.user_message, "error");
         window.Culqi.close();
       }
     };
+
   };
+
+  console.log(planes);
 
   const modalNewsletter = (
   <section className="newsletter-wrap1 p-4">

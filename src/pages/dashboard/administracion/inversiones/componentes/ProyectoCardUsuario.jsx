@@ -3,9 +3,11 @@ import React from "react";
 import { Card, Button } from "react-bootstrap";
 import { FaEdit, FaLock } from "react-icons/fa";
 import config from "../../../../../config";
+import { FaMapMarkerAlt, FaTag } from "react-icons/fa";
 
 export default function ProyectoCardUsuario({ proyecto, activo, onEditar, esAdmin }) {
   
+  console.log(proyecto);
   const crearSlug = (texto) => {
     return texto
       .toString()
@@ -66,9 +68,38 @@ export default function ProyectoCardUsuario({ proyecto, activo, onEditar, esAdmi
 
       <Card.Body>
         <h5>{proyecto.titulo}</h5>
-        <p className="text-muted">{proyecto.descripcion}</p>
+        <p className="text-muted mb-2">{proyecto.descripcion}</p>
 
-        {activo && <p className="text-success fw-bold">Disponible para ti</p>}
+        {/* DIVISIÓN UBICACIÓN / CATEGORÍA */}
+        <div className="d-flex justify-content-between align-items-start mb-2">
+          
+          {/* UBICACIÓN */}
+          <div className="d-flex align-items-center text-muted" style={{ fontSize: "0.9rem" }}>
+            <FaMapMarkerAlt className="me-1 text-danger" />
+            <span
+              style={{
+                maxWidth: "200px",
+                whiteSpace: "normal",
+                wordBreak: "break-word",
+                lineHeight: "1.2",
+                textAlign: "justify"
+              }}
+            >
+              {proyecto.ubicacion}
+            </span>
+          </div>
+
+          {/* CATEGORÍA */}
+          <div className="d-flex align-items-center text-muted" style={{ fontSize: "0.9rem" }}>
+            <FaTag className="me-1 text-success" />
+            <span>
+              {proyecto.categoria ?? "General"}
+            </span>
+          </div>
+
+        </div>
+
+        {activo && <p className="text-success fw-bold mb-0">Disponible para ti</p>}
       </Card.Body>
     </Card>
   );

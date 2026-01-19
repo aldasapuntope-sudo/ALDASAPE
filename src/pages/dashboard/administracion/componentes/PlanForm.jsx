@@ -14,6 +14,7 @@ export default function PlanFormclub({ plan, onClose }) {
       descripcion: "",
       precio: "",
       duracion_dias: "",
+      anuncios_disponibles: "",
       is_active: 1,
     },
     enableReinitialize: true,
@@ -49,6 +50,7 @@ export default function PlanFormclub({ plan, onClose }) {
         descripcion: plan.descripcion || "",
         precio: plan.precio || "",
         duracion_dias: plan.duracion_dias || "",
+        anuncios_disponibles: plan.anuncios_disponibles || "",
         is_active: plan.is_active ?? 1,
       });
     }
@@ -148,6 +150,22 @@ export default function PlanFormclub({ plan, onClose }) {
                     placeholder="Ej: 30"
                   />
                 </div>
+
+
+                {/* ANUNCIOS DISPONIBLES */}
+                <div className="col-md-6 mb-3">
+                  <label className="form-label fw-semibold">Anuncios Disponibles</label>
+                  <input
+                    type="number"
+                    name="anuncios_disponibles"
+                    className="form-control"
+                    value={formik.values.anuncios_disponibles}
+                    onChange={formik.handleChange}
+                    required
+                    placeholder="Ej: 30"
+                  />
+                </div>
+                
 
                 {/* ESTADO */}
                 <div className="col-md-6 mb-3">

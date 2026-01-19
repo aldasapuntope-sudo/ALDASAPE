@@ -123,6 +123,11 @@ export default function PlanesList() {
       sortable: true,
     },
     {
+      name: "Anuncios disponibles",
+      selector: (row) => row.anuncios_disponibles,
+      sortable: true,
+    },
+    {
       name: "Estado",
       selector: (row) => (
         <span className={`badge ${row.is_active ? "bg-success" : "bg-secondary"}`}>
