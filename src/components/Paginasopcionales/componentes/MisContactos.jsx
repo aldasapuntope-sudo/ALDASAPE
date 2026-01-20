@@ -10,6 +10,7 @@ import Cargando from "../../../components/cargando";
 import { CardSkeleton } from "../../../components/TablaSkeleton";
 
 import "../../../css/CuentaLayout.css";
+import EmptyState from "../../EmptyState";
 
 const generarSlug = (texto) =>
   texto
@@ -69,7 +70,13 @@ const MisContactos = () => {
               <CardSkeleton cards={5} />
             </>
           ) : contactos.length === 0 ? (
-            <Alert variant="light" className="text-center py-5 rounded-4 border-0">
+            <EmptyState
+                image="/assets/images/empty-sinresult.png"
+                title="Aún no contactaste ningún anunciante"
+                description="¡No pierdas tiempo! Tu próximo hogar te está esperando"
+                
+              />
+            /*<Alert variant="light" className="text-center py-5 rounded-4 border-0">
               <img
                 src="/assets/images/empty-contactos.png"
                 alt="Sin contactos"
@@ -82,7 +89,7 @@ const MisContactos = () => {
               <p className="text-muted mb-0">
                 ¡No pierdas tiempo! Tu próximo hogar te está esperando
               </p>
-            </Alert>
+            </Alert> */
           ) : (
             <div className="d-flex flex-column gap-3">
               {contactos.map((c) => (

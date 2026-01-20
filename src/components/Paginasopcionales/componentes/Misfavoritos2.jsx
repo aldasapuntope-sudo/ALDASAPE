@@ -10,6 +10,7 @@ import Cargando from "../../../components/cargando";
 import { useUsuario } from "../../../context/UserContext";
 import config from "../../../config";
 import FavoritoCards from "../../../pages/dashboard/mis-anuncios/componentes/FavoritoCard";
+import EmptyState from "../../EmptyState";
 
 const MisFavoritos2 = () => {
   const [favoritos, setFavoritos] = useState([]);
@@ -115,14 +116,19 @@ const MisFavoritos2 = () => {
                 <CardSkeleton cards={6} />
               </>
             ) : favoritos.length === 0 ? (
-              <Alert
+              <EmptyState
+                image="/assets/images/empty-sinresult.png"
+                title="No tienes anuncios en tu lista de favoritos por el momento."
+                description="Explora anuncios conviertelas en tus favoritos!"     
+              />
+              /*<Alert
                 variant="info"
                 className="text-center py-4 rounded-3 shadow-sm"
               >
                 <p className="mb-0">
                   No tienes anuncios en tu lista de favoritos por el momento.
                 </p>
-              </Alert>
+              </Alert>*/
             ) : view === "list" ? (
               <div className="table-responsive">
                 <table className="table table-hover align-middle">

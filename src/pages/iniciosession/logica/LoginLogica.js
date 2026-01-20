@@ -31,6 +31,7 @@ export const enviarTokenGoogle = async (token) => {
         givenName: res.data.givenName,
         familyName: res.data.familyName,
         usuarioaldasa: res.data.usuarioaldasa,
+        planActivo: res.data.planActivo,
       };
     } else {
       // ⚠️ Error controlado desde el backend

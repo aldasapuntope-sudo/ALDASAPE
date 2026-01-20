@@ -77,7 +77,7 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
   if (!usuario) return null;
 
   const nombre = usuario.usuarioaldasa?.nombre || usuario.name || 'Usuario';
-  const escuela = usuario.escuela || 'Aldasa';
+  const planactivo = usuario.planActivo || 'Sin Plan';
 
 
   const imgSrc = (() => {
@@ -265,7 +265,7 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
       {/* 👤 USUARIO */}
       <div className="d-flex flex-column text-end me-2">
         <span style={{ color: '#252526', fontWeight: '900', fontSize: '12px' }}>{nombre.length > 9 ? `${nombre.slice(0, 10)}…` : nombre}</span>
-        <span style={{ color: '#ffffffff', fontSize: '10px' }}>{escuela}</span>
+        <span style={{ color: 'rgb(255 255 255)', fontSize: '10px', background: 'var(--green)', textAlign: 'center', borderRadius: '100px' }}>{planactivo}</span>
       </div>
 
       <Dropdown align="end">
@@ -290,6 +290,7 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
             <div className="text-muted small">
               {usuario?.usuarioaldasa?.email}
             </div>
+            <span style={{ color: 'rgb(255 255 255)', fontSize: '11px', background: 'var(--green)', textAlign: 'center', borderRadius: '100px', padding: '1px 26px' }}>{planactivo}</span>
           </div>
           <Dropdown.Item
             as={Link}

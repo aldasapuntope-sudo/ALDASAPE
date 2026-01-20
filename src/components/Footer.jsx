@@ -105,7 +105,7 @@ export default function Footer({ fondo = "imagen" }) {
                       </li>
                     ))
                   ) : (
-                    <li>Cargando...</li>
+                    <li></li>
                   )}
                 </ul>
               </div>

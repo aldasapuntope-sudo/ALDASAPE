@@ -1,14 +1,20 @@
-// src/componentes/MegaDropdown.js
 import React from "react";
 
 export default function MegaDropdown({ data, mode, isMobile, isOpen }) {
   if (!data || (isMobile && !isOpen)) return null;
 
-  const BASE_URL = window.location.origin;
-
   if (isMobile) {
+    /* =========================
+       MOBILE
+    ========================== */
+
+    // DATA COMO OBJETO (mega menu)
     if (!Array.isArray(data)) {
-      const sections = Object.entries(data);
+      const sections = Object.entries(data).filter(
+        ([_, items]) => Array.isArray(items) && items.length > 0
+      );
+
+      if (sections.length === 0) return null;
 
       return (
         <ul className={`dropdown-menu p-2 ${isOpen ? "show" : ""}`}>
@@ -21,39 +27,39 @@ export default function MegaDropdown({ data, mode, isMobile, isOpen }) {
             return (
               <li key={sectionName}>
                 <h6 className="dropdown-header">{title}</h6>
-                {Array.isArray(items) && items.length > 0 ? (
-                  items.map((item) => {
-                    let url = "#";
 
-                    if (sectionName === "tipo") {
-                      url = `/buscar?tipo=${item.id}${mode ? `&mode=${mode}` : ""}`;
-                    } else if (sectionName === "ciudad") {
-                      url = `/buscar?ciudad=${encodeURIComponent(item.nombre)}${mode ? `&mode=${mode}` : ""}`;
-                    } else {
-                      url = item.url;
-                    }
+                {items.map((item) => {
+                  let url = "#";
 
-                    return (
-                      <a
-                        key={item.id || item.nombre}
-                        className="dropdown-item"
-                        href={url}
-                        target={sectionName === "propiedades_mas_vistas" ? "_blank" : "_self"}
-                        rel="noopener noreferrer"
-                      >
-                        {item.titulo || item.nombre.toUpperCase()}
-                      </a>
-                    );
-                  })
-                ) : (
-                  <span className="dropdown-item text-muted">Sin datos</span>
-                )}
+                  if (sectionName === "tipo") {
+                    url = `/buscar?tipo=${item.id}${mode ? `&mode=${mode}` : ""}`;
+                  } else if (sectionName === "ciudad") {
+                    url = `/buscar?ciudad=${encodeURIComponent(item.nombre)}${mode ? `&mode=${mode}` : ""}`;
+                  } else {
+                    url = item.url;
+                  }
+
+                  return (
+                    <a
+                      key={item.id || item.nombre}
+                      className="dropdown-item"
+                      href={url}
+                      target={sectionName === "propiedades_mas_vistas" ? "_blank" : "_self"}
+                      rel="noopener noreferrer"
+                    >
+                      {item.titulo || item.nombre.toUpperCase()}
+                    </a>
+                  );
+                })}
               </li>
             );
           })}
         </ul>
       );
     }
+
+    // DATA COMO ARRAY (servicios)
+    if (data.length === 0) return null;
 
     return (
       <ul className={`dropdown-menu p-2 ${isOpen ? "show" : ""}`}>
@@ -73,8 +79,17 @@ export default function MegaDropdown({ data, mode, isMobile, isOpen }) {
     );
   }
 
+  /* =========================
+     DESKTOP
+  ========================== */
+
+  // DATA COMO OBJETO (mega menu)
   if (!Array.isArray(data)) {
-    const sections = Object.entries(data);
+    const sections = Object.entries(data).filter(
+      ([_, items]) => Array.isArray(items) && items.length > 0
+    );
+
+    if (sections.length === 0) return null;
 
     return (
       <div className="dropdown-menu mega-menu fade-up p-3 shadow">
@@ -89,33 +104,30 @@ export default function MegaDropdown({ data, mode, isMobile, isOpen }) {
               return (
                 <div key={sectionName} className="col-6 col-md-3">
                   <h6 className="dropdown-header">{title}</h6>
-                  {Array.isArray(items) && items.length > 0 ? (
-                    items.map((item) => {
-                      let url = "#";
 
-                      if (sectionName === "tipo") {
-                        url = `/buscar?tipo=${item.id}${mode ? `&mode=${mode}` : ""}`;
-                      } else if (sectionName === "ciudad") {
-                        url = `/buscar?ciudad=${encodeURIComponent(item.nombre)}${mode ? `&mode=${mode}` : ""}`;
-                      } else {
-                        url = item.url;
-                      }
+                  {items.map((item) => {
+                    let url = "#";
 
-                      return (
-                        <a
-                          key={item.id || item.nombre}
-                          className="dropdown-item"
-                          href={url}
-                          target={sectionName === "propiedades_mas_vistas" ? "_blank" : "_self"}
-                          rel="noopener noreferrer"
-                        >
-                          {item.titulo || item.nombre}
-                        </a>
-                      );
-                    })
-                  ) : (
-                    <span className="dropdown-item text-muted">Sin datos</span>
-                  )}
+                    if (sectionName === "tipo") {
+                      url = `/buscar?tipo=${item.id}${mode ? `&mode=${mode}` : ""}`;
+                    } else if (sectionName === "ciudad") {
+                      url = `/buscar?ciudad=${encodeURIComponent(item.nombre)}${mode ? `&mode=${mode}` : ""}`;
+                    } else {
+                      url = item.url;
+                    }
+
+                    return (
+                      <a
+                        key={item.id || item.nombre}
+                        className="dropdown-item"
+                        href={url}
+                        target={sectionName === "propiedades_mas_vistas" ? "_blank" : "_self"}
+                        rel="noopener noreferrer"
+                      >
+                        {item.titulo || item.nombre}
+                      </a>
+                    );
+                  })}
                 </div>
               );
             })}
@@ -124,6 +136,9 @@ export default function MegaDropdown({ data, mode, isMobile, isOpen }) {
       </div>
     );
   }
+
+  // DATA COMO ARRAY (servicios)
+  if (data.length === 0) return null;
 
   return (
     <div className="dropdown-menu mega-menu fade-up p-3 shadow">

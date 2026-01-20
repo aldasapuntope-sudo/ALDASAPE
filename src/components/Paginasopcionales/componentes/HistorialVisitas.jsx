@@ -10,6 +10,7 @@ import { useUsuario } from "../../../context/UserContext";
 
 import FavoritoCards from "../../../pages/dashboard/mis-anuncios/componentes/FavoritoCard";
 import config from "../../../config";
+import EmptyState from "../../EmptyState";
 
 const HistorialVisitas = () => {
   const [historial, setHistorial] = useState([]);
@@ -96,12 +97,17 @@ const HistorialVisitas = () => {
               <CardSkeleton cards={6} />
             </>
           ) : historial.length === 0 ? (
-            <Alert variant="light" className="text-center py-5 rounded-4">
+            <EmptyState
+              image="/assets/images/empty-sinresult.png"
+              title="Aún no has visitado propiedades"
+              description="Explora anuncios y aquí verás tu historial"     
+            />
+            /*<Alert variant="light" className="text-center py-5 rounded-4">
               <h5 className="fw-bold">Aún no has visitado propiedades</h5>
               <p className="text-muted mb-0">
                 Explora anuncios y aquí verás tu historial
               </p>
-            </Alert>
+            </Alert>*/
           ) : view === "list" ? (
             <div className="table-responsive">
               <table className="table table-hover align-middle">
