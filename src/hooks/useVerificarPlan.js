@@ -1,22 +1,23 @@
-// src/hooks/useVerificarPlan.js
 import { useState, useEffect } from "react";
 import axios from "axios";
 import config from "../config";
 import { useUsuario } from "../context/UserContext";
 
 export default function useVerificarPlan(intervaloMs = 60000) {
-  // 👆 parámetro: tiempo de actualización (default 1 min)
-
   const { usuario } = useUsuario();
+
   const [planInfo, setPlanInfo] = useState({
     tienePlan: false,
     activo: false,
     anunciosDisponibles: 0,
     datos: null,
   });
+
   const [cargando, setCargando] = useState(true);
 
   const verificarPlan = async () => {
+
+    // 🚫 SIN USUARIO
     if (!usuario?.usuarioaldasa?.id) {
       setPlanInfo({
         tienePlan: false,
@@ -28,6 +29,22 @@ export default function useVerificarPlan(intervaloMs = 60000) {
       return;
     }
 
+    // 👑 ADMIN → PLAN ILIMITADO
+    if (usuario.usuarioaldasa.perfil_id === 1) {
+      setPlanInfo({
+        tienePlan: true,
+        activo: true,
+        anunciosDisponibles: Infinity, // 🔥 ilimitado
+        datos: {
+          nombre: "Administrador",
+          is_admin: true,
+        },
+      });
+      setCargando(false);
+      return;
+    }
+
+    // 👤 USUARIO NORMAL → VALIDAR PLAN REAL
     try {
       const res = await axios.get(
         `${config.apiUrl}api/planes/usuario/${usuario.usuarioaldasa.id}`
@@ -57,7 +74,6 @@ export default function useVerificarPlan(intervaloMs = 60000) {
         });
       }
     } catch (error) {
-      console.error("Error verificando plan:", error);
       setPlanInfo({
         tienePlan: false,
         activo: false,
@@ -70,13 +86,18 @@ export default function useVerificarPlan(intervaloMs = 60000) {
   };
 
   useEffect(() => {
-    verificarPlan(); // 🔹 Llamada inicial
+    verificarPlan();
 
-    // 🔄 Verifica automáticamente cada "intervaloMs" milisegundos
-    const intervalo = setInterval(verificarPlan, intervaloMs);
-
-    return () => clearInterval(intervalo); // 🧹 Limpia el intervalo al desmontar
+    // 🔄 Intervalo SOLO para usuarios normales
+    if (usuario?.usuarioaldasa?.perfil_id !== 1) {
+      const intervalo = setInterval(verificarPlan, intervaloMs);
+      return () => clearInterval(intervalo);
+    }
   }, [usuario]);
 
-  return { planInfo, cargando, refrescarPlan: verificarPlan };
+  return {
+    planInfo,
+    cargando,
+    refrescarPlan: verificarPlan,
+  };
 }

@@ -519,4 +519,7 @@ body.dark-mode .salir-btn {
   .search-box {
       display: block;
   }
+  .btn-publicar {
+      display: none;
+  }
 }

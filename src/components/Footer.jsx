@@ -95,21 +95,27 @@ export default function Footer({ fondo = "imagen" }) {
 
             {/* Lugares dinámicos */}
             <div className="col-xl-3 col-lg-3 col-md-6 col-sm-6">
-              <div className="footer-insta">
-                <h3 className="footer-title">Lugares más buscados</h3>
-                <ul className="insta-link">
-                  {lugares.length > 0 ? (
-                    lugares.map((lugar) => (
+              {lugares.length > 0 && (
+                <div className="footer-insta">
+                  <h3 className="footer-title">Lugares más buscados</h3>
+                  <ul className="insta-link">
+                    {lugares.map((lugar) => (
                       <li key={lugar.id}>
-                        <Link to={`/buscar?ciudad=${lugar.nombre}`} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>{lugar.nombre}</Link>
+                        <Link
+                          to={`/buscar?ciudad=${lugar.nombre}`}
+                          onClick={() =>
+                            window.scrollTo({ top: 0, behavior: "smooth" })
+                          }
+                        >
+                          {lugar.nombre}
+                        </Link>
                       </li>
-                    ))
-                  ) : (
-                    <li></li>
-                  )}
-                </ul>
-              </div>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
+
 
             {/* Contacto */}
             <div className="col-xl-3 col-lg-3 col-md-6 col-sm-6">
@@ -137,7 +143,12 @@ export default function Footer({ fondo = "imagen" }) {
 
                 {/* LIBRO DE RECLAMACIONES */}
                 <div className="mt-3">
-                  <Link to="/libro-de-reclamaciones">
+                  <Link 
+                    to="/libro-de-reclamaciones" 
+                    onClick={() =>
+                      window.scrollTo({ top: 0, behavior: "smooth" })
+                    }
+                  >
                     <img
                       src="/assets/images/libro-reclamaciones.png"
                       alt="Libro de Reclamaciones"

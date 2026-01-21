@@ -29,6 +29,7 @@ export default function MegaDropdown({ data, mode, isMobile, isOpen }) {
                 <h6 className="dropdown-header">{title}</h6>
 
                 {items.map((item) => {
+                  
                   let url = "#";
 
                   if (sectionName === "tipo") {
@@ -109,7 +110,8 @@ export default function MegaDropdown({ data, mode, isMobile, isOpen }) {
                     let url = "#";
 
                     if (sectionName === "tipo") {
-                      url = `/buscar?tipo=${item.id}${mode ? `&mode=${mode}` : ""}`;
+                      //url = `/buscar?tipo=${item.nombre}${mode ? `&mode=${mode}` : ""}`;
+                      url = `/buscar?mode=${mode || ""}&tipo[]=${encodeURIComponent(item.nombre)}`;
                     } else if (sectionName === "ciudad") {
                       url = `/buscar?ciudad=${encodeURIComponent(item.nombre)}${mode ? `&mode=${mode}` : ""}`;
                     } else {

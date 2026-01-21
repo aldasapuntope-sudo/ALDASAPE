@@ -102,7 +102,7 @@ export default function ProyectosUsuario() {
   return (
     <>
       <BreadcrumbALDASA />
-      {!loadingInfo && dataInfo && (
+      {!esAdmin && !loadingInfo && dataInfo &&(
         <section className="about-wrap2 rounded-4 py-5 mt-5" style={{ background: "white" }}>
           <h2 className="text-center fw-bold mb-4" style={{ color: "var(--green)" }}>
             {dataInfo.titulo}
