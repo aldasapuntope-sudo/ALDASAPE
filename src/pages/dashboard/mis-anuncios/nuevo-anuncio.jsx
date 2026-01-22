@@ -11,7 +11,7 @@ import Cargando from "../../../components/cargando";
 import axios from "axios";
 
 const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
-  console.log(anuncio);
+  //console.log(anuncio);
   const [tipos, setTipos] = useState([]);
   const [operaciones, setOperaciones] = useState([]);
   const [ubicaciones, setUbicaciones] = useState([]);
@@ -33,7 +33,14 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
 
 
   const esAdmin = usuario?.usuarioaldasa?.perfil_id === 1;
+  const esModerador = usuario?.usuarioaldasa?.perfil_id === 2;
 
+  const enRevision = anuncio?.isPublish === 0;
+  const activo = anuncio?.isPublish === 1;
+  const tieneObservacion = !!anuncio?.observacion_admin;
+  const [respuesta, setRespuesta] = useState("");
+
+  //console.log(usuario.usuarioaldasa);
   useEffect(() => {
     // 🔒 Si no hay usuario → fuera
     if (!usuario) {
@@ -295,6 +302,32 @@ useEffect(() => {
     }
   }
 
+  const aprobarAnuncio = async () => {
+    Swal.fire({
+      title: "¿Publicar anuncio?",
+      text: "El anuncio pasará a estado ACTIVO",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Sí, publicar",
+      cancelButtonText: "Cancelar",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.post(
+            `${config.apiUrl}api/misanuncios/publicar/${anuncio.id}`
+          );
+
+          Swal.fire("Publicado", "El anuncio ahora está activo", "success");
+          onRefresh?.();
+          onClose?.();
+        } catch (error) {
+          Swal.fire("Error", "No se pudo publicar el anuncio", "error");
+        }
+      }
+    });
+  };
+
+
 
   async function cargarCombos() {
     setCargando(true);
@@ -477,10 +510,30 @@ useEffect(() => {
     });
   };
 
-  
+  const enviarRespuesta = async () => {
+    if (!respuesta.trim()) {
+      Swal.fire("Atención", "Escribe una respuesta", "warning");
+      return;
+    }
+
+    try {
+      await axios.post(
+        `${config.apiUrl}api/misanuncios/responder/${anuncio.id}`,
+        { respuesta }
+      );
+
+      Swal.fire("Enviado", "Respuesta enviada al administrador", "success");
+      setRespuesta("");
+      onRefresh?.();
+    } catch (error) {
+      Swal.fire("Error", "No se pudo enviar la respuesta", "error");
+    }
+  };
+
 
   return (
-    <div className="card shadow-sm border-0 p-4">
+    <>
+      <div className="card shadow-sm border-0 p-4">
       <h4 className="mb-4 text-success fw-bold">
         {anuncio ? "✏️ Editar anuncio" : "🏠 Publicar nuevo anuncio"}
       </h4>
@@ -992,6 +1045,30 @@ useEffect(() => {
 </div>
 
 
+        {(esAdmin || esModerador) && enRevision  && (
+          <div className="col-12 mt-4">
+            <div className="alert alert-warning">
+              <strong>Observación del administrador:</strong>
+              <p>{anuncio.observacion_admin}</p>
+
+              <textarea
+                className="form-control"
+                rows="3"
+                value={respuesta}
+                onChange={(e) => setRespuesta(e.target.value)}
+                placeholder="Escribe tu respuesta"
+              />
+
+              <button
+                type="button"
+                className="btn btn-primary mt-2"
+                onClick={enviarRespuesta}
+              >
+                📩 Enviar respuesta
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Botón */}
         <div className="col-12 mt-4 text-end">
@@ -1001,6 +1078,19 @@ useEffect(() => {
         </div>
       </form>
     </div>
+    {(esAdmin || esModerador) && enRevision && (
+      <div className="col-12 mt-4 text-end">
+        <button
+          type="button"
+          className="btn btn-success fw-bold"
+          onClick={aprobarAnuncio}
+        >
+          ✅ Publicar anuncio
+        </button>
+      </div>
+    )}
+    
+    </>
   );
 };
 

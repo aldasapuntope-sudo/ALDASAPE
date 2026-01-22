@@ -1,6 +1,6 @@
 const config = {
-  //apiUrl: "https://apidalsa.vidaeternaparaelmundo.com/",
-  //urlserver: "https://apidalsa.vidaeternaparaelmundo.com/",
+  //apiUrl: "https://apidalsa.mycvsac.org.pe/",
+  //urlserver: "https://apidalsa.mycvsac.org.pe/",
   //urlimageneslocal: "https://aldasa.pe/",
   apiUrl: "http://127.0.0.1:8000/",
   urlserver: "http://localhost/",
