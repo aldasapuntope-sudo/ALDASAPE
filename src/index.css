@@ -483,6 +483,14 @@ body.dark-mode .salir-btn {
   animation: float 2.5s ease-in-out infinite;
 }
 
+.item-mail {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
 @keyframes float {
   0% {
     transform: translateY(0px);

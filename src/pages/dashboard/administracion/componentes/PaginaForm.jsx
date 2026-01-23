@@ -10,6 +10,7 @@ import { Editor } from "@tinymce/tinymce-react";
 import config from "../../../../config";
 
 export default function PaginaForm({ Pagina, onClose }) {
+  console.log(Pagina)
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState("");
   const [uploading, setUploading] = useState(false);

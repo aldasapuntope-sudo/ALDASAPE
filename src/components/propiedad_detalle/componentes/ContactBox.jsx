@@ -83,13 +83,13 @@ export default function ContactBox({ anuncio }) {
 
             // Diccionario de traducciones comunes
             const traducciones = {
-            "The :attribute field is required.": "El campo :attribute es obligatorio.",
-            "The :attribute field must be a string.": "El campo :attribute debe ser texto.",
-            "The :attribute must be a valid email address.": "El campo :attribute debe ser un correo electrónico válido.",
-            "The :attribute field must be an integer.": "El campo :attribute debe ser un número entero.",
-            "The :attribute format is invalid.": "El formato del campo :attribute no es válido.",
-            "The :attribute must be at least :min characters.": "El campo :attribute debe tener al menos :min caracteres.",
-            "The :attribute may not be greater than :max characters.": "El campo :attribute no debe tener más de :max caracteres.",
+              "The :attribute field is required.": "El campo :attribute es obligatorio.",
+              "The :attribute field must be a string.": "El campo :attribute debe ser texto.",
+              "The :attribute must be a valid email address.": "El campo :attribute debe ser un correo electrónico válido.",
+              "The :attribute field must be an integer.": "El campo :attribute debe ser un número entero.",
+              "The :attribute format is invalid.": "El formato del campo :attribute no es válido.",
+              "The :attribute must be at least :min characters.": "El campo :attribute debe tener al menos :min caracteres.",
+              "The :attribute may not be greater than :max characters.": "El campo :attribute no debe tener más de :max caracteres.",
             };
 
             // Traducción dinámica
@@ -162,8 +162,10 @@ export default function ContactBox({ anuncio }) {
             <div className="item-logo">
               <img
                 src={
-                  anuncio.perfilanunciante.imagen
-                    ? anuncio.perfilanunciante.imagen
+                  anuncio?.perfilanunciante?.imagen
+                    ? anuncio.perfilanunciante.imagen.startsWith("http")
+                      ? anuncio.perfilanunciante.imagen // 👉 Google u otra URL externa
+                      : `${config.urlserver}${anuncio.perfilanunciante.imagen}` // 👉 imagen local
                     : "/img/default-user.png"
                 }
                 alt={anuncio.perfilanunciante.nombre}
@@ -171,6 +173,18 @@ export default function ContactBox({ anuncio }) {
                 height="100"
                 className="rounded-circle"
               />
+
+              {/*<img
+                src={
+                    anuncio.perfilanunciante.imagen
+                    ? anuncio.perfilanunciante.imagen
+                    : "/img/default-user.png"
+                }
+                alt={anuncio.perfilanunciante.nombre}
+                width="100"
+                height="100"
+                className="rounded-circle"
+              /> */}
             </div>
           </div>
           <div className="media-body flex-grow-1 ms-3">
@@ -181,7 +195,7 @@ export default function ContactBox({ anuncio }) {
                 <span>(Llamar)</span>
               </a>
             </div>
-            <div className="item-mail">{anuncio.perfilanunciante.email}</div>
+            <div className="item-mail" style={{width: '240px'}}>{anuncio.perfilanunciante.email}</div>
           </div>
         </div>
 

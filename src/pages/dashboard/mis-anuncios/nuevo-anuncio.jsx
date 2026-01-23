@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaSave, FaBullhorn } from "react-icons/fa";
+import { FaSave, FaBullhorn, FaCheckCircle } from "react-icons/fa";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -11,7 +11,7 @@ import Cargando from "../../../components/cargando";
 import axios from "axios";
 
 const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
-  //console.log(anuncio);
+  console.log(anuncio);
   const [tipos, setTipos] = useState([]);
   const [operaciones, setOperaciones] = useState([]);
   const [ubicaciones, setUbicaciones] = useState([]);
@@ -313,8 +313,8 @@ useEffect(() => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.post(
-            `${config.apiUrl}api/misanuncios/publicar/${anuncio.id}`
+          await axios.put(
+            `${config.apiUrl}api/misanuncios/habilitaranuncio/${anuncio.id}`
           );
 
           Swal.fire("Publicado", "El anuncio ahora está activo", "success");
@@ -1085,7 +1085,7 @@ useEffect(() => {
           className="btn btn-success fw-bold"
           onClick={aprobarAnuncio}
         >
-          ✅ Publicar anuncio
+          <FaCheckCircle /> Habilitar anuncio
         </button>
       </div>
     )}

@@ -36,7 +36,7 @@ export default function Planes() {
   const [cargandoPlanes, setCargandoPlanes] = useState(false);
   const token = localStorage.getItem("usuario");
 
-  console.log(token);
+  
   /* ----------------------------------
      NEWSLETTER
   ---------------------------------- */
@@ -167,7 +167,7 @@ export default function Planes() {
 
   };
 
-  console.log(planes);
+  
 
   const modalNewsletter = (
   <section className="newsletter-wrap1 p-4">
@@ -258,6 +258,48 @@ export default function Planes() {
     return txt.value;
   };
 
+  const limpiarHTMLPlan = (html, imagen) => {
+    if (!html) return "";
+
+    // ✅ Base URL
+    const BASE_URL = config.urlserver;
+
+    // ✅ Imagen final (prioriza imagen_destacada)
+    const imagenFinal = imagen
+      ? `${BASE_URL}/${imagen}`
+      : `${BASE_URL}/imagenes_paginas/pagina_0nG09dTUVx2.webp`;
+
+    // ✅ 1. Decodificar HTML escapado
+    const textarea = document.createElement("textarea");
+    textarea.innerHTML = html;
+    const decodedHTML = textarea.value;
+
+    // ✅ 2. Parsear HTML real
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(decodedHTML, "text/html");
+
+    // ✅ 3. Reemplazar imágenes internas
+    doc.querySelectorAll("img").forEach((img) => {
+      if (
+        img.getAttribute("src") &&
+        img.getAttribute("src").includes("/imagenes_paginas/")
+      ) {
+        img.src = imagenFinal;
+      }
+    });
+
+    // ✅ 4. Eliminar wrappers innecesarios
+    doc.querySelectorAll("section, .container").forEach((el) => {
+      el.replaceWith(...el.childNodes);
+    });
+
+    return doc.body.innerHTML;
+  };
+
+
+
+
+
   const decodeHTML3 = (html) => {
       if (!html) return "";
 
@@ -317,9 +359,9 @@ export default function Planes() {
               </div>
             
               <div
-          className="container"
-          dangerouslySetInnerHTML={{ __html: decodeHTML3(plan.descripcion) }}
-        />
+                className="container"
+                dangerouslySetInnerHTML={{ __html: decodeHTML3(plan.descripcion) }}
+              />
               {/*<p>{plan.descripcion}</p> */}
               {/* LISTA DE BENEFICIOS */}
               
@@ -376,6 +418,7 @@ export default function Planes() {
   /* ----------------------------------
      RENDER NORMAL
   ---------------------------------- */
+  console.log(data);
   return (
     <>
       <div className="container mt-4">
@@ -387,10 +430,17 @@ export default function Planes() {
           {data.titulo}
         </h2>
 
-        <div
+        {/*<div
           className="container"
           dangerouslySetInnerHTML={{ __html: decodeHTML2(data.contenido) }}
+        /> */}
+
+        <div className="container"
+          dangerouslySetInnerHTML={{
+            __html: limpiarHTMLPlan(data.contenido, data.imagen_destacada),
+          }}
         />
+
 
         {botonPlan}
       </section>
