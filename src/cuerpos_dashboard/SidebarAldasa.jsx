@@ -202,6 +202,12 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
                     </li>
 
                     <li
+                      className={`submenu-link ${location.pathname.startsWith('/adm-libroreclamaciones') ? 'active' : ''}`}
+                    >
+                      <Link to="/adm-libroreclamaciones" onClick={toggleSidebar}>Libro de Reclamaciones</Link>
+                    </li>
+                    
+                    <li
                       className={`submenu-link ${location.pathname.startsWith('/adm-bitacora') ? 'active' : ''}`}
                     >
                       <Link to="/adm-bitacora" onClick={toggleSidebar}>Bitácora</Link>
@@ -342,7 +348,7 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
 
 
         {/* COLABORADOR */}
-        {usuario?.usuarioaldasa?.perfil_id === 2 && (
+        {/*usuario?.usuarioaldasa?.perfil_id === 2 && (
           <div className="menu-group">
             <button className="menu-btn" onClick={() => toggleMenu('colaborador')}>
               <FaClipboardList className="me-2" /> Revisión
@@ -361,7 +367,7 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
               </li>
             </ul>
           </div>
-        )}
+        )*/}
 
 
         {/* Si el modo es "evaluacion", mostramos solo ese menú */}

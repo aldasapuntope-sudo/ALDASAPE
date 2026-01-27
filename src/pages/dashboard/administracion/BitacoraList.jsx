@@ -27,6 +27,7 @@ export default function BitacoraList() {
       setCargando(false);
     }
   };
+  console.log(bitacora);
 
   useEffect(() => {
     fetchBitacora();
@@ -42,7 +43,7 @@ export default function BitacoraList() {
   // ✅ Columnas del DataTable
   const columns = [
     { name: "#", selector: (row, i) => i + 1, width: "70px", center: true },
-    { name: "Usuario", selector: (row) => row.user_name || "-", sortable: true, center: true },
+    { name: "Usuario", selector: (row) => row.usuario || "-", sortable: true, center: true },
     { name: "Acción", selector: (row) => row.accion, sortable: true, center: true },
     { name: "Tabla afectada", selector: (row) => row.tabla_afectada, sortable: true, center: true },
     { name: "Registro ID", selector: (row) => row.registro_id, center: true },

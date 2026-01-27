@@ -82,6 +82,7 @@ import MisFavoritos2 from './components/Paginasopcionales/componentes/Misfavorit
 import HistorialVisitas from './components/Paginasopcionales/componentes/HistorialVisitas';
 import SoporteMotivoList from './pages/dashboard/administracion/SoporteMotivosList';
 import LibroReclamaciones from './pages/enlaces/LibroReclamaciones';
+import LibroReclamacionesList from './pages/dashboard/administracion/LibroReclamacionesList';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -337,6 +338,11 @@ function AppRoutes() {
             <Route
               path="/adm-bitacora"
               element={<RutaProtegida element={BitacoraList} />}
+            />
+
+            <Route 
+              path="/adm-libroreclamaciones"
+              element={<RutaProtegida element={LibroReclamacionesList}/>}
             />
 
             

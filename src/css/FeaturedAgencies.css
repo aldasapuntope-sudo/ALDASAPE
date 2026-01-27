@@ -38,3 +38,14 @@
   opacity: 1;
   transform: scale(1.08);
 }
+
+.brand-logo {
+  max-height: 70px;
+  object-fit: contain;
+}
+
+.brand-name {
+  font-size: 14px;
+  margin-top: 6px;
+  color: #333;
+}

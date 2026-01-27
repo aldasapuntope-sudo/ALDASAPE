@@ -88,6 +88,44 @@ export default function ProyectosUsuario() {
     }
   };
 
+  const limpiarHTMLPlan = (html, imagen) => {
+    if (!html) return "";
+
+    // ✅ Base URL
+    const BASE_URL = config.urlserver;
+
+    // ✅ Imagen final (prioriza imagen_destacada)
+    const imagenFinal = imagen
+      ? `${BASE_URL}/${imagen}`
+      : `${BASE_URL}/imagenes_paginas/pagina_0nG09dTUVx.webp`;
+
+    // ✅ 1. Decodificar HTML escapado
+    const textarea = document.createElement("textarea");
+    textarea.innerHTML = html;
+    const decodedHTML = textarea.value;
+
+    // ✅ 2. Parsear HTML real
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(decodedHTML, "text/html");
+
+    // ✅ 3. Reemplazar imágenes internas
+    doc.querySelectorAll("img").forEach((img) => {
+      if (
+        img.getAttribute("src") &&
+        img.getAttribute("src").includes("/imagenes_paginas/")
+      ) {
+        img.src = imagenFinal;
+      }
+    });
+
+    // ✅ 4. Eliminar wrappers innecesarios
+    doc.querySelectorAll("section, .container").forEach((el) => {
+      el.replaceWith(...el.childNodes);
+    });
+
+    return doc.body.innerHTML;
+  };
+
   const handleNuevo = () => {
     setProyectoSel(null);
     setShowModal(true);
@@ -109,11 +147,17 @@ export default function ProyectosUsuario() {
           </h2>
           
 
-          <div
+          {/*<div
             className="container"
             dangerouslySetInnerHTML={{ __html: decodeHTML(dataInfo.contenido) }}
-          />
+          /> */}
 
+          <div className="container"
+            dangerouslySetInnerHTML={{
+              __html: limpiarHTMLPlan(dataInfo.contenido, dataInfo.imagen_destacada),
+            }}
+          />
+          
           <div className="d-flex justify-content-center align-items-center gap-3 flex-wrap mt-4">
             <Button
               variant="success"

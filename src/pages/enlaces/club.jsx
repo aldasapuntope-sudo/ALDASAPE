@@ -113,7 +113,8 @@ export default function Club() {
       return;
     }
 
-    window.Culqi.publicKey = "pk_test_aDdnZvQQ5srem5oX";
+    //window.Culqi.publicKey = "pk_test_aDdnZvQQ5srem5oX";
+    window.Culqi.publicKey = "pk_live_lGcDvuagZcb6MQogs";
 
     window.Culqi.settings({
       title: plan.nombre,
@@ -161,6 +162,45 @@ export default function Club() {
         window.Culqi.close();
       }
     };
+  };
+
+
+  const limpiarHTMLPlan = (html, imagen) => {
+    if (!html) return "";
+
+    // ✅ Base URL
+    const BASE_URL = config.urlserver;
+
+    // ✅ Imagen final (prioriza imagen_destacada)
+    const imagenFinal = imagen
+      ? `${BASE_URL}/${imagen}`
+      : `${BASE_URL}/imagenes_paginas/pagina_0nG09dTUVx.webp`;
+
+    // ✅ 1. Decodificar HTML escapado
+    const textarea = document.createElement("textarea");
+    textarea.innerHTML = html;
+    const decodedHTML = textarea.value;
+
+    // ✅ 2. Parsear HTML real
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(decodedHTML, "text/html");
+
+    // ✅ 3. Reemplazar imágenes internas
+    doc.querySelectorAll("img").forEach((img) => {
+      if (
+        img.getAttribute("src") &&
+        img.getAttribute("src").includes("/imagenes_paginas/")
+      ) {
+        img.src = imagenFinal;
+      }
+    });
+
+    // ✅ 4. Eliminar wrappers innecesarios
+    doc.querySelectorAll("section, .container").forEach((el) => {
+      el.replaceWith(...el.childNodes);
+    });
+
+    return doc.body.innerHTML;
   };
 
 
@@ -415,11 +455,17 @@ export default function Club() {
           {data.titulo}
         </h2>
 
-        <div
+        {/*<div
           className="container"
           dangerouslySetInnerHTML={{ __html: decodeHTML2(data.contenido) }}
         />
+        */}
 
+        <div className="container"
+          dangerouslySetInnerHTML={{
+            __html: limpiarHTMLPlan(data.contenido, data.imagen_destacada),
+          }}
+        />
         {botonPlan}
       </section>
 

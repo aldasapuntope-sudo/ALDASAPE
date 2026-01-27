@@ -118,7 +118,8 @@ export default function Planes() {
       return;
     }
 
-    window.Culqi.publicKey = "pk_test_aDdnZvQQ5srem5oX";
+    //window.Culqi.publicKey = "pk_test_aDdnZvQQ5srem5oX";
+    window.Culqi.publicKey = "pk_live_lGcDvuagZcb6MQogs";
 
     window.Culqi.settings({
       title: plan.nombre,
@@ -267,7 +268,7 @@ export default function Planes() {
     // ✅ Imagen final (prioriza imagen_destacada)
     const imagenFinal = imagen
       ? `${BASE_URL}/${imagen}`
-      : `${BASE_URL}/imagenes_paginas/pagina_0nG09dTUVx2.webp`;
+      : `${BASE_URL}/imagenes_paginas/pagina_0nG09dTUVx.webp`;
 
     // ✅ 1. Decodificar HTML escapado
     const textarea = document.createElement("textarea");

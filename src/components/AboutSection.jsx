@@ -70,7 +70,7 @@ export default function AboutSection() {
                         ? data.imagen_destacada.startsWith("http")
                           ? data.imagen_destacada
                           : `${config.urlserver}${data.imagen_destacada}`
-                        : "/assets/images/placeholder.webp"
+                        : "/imagenes_paginas/pagina_0nG09dTUVx.webp"
                     }
                     alt={data.titulo}
                     className="img-fluid rounded-4 shadow-lg"
