@@ -210,7 +210,11 @@ function AppRoutes() {
           {!usuario && (
             <>
               
-              <Route path="/registro" element={<Register />} />
+              {/* <Route path="/registro" element={<Register />} /> */}
+              <Route
+                path="/registro"
+                element={<Register abrirLoginModal={() => setShowLoginModal(true)} />}
+              />
               <Route path="/recover-password" element={<RecoverPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               

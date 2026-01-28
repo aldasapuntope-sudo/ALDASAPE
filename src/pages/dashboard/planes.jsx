@@ -35,6 +35,8 @@ export default function Planes() {
   const [planes, setPlanes] = useState([]);
   const [cargandoPlanes, setCargandoPlanes] = useState(false);
   const token = localStorage.getItem("usuario");
+  const [mostrarVideo, setMostrarVideo] = useState(false);
+  const [videoUrl, setVideoUrl] = useState(null);
 
   
   /* ----------------------------------
@@ -82,6 +84,18 @@ export default function Planes() {
     }
   };
 
+  useEffect(() => {
+    const handler = (e) => {
+      setVideoUrl(e.detail);
+      setMostrarVideo(true);
+    };
+
+    window.addEventListener("abrir-video", handler);
+
+    return () => {
+      window.removeEventListener("abrir-video", handler);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchPlanes = async () => {
@@ -211,6 +225,27 @@ export default function Planes() {
   </section>
 );
 
+
+useEffect(() => {
+  const handleClick = (e) => {
+    const btn = e.target.closest(".play-video-trigger");
+    if (!btn) return;
+
+    const videoUrl = btn.getAttribute("data-video-url");
+    if (!videoUrl) return;
+
+    setVideoUrl(videoUrl);
+    setMostrarVideo(true);
+  };
+
+  document.addEventListener("click", handleClick);
+
+  return () => {
+    document.removeEventListener("click", handleClick);
+  };
+}, []);
+
+
   /* ----------------------------------
      OBTENER CONTENIDO CLUB
   ---------------------------------- */
@@ -260,42 +295,63 @@ export default function Planes() {
   };
 
   const limpiarHTMLPlan = (html, imagen) => {
-    if (!html) return "";
+  if (!html) return "";
 
-    // ✅ Base URL
-    const BASE_URL = config.urlserver;
+  const BASE_URL = config.urlserver;
 
-    // ✅ Imagen final (prioriza imagen_destacada)
-    const imagenFinal = imagen
-      ? `${BASE_URL}/${imagen}`
-      : `${BASE_URL}/imagenes_paginas/pagina_0nG09dTUVx.webp`;
+  const imagenFinal = imagen
+    ? `${BASE_URL}/${imagen}`
+    : `${BASE_URL}/imagenes_paginas/pagina_0nG09dTUVx.webp`;
 
-    // ✅ 1. Decodificar HTML escapado
-    const textarea = document.createElement("textarea");
-    textarea.innerHTML = html;
-    const decodedHTML = textarea.value;
+  // Decodificar HTML
+  const textarea = document.createElement("textarea");
+  textarea.innerHTML = html;
+  const decodedHTML = textarea.value;
 
-    // ✅ 2. Parsear HTML real
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(decodedHTML, "text/html");
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(decodedHTML, "text/html");
 
-    // ✅ 3. Reemplazar imágenes internas
-    doc.querySelectorAll("img").forEach((img) => {
-      if (
-        img.getAttribute("src") &&
-        img.getAttribute("src").includes("/imagenes_paginas/")
-      ) {
-        img.src = imagenFinal;
+  /* -------------------------
+     IMAGEN
+  ------------------------- */
+  doc.querySelectorAll("img").forEach((img) => {
+    if (img.src.includes("/imagenes_paginas/")) {
+      img.src = imagenFinal;
+    }
+  });
+
+  /* -------------------------
+     VIDEO PLAY
+  ------------------------- */
+  const playBtn = doc.querySelector(".play-btn-modern");
+
+  if (playBtn) {
+    const href = playBtn.getAttribute("href");
+
+    // ❌ Si NO hay link → eliminar botón
+    if (playBtn) {
+      const href = playBtn.getAttribute("href");
+
+      if (!href) {
+        playBtn.remove();
+      } else {
+        playBtn.removeAttribute("href");
+        playBtn.setAttribute("data-video-url", href);
+        playBtn.classList.add("play-video-trigger");
       }
-    });
+    }
+  }
 
-    // ✅ 4. Eliminar wrappers innecesarios
-    doc.querySelectorAll("section, .container").forEach((el) => {
-      el.replaceWith(...el.childNodes);
-    });
+  /* -------------------------
+     LIMPIEZA
+  ------------------------- */
+  doc.querySelectorAll("section, .container").forEach((el) => {
+    el.replaceWith(...el.childNodes);
+  });
 
-    return doc.body.innerHTML;
-  };
+  return doc.body.innerHTML;
+};
+
 
 
 
@@ -419,7 +475,34 @@ export default function Planes() {
   /* ----------------------------------
      RENDER NORMAL
   ---------------------------------- */
-  console.log(data);
+  //console.log(data);
+
+  const getYoutubeEmbedUrl = (url) => {
+  if (!url) return "";
+
+  try {
+    const parsedUrl = new URL(url);
+
+    // youtube.com/watch?v=ID
+    if (parsedUrl.hostname.includes("youtube.com")) {
+      const videoId = parsedUrl.searchParams.get("v");
+      if (videoId) {
+        return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+      }
+    }
+
+    // youtu.be/ID
+    if (parsedUrl.hostname.includes("youtu.be")) {
+      const videoId = parsedUrl.pathname.replace("/", "");
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+    }
+
+    return "";
+  } catch (e) {
+    return "";
+  }
+};
+
   return (
     <>
       <div className="container mt-4">
@@ -478,6 +561,80 @@ export default function Planes() {
             </button>
 
             {modalNewsletter}
+          </div>
+        </div>
+      )}
+       {mostrarVideo && (
+        <div
+          className="popup-overlay"
+          onClick={() => {
+            setMostrarVideo(false);
+            setVideoUrl(null);
+          }}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.9)",
+            backdropFilter: "blur(4px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+          }}
+        >
+          <div
+            className="popup-content"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: "relative",
+              width: "95vw",
+              maxWidth: "1400px",
+              background: "transparent",
+              padding: 0,
+            }}
+          >
+            <button
+              onClick={() => {
+                setMostrarVideo(false);
+                setVideoUrl(null);
+              }}
+              style={{
+                position: "absolute",
+                top: "-40px",
+                right: "0",
+                background: "none",
+                border: "none",
+                color: "#fff",
+                fontSize: "28px",
+                cursor: "pointer",
+              }}
+              aria-label="Cerrar video"
+            >
+              ✖
+            </button>
+
+            <div
+              style={{
+                position: "relative",
+                width: "100%",
+                height: "80vh",
+              }}
+            >
+              <iframe
+                src={getYoutubeEmbedUrl(videoUrl)}
+                title="Video"
+                frameBorder="0"
+                allow="autoplay; encrypted-media; fullscreen"
+                allowFullScreen
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "16px",
+                }}
+              />
+            </div>
           </div>
         </div>
       )}

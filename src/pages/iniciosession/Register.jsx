@@ -6,7 +6,7 @@ import '../../css/Login.css';
 import config from '../../config';
 import Cargando from '../../components/cargando';
 
-export default function Register() {
+export default function Register({ abrirLoginModal }) {
   const [tiposUsuario, setTiposUsuario] = useState([]);
   const [condicionesFiscales, setCondicionesFiscales] = useState([]);
   const [condicionesFiltradas, setCondicionesFiltradas] = useState([]);
@@ -86,11 +86,21 @@ export default function Register() {
         const data = await res.json();
 
         if (res.ok) {
-          Swal.fire({
+          /*Swal.fire({
             icon: 'success',
             title: '¡Registro exitoso!',
             text: 'Tu cuenta ha sido creada correctamente.'
+          });*/
+
+           Swal.fire({
+            icon: 'success',
+            title: '¡Registro exitoso!',
+            text: 'Tu cuenta ha sido creada correctamente.',
+            confirmButtonText: 'Iniciar sesión'
+          }).then(() => {
+            abrirLoginModal(); // 👈 ABRE EL MODAL DE LOGIN
           });
+          
           resetForm();
           setCamposHabilitados(false);
         } else {
