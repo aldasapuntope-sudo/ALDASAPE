@@ -132,8 +132,8 @@ export default function Planes() {
       return;
     }
 
-    //window.Culqi.publicKey = "pk_test_aDdnZvQQ5srem5oX";
-    window.Culqi.publicKey = "pk_live_lGcDvuagZcb6MQogs";
+    window.Culqi.publicKey = "pk_test_aDdnZvQQ5srem5oX";
+    //window.Culqi.publicKey = "pk_live_lGcDvuagZcb6MQogs";
 
     window.Culqi.settings({
       title: plan.nombre,
@@ -295,62 +295,62 @@ useEffect(() => {
   };
 
   const limpiarHTMLPlan = (html, imagen) => {
-  if (!html) return "";
+    if (!html) return "";
 
-  const BASE_URL = config.urlserver;
+    const BASE_URL = config.urlserver;
 
-  const imagenFinal = imagen
-    ? `${BASE_URL}/${imagen}`
-    : `${BASE_URL}/imagenes_paginas/pagina_0nG09dTUVx.webp`;
+    const imagenFinal = imagen
+      ? `${BASE_URL}/${imagen}`
+      : `${BASE_URL}/imagenes_paginas/pagina_0nG09dTUVx.webp`;
 
-  // Decodificar HTML
-  const textarea = document.createElement("textarea");
-  textarea.innerHTML = html;
-  const decodedHTML = textarea.value;
+    // Decodificar HTML
+    const textarea = document.createElement("textarea");
+    textarea.innerHTML = html;
+    const decodedHTML = textarea.value;
 
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(decodedHTML, "text/html");
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(decodedHTML, "text/html");
 
-  /* -------------------------
-     IMAGEN
-  ------------------------- */
-  doc.querySelectorAll("img").forEach((img) => {
-    if (img.src.includes("/imagenes_paginas/")) {
-      img.src = imagenFinal;
-    }
-  });
+    /* -------------------------
+      IMAGEN
+    ------------------------- */
+    doc.querySelectorAll("img").forEach((img) => {
+      if (img.src.includes("/imagenes_paginas/")) {
+        img.src = imagenFinal;
+      }
+    });
 
-  /* -------------------------
-     VIDEO PLAY
-  ------------------------- */
-  const playBtn = doc.querySelector(".play-btn-modern");
+    /* -------------------------
+      VIDEO PLAY
+    ------------------------- */
+    const playBtn = doc.querySelector(".play-btn-modern");
 
-  if (playBtn) {
-    const href = playBtn.getAttribute("href");
-
-    // ❌ Si NO hay link → eliminar botón
     if (playBtn) {
       const href = playBtn.getAttribute("href");
 
-      if (!href) {
-        playBtn.remove();
-      } else {
-        playBtn.removeAttribute("href");
-        playBtn.setAttribute("data-video-url", href);
-        playBtn.classList.add("play-video-trigger");
+      // ❌ Si NO hay link → eliminar botón
+      if (playBtn) {
+        const href = playBtn.getAttribute("href");
+
+        if (!href) {
+          playBtn.remove();
+        } else {
+          playBtn.removeAttribute("href");
+          playBtn.setAttribute("data-video-url", href);
+          playBtn.classList.add("play-video-trigger");
+        }
       }
     }
-  }
 
-  /* -------------------------
-     LIMPIEZA
-  ------------------------- */
-  doc.querySelectorAll("section, .container").forEach((el) => {
-    el.replaceWith(...el.childNodes);
-  });
+    /* -------------------------
+      LIMPIEZA
+    ------------------------- */
+    doc.querySelectorAll("section, .container").forEach((el) => {
+      el.replaceWith(...el.childNodes);
+    });
 
-  return doc.body.innerHTML;
-};
+    return doc.body.innerHTML;
+  };
 
 
 

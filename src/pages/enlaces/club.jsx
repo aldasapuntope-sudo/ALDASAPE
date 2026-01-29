@@ -115,8 +115,8 @@ export default function Club() {
       return;
     }
 
-    //window.Culqi.publicKey = "pk_test_aDdnZvQQ5srem5oX";
-    window.Culqi.publicKey = "pk_live_lGcDvuagZcb6MQogs";
+    window.Culqi.publicKey = "pk_test_aDdnZvQQ5srem5oX";
+    //window.Culqi.publicKey = "pk_live_lGcDvuagZcb6MQogs";
 
     window.Culqi.settings({
       title: plan.nombre,

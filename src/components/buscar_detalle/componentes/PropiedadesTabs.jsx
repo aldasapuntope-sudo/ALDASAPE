@@ -75,7 +75,7 @@ export default function PropiedadesTabs({ resultados }) {
   }
   
   const getImagenPerfil = (imagen) => {
-    if (!imagen) return `${config.urlserver}uploads/avatar-default.png`;
+    if (!imagen) return `${config.urlserver}image/animoji-1.png`;
 
     // Si ya es una URL externa (Google, Facebook, etc.)
     if (imagen.startsWith("http://") || imagen.startsWith("https://")) {
@@ -160,7 +160,7 @@ export default function PropiedadesTabs({ resultados }) {
                             className="rounded-circle object-fit-cover"
                             onClick={(e) => e.stopPropagation()}
                             onError={(e) => {
-                              e.target.src = `${config.urlserver}uploads/avatar-default.png`;
+                              e.target.src = `${config.urlserver}image/animoji-1.png`;
                             }}
                           />
 
@@ -319,7 +319,7 @@ export default function PropiedadesTabs({ resultados }) {
                             className="rounded-circle object-fit-cover"
                             onClick={(e) => e.stopPropagation()}
                             onError={(e) => {
-                              e.target.src = `${config.urlserver}uploads/avatar-default.png`;
+                              e.target.src = `${config.urlserver}image/animoji-1.png`;
                             }}
                           />
 
