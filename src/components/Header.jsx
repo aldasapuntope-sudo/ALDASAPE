@@ -8,11 +8,12 @@ import UserInfoBoxAldasa from "./UserInfoBoxAldasa";
 import { useTheme } from "../context/ThemeContext";
 import MegaDropdown from "./MegaDropdown";
 import config from "../config";
+import { usePublicData } from "../context/PublicDataContext";
 
 export default function HeaderAldasa({ abrirModal, abrirLoginModal }) {
   const [user, setUser] = useState(null);
   const { darkMode, toggleDarkMode } = useTheme();
-  const [menuData, setMenuData] = useState(null);
+  const { menus: menuData, loading } = usePublicData();
   const [isMobile, setIsMobile] = useState(false);
   const [activeMenu, setActiveMenu] = useState(null);
 
@@ -43,12 +44,12 @@ export default function HeaderAldasa({ abrirModal, abrirLoginModal }) {
   }, []);
 
   /* ================== MENUS ================== */
-  useEffect(() => {
+  /*useEffect(() => {
     fetch(`${config.apiUrl}api/menus`)
       .then((res) => res.json())
       .then(setMenuData)
       .catch((err) => console.error("Error al cargar menús:", err));
-  }, []);
+  }, []);*/
 
   const toggleMenu = (menuKey) => {
     setActiveMenu(activeMenu === menuKey ? null : menuKey);

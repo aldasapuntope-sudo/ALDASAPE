@@ -59,7 +59,7 @@ import PopupList from './pages/dashboard/administracion/PopupList';
 import UsuariosList from './pages/dashboard/administracion/UsuariosList';
 import GTMScripts from './pages/dashboard/componentes/GTMScripts';
 import ConfigScriptsList from './pages/dashboard/administracion/ConfigScriptsList';
-import AppConfigLoader from './pages/dashboard/componentes/AppConfigLoader';
+//import AppConfigLoader from './pages/dashboard/componentes/AppConfigLoader';
 import ConfigPopupList from './pages/dashboard/administracion/ConfigPopupList';
 import Club from './pages/enlaces/club';
 import Inversiones from './pages/enlaces/Inversiones';
@@ -83,6 +83,7 @@ import HistorialVisitas from './components/Paginasopcionales/componentes/Histori
 import SoporteMotivoList from './pages/dashboard/administracion/SoporteMotivosList';
 import LibroReclamaciones from './pages/enlaces/LibroReclamaciones';
 import LibroReclamacionesList from './pages/dashboard/administracion/LibroReclamacionesList';
+import { PublicDataProvider } from './context/PublicDataContext';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -158,7 +159,7 @@ function AppRoutes() {
 
   return (
     <>
-      <AppConfigLoader />
+      
       <Preloader />
 
       <Routes>
@@ -485,11 +486,15 @@ export default function App() {
     <GoogleOAuthProvider clientId="248224400413-p8995p9d7ges2up8m8fi629chuhfql8i.apps.googleusercontent.com">
       <ThemeProvider>
         <UserProvider>
-          <Router basename="/">
+          <PublicDataProvider>
+            <Router basename="/">
 
-            <GTMScripts />
-            <AppRoutes />
-          </Router>
+              <GTMScripts />
+              <AppRoutes />
+            </Router>
+
+          </PublicDataProvider>
+          
         </UserProvider>
       </ThemeProvider>
     </GoogleOAuthProvider>

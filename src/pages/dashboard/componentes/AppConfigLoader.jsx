@@ -1,22 +1,13 @@
-import { useEffect, useState } from "react";
 import config from "../../../config";
 
-export default function AppConfigLoader() {
-  const [colorPrimario, setColorPrimario] = useState("#00c657");
 
-  useEffect(() => {
-    fetch(`${config.apiUrl}api/paginaprincipal/color`)
-      .then(res => res.json())
-      .then(data => {
+export const getPrimaryColor = async () => {
+  const res = await fetch(`${config.apiUrl}api/paginaprincipal/color`);
+  const data = await res.json();
 
-        if (Array.isArray(data) && data.length > 0) {
-          const color = data[0].valor;
-          setColorPrimario(color);
-          document.documentElement.style.setProperty("--green", color);
-        }
-      })
-      .catch(err => console.error("Error al cargar configuración", err));
-  }, []);
+  if (Array.isArray(data) && data.length > 0) {
+    return data[0].valor;
+  }
 
-  return null;
-}
+  return "#00c657"; // fallback
+};

@@ -1,47 +1,40 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import SearchFilter from './SearchFilter';
-import config from '../config';
-import axios from 'axios';
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import SearchFilter from "./SearchFilter";
+import config from "../config";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { usePublicData } from "../context/PublicDataContext";
 
 export default function Hero() {
-  const [slides, setSlides] = useState([]);
+  const { sliders, loading } = usePublicData();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const intervalRef = useRef(null);
-  const [mode, setMode] = useState('alquiler');
-  // Obtener imágenes desde la API
-  useEffect(() => {
-    const cargarSlides = async () => {
-      const res = await axios.get(`${config.apiUrl}api/paginaprincipal/sliders`);
-      setSlides(res.data);
-    };
-    cargarSlides();
-  }, []);
+  const [mode, setMode] = useState("alquiler");
 
-  // Slider automático
+  // 🔁 Slider automático (SIEMPRE se declara)
   useEffect(() => {
-    if (slides.length === 0) return;
+    if (loading || paused || !sliders || sliders.length === 0) return;
 
-    if (!paused) {
-      intervalRef.current = setInterval(() => {
-        nextSlide();
-      }, 4000);
-    }
+    intervalRef.current = setInterval(() => {
+      setIndex((prev) => (prev + 1) % sliders.length);
+    }, 4000);
 
     return () => clearInterval(intervalRef.current);
-  }, [slides, paused]);
+  }, [paused, sliders, loading]);
 
   const nextSlide = () => {
-    setIndex(prev => (prev + 1) % slides.length);
+    if (!sliders || sliders.length === 0) return;
+    setIndex((prev) => (prev + 1) % sliders.length);
   };
 
   const prevSlide = () => {
-    setIndex(prev => (prev - 1 + slides.length) % slides.length);
+    if (!sliders || sliders.length === 0) return;
+    setIndex((prev) => (prev - 1 + sliders.length) % sliders.length);
   };
 
-  if (slides.length === 0) return null;
+  // ⛔ Render controlado (AQUÍ sí se puede)
+  if (loading || !sliders || sliders.length === 0) return null;
 
   return (
     <section
@@ -49,29 +42,28 @@ export default function Hero() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-
-      {/* Botón izquierda */}
+      {/* ⬅️ Botón izquierda */}
       <button className="slider-btn left" onClick={prevSlide}>
         <FaChevronLeft />
       </button>
 
-      {/* Botón derecha */}
+      {/* ➡️ Botón derecha */}
       <button className="slider-btn right" onClick={nextSlide}>
         <FaChevronRight />
       </button>
 
-      {/* Fondo animado tipo slider con slide LEFT */}
+      {/* 🎞️ Fondo animado */}
       <AnimatePresence mode="wait">
         <motion.div
-          key={slides[index].id}
+          key={sliders[index].id}
           className="hero-bg"
           style={{
-            backgroundImage: `url(${config.urlserver}${slides[index].imagen_url})`
+            backgroundImage: `url(${config.urlserver}${sliders[index].imagen_url})`,
           }}
-          initial={{ x: '100%', opacity: 0 }}
+          initial={{ x: "100%", opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          exit={{ x: '-100%', opacity: 0 }}
-          transition={{ duration: 0.0, ease: "easeInOut" }}
+          exit={{ x: "-100%", opacity: 0 }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
         />
       </AnimatePresence>
 
@@ -79,14 +71,14 @@ export default function Hero() {
 
       <div className="hero-content">
         <h1>
-          {slides[index]?.titulo
-            ? slides[index].titulo.charAt(0).toUpperCase() +
-              slides[index].titulo.slice(1)
+          {sliders[index]?.titulo
+            ? sliders[index].titulo.charAt(0).toUpperCase() +
+              sliders[index].titulo.slice(1)
             : "Encuentra tu próximo lugar"}
         </h1>
 
         <p style={{ textAlign: "center" }}>
-          {slides[index]?.descripcion ||
+          {sliders[index]?.descripcion ||
             "Explora miles de inmuebles para comprar, alquilar o invertir"}
         </p>
 
@@ -94,7 +86,6 @@ export default function Hero() {
           <SearchFilter mode={mode} setMode={setMode} />
         </div>
       </div>
-
     </section>
   );
 }
