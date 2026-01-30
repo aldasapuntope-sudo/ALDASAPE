@@ -61,6 +61,7 @@ const AnunciosList = ({ isPublish }) => {
         moneda_id: a.moneda_id,
         direccion: a.direccion,
         isPublish: a.is_active_publish,
+        user_id: a.user_id,
         imagen: a.imagen_principal
           ? a.imagen_principal.replace(
               "C:/Users/ALDASA/Desktop/propiedades\\",

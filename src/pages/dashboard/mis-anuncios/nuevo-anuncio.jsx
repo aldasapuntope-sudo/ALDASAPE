@@ -11,7 +11,6 @@ import Cargando from "../../../components/cargando";
 import axios from "axios";
 
 const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
-  console.log(anuncio);
   const [tipos, setTipos] = useState([]);
   const [operaciones, setOperaciones] = useState([]);
   const [ubicaciones, setUbicaciones] = useState([]);
@@ -277,6 +276,48 @@ useEffect(() => {
       setCaracteristicasSeleccionadas(seleccionadas);
     }
   }, [caracteristicas, anuncio]);*/
+
+  const enviarRespuestaobservacion = async () => {
+    if (!respuesta.trim()) {
+      Swal.fire("Atención", "Escribe una respuesta", "warning");
+      return;
+    }
+
+    try {
+      const payload = {
+        soporte_motivo_id: "4",
+        titulo: `Observación sobre el anuncio: ${anuncio.titulo}`,
+        descripcion: respuesta,
+      };
+
+      await axios.post(
+        `${config.apiUrl}api/paginaprincipal/ticketssoporteyayuda/${anuncio.user_id}`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      Swal.fire(
+        "✅ Enviado",
+        "Tu observación fue enviada como ticket de soporte",
+        "success"
+      );
+
+      setRespuesta("");
+      onRefresh?.();
+    } catch (error) {
+      Swal.fire(
+        "❌ Error",
+        error?.response?.data?.message || "No se pudo enviar la observación",
+        "error"
+      );
+    }
+  };
+
+
 
   // 🔧 Cargar características y amenities según el tipo de propiedad seleccionado
   async function cargarCaracteristicasPorTipo(tipoId) {
@@ -1045,11 +1086,14 @@ useEffect(() => {
 </div>
 
 
-        {(esAdmin || esModerador) && enRevision  && (
+       {(esAdmin || esModerador) && enRevision && (
           <div className="col-12 mt-4">
             <div className="alert alert-warning">
-              <strong>Observación del administrador:</strong>
-              <p>{anuncio.observacion_admin}</p>
+              <strong>
+                Observación sobre el anuncio: {anuncio.titulo}
+              </strong>
+
+              <p className="mt-2">{anuncio.observacion_admin}</p>
 
               <textarea
                 className="form-control"
@@ -1062,13 +1106,14 @@ useEffect(() => {
               <button
                 type="button"
                 className="btn btn-primary mt-2"
-                onClick={enviarRespuesta}
+                onClick={enviarRespuestaobservacion}
               >
-                📩 Enviar respuesta
+                📩 Enviar como ticket
               </button>
             </div>
           </div>
         )}
+
 
         {/* Botón */}
         <div className="col-12 mt-4 text-end">
