@@ -4,6 +4,7 @@ import SearchFilter from "./SearchFilter";
 import config from "../config";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { usePublicData } from "../context/PublicDataContext";
+import { HeroSkeleton } from "./TablaSkeleton";
 
 export default function Hero() {
   const { sliders, loading } = usePublicData();
@@ -12,7 +13,7 @@ export default function Hero() {
   const intervalRef = useRef(null);
   const [mode, setMode] = useState("alquiler");
 
-  // 🔁 Slider automático (SIEMPRE se declara)
+  // 🔁 Slider automático
   useEffect(() => {
     if (loading || paused || !sliders || sliders.length === 0) return;
 
@@ -33,8 +34,10 @@ export default function Hero() {
     setIndex((prev) => (prev - 1 + sliders.length) % sliders.length);
   };
 
-  // ⛔ Render controlado (AQUÍ sí se puede)
-  if (loading || !sliders || sliders.length === 0) return null;
+  // 🦴 Skeleton
+  if (loading) return <HeroSkeleton />;
+
+  if (!sliders || sliders.length === 0) return null;
 
   return (
     <section
@@ -42,17 +45,14 @@ export default function Hero() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* ⬅️ Botón izquierda */}
       <button className="slider-btn left" onClick={prevSlide}>
         <FaChevronLeft />
       </button>
 
-      {/* ➡️ Botón derecha */}
       <button className="slider-btn right" onClick={nextSlide}>
         <FaChevronRight />
       </button>
 
-      {/* 🎞️ Fondo animado */}
       <AnimatePresence mode="wait">
         <motion.div
           key={sliders[index].id}

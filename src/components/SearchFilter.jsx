@@ -103,12 +103,23 @@ export default function SearchFilter({ mode, setMode }) {
     e.preventDefault();
 
     const params = new URLSearchParams();
-    if (chips.length) params.append("q", chips.join(","));
-    if (tipo) params.append("tipo", tipo);
-    if (mode) params.append("mode", mode);
+
+    if (chips.length) {
+      params.append("q", chips.join(","));
+    }
+
+    if (tipo) {
+      params.append("tipo[]", tipo); // ✅ ARRAY
+    }
+
+    if (mode) {
+      params.append("mode", mode);
+    }
 
     navigate(`/buscar?${params.toString()}`);
   };
+
+
 
   /* =========================
      RENDER

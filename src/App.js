@@ -84,6 +84,7 @@ import SoporteMotivoList from './pages/dashboard/administracion/SoporteMotivosLi
 import LibroReclamaciones from './pages/enlaces/LibroReclamaciones';
 import LibroReclamacionesList from './pages/dashboard/administracion/LibroReclamacionesList';
 import { PublicDataProvider } from './context/PublicDataContext';
+import BusquedasAlertas from './components/Paginasopcionales/componentes/BusquedasAlertas';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -412,6 +413,8 @@ function AppRoutes() {
               <Route path="/mis-contactos" element={<MisContactos />} />
               <Route path="/favoritos" element={<MisFavoritos2 />} />
               <Route path="/historial" element={<HistorialVisitas />} />
+              <Route path="/busquedas-alertas" element={<BusquedasAlertas />} />
+              
               
             </Route>
           </Route>

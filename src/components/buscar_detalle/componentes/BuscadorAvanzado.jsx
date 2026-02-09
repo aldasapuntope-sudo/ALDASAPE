@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FaSearch, FaTimes } from "react-icons/fa";
 import axios from "axios";
 import config from "../../../config";
+import Swal from "sweetalert2";
+import { useUsuario } from "../../../context/UserContext";
 
 export default function BuscadorAvanzado({
   onFiltrar,
@@ -16,6 +18,7 @@ export default function BuscadorAvanzado({
   const [ciudad, setCiudad] = useState("");
   const [precioMin, setPrecioMin] = useState("");
   const [precioMax, setPrecioMax] = useState("");
+  const { usuario } = useUsuario();
 
   // MULTI
   const [tiposSeleccionados, setTiposSeleccionados] = useState([]);
@@ -23,6 +26,7 @@ export default function BuscadorAvanzado({
   // DATA
   const [tiposPropiedad, setTiposPropiedad] = useState([]);
   const [tiposOperacion, setTiposOperacion] = useState([]);
+  const [ubicaciones, setUbicaciones] = useState([]);
   /* =======================
      1. OBTENER TIPOS
   ======================= */
@@ -65,6 +69,7 @@ export default function BuscadorAvanzado({
     fetchOperaciones();
   }, []);
 
+  console.log(usuario);
   /* =======================
      2. LEER URL INICIAL
   ======================= */
@@ -79,6 +84,118 @@ export default function BuscadorAvanzado({
     setTiposSeleccionados(params.getAll("tipo[]"));
 
   }, []);
+
+  useEffect(() => {
+    const fetchUbicaciones = async () => {
+      try {
+        const res = await axios.get(
+          `${config.apiUrl}api/paginaprincipal/tipos-ubicaciones`
+        );
+
+        if (Array.isArray(res.data?.data)) {
+          setUbicaciones(res.data.data);
+        } else if (Array.isArray(res.data)) {
+          setUbicaciones(res.data);
+        }
+      } catch (e) {
+        console.error("Error ubicaciones", e);
+      }
+    };
+
+    fetchUbicaciones();
+  }, []);
+
+  const generarTitulo = (filtros) => {
+    let partes = [];
+
+    if (filtros.tipos.length) {
+      partes.push(filtros.tipos.join(", "));
+    }
+
+    if (filtros.mode) {
+      partes.push(filtros.mode === "alquiler" ? "en Alquiler" : "en Venta");
+    }
+
+    if (filtros.ciudad) {
+      partes.push(`- ${filtros.ciudad}`);
+    }
+
+    return partes.length ? partes.join(" ") : "Búsqueda personalizada";
+  };
+
+
+
+  const guardarFiltro = async () => {
+  // 🔐 VALIDAR SESIÓN
+  if (!usuario || !usuario.usuarioaldasa || !usuario.usuarioaldasa.id) {
+    Swal.fire({
+      icon: "warning",
+      title: "Inicia sesión",
+      text: "Debes iniciar sesión para guardar una búsqueda",
+      confirmButtonText: "Entendido",
+    });
+    return;
+  }
+
+  const filtros = construirFiltros();
+
+  // 🚫 VALIDACIÓN DE FILTROS
+  if (
+    !filtros.tipos.length &&
+    !filtros.mode &&
+    !filtros.ciudad &&
+    !filtros.busqueda
+  ) {
+    Swal.fire({
+      icon: "info",
+      title: "Filtros vacíos",
+      text: "Debes seleccionar al menos un filtro para guardar la búsqueda",
+      confirmButtonText: "Ok",
+    });
+    return;
+  }
+
+  const params = new URLSearchParams();
+
+  if (filtros.busqueda) params.set("q", filtros.busqueda);
+  if (filtros.mode) params.set("mode", filtros.mode);
+  if (filtros.ciudad) params.set("ciudad", filtros.ciudad);
+  if (filtros.precioMin !== null) params.set("min", filtros.precioMin);
+  if (filtros.precioMax !== null) params.set("max", filtros.precioMax);
+
+  filtros.tipos.forEach((t) => params.append("tipo[]", t));
+
+  const urlFiltro = `/buscar?${params.toString()}`;
+  const titulo = generarTitulo(filtros);
+
+  try {
+    await axios.post(`${config.apiUrl}api/paginaprincipal/busquedas-guardadas`, {
+      titulo,
+      url_filtro: urlFiltro,
+      alerta: "inmediata",
+      usuario_id: usuario.id, // 👈 importante
+    });
+
+    Swal.fire({
+      icon: "success",
+      title: "Búsqueda guardada",
+      text: "Tu búsqueda se guardó correctamente",
+      timer: 2000,
+      showConfirmButton: false,
+    });
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "No se pudo guardar la búsqueda",
+    });
+  }
+};
+
+
+
+
+
 
   /* =======================
      HELPERS
@@ -219,10 +336,17 @@ export default function BuscadorAvanzado({
         onChange={(e) => setCiudad(e.target.value)}
       >
         <option value="">Ubicación</option>
-        <option value="Chiclayo">Chiclayo</option>
-        <option value="Lambayeque">Lambayeque</option>
-        <option value="Pimentel">Pimentel</option>
+
+        {ubicaciones.map((u) => (
+          <option
+            key={u.id ?? u.slug ?? u.nombre}
+            value={u.slug ?? u.nombre}
+          >
+            {u.nombre}
+          </option>
+        ))}
       </select>
+
 
       {/* PRECIOS */}
       <div className="d-flex gap-2 mb-3">
@@ -244,8 +368,11 @@ export default function BuscadorAvanzado({
 
       {/* BOTONES */}
       <div className="d-flex gap-2">
-        <button className="btn btn-success w-100">
-          Buscar <FaSearch />
+        <button
+          className="btn btn-primary w-100"
+          onClick={guardarFiltro}
+        >
+          Guardar búsqueda
         </button>
         <button className="btn btn-outline-secondary" onClick={limpiar}>
           Limpiar

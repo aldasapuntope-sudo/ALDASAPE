@@ -490,6 +490,10 @@ body.dark-mode .salir-btn {
   text-overflow: ellipsis;
 }
 
+.swal2-container.swal2-center.swal2-backdrop-show {
+    z-index: 999999;
+}
+
 
 @keyframes float {
   0% {

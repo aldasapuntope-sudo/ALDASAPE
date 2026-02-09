@@ -84,7 +84,7 @@ export default function PropertyCard({ anuncio }) {
 
 
 
-  console.log(anuncio);
+  //console.log(anuncio);
   return (
    <>
     <Card
