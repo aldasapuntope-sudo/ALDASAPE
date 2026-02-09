@@ -17,20 +17,20 @@ const BusquedasAlertas = () => {
   const usuarioId = usuario?.usuarioaldasa?.id;
 
   useEffect(() => {
-    cargarBusquedas();
+    if (usuarioId) cargarBusquedas();
   }, [usuarioId]);
 
+  /* =========================
+     CARGAR BÚSQUEDAS
+  ========================= */
   const cargarBusquedas = async () => {
-    if (!usuarioId) return;
-
     setCargando(true);
     try {
       const res = await axios.get(
-        `${config.apiUrl}api/paginaprincipal/lbusquedas-guardadas/${usuarioId}`
+        `${config.apiUrl}api/administracion/lbusquedas-guardadas/${usuarioId}`
       );
 
-      const data = Array.isArray(res.data.data) ? res.data.data : [];
-      setBusquedas(data);
+      setBusquedas(Array.isArray(res.data.data) ? res.data.data : []);
     } catch (error) {
       console.error("Error al cargar búsquedas:", error);
     } finally {
@@ -38,6 +38,10 @@ const BusquedasAlertas = () => {
     }
   };
 
+ 
+  /* =========================
+     ELIMINAR BÚSQUEDA
+  ========================= */
   const eliminarBusqueda = async (id) => {
     const confirm = await Swal.fire({
       icon: "warning",
@@ -51,19 +55,19 @@ const BusquedasAlertas = () => {
     if (!confirm.isConfirmed) return;
 
     try {
-      await axios.delete(
-        `${config.apiUrl}api/paginaprincipal/lbusquedas-guardadas/${id}`
+      await axios.put(
+        `${config.apiUrl}api/administracion/ebusquedas-guardadas/${id}`
       );
 
-      setBusquedas(busquedas.filter((b) => b.id !== id));
+      setBusquedas((prev) => prev.filter((b) => b.id !== id));
 
       Swal.fire({
         icon: "success",
-        title: "Eliminado",
-        timer: 1500,
+        title: "Búsqueda eliminada",
+        timer: 1400,
         showConfirmButton: false,
       });
-    } catch (error) {
+    } catch {
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -72,21 +76,81 @@ const BusquedasAlertas = () => {
     }
   };
 
-  const cambiarAlerta = async (id, alerta) => {
+  /* =========================
+     EDITAR BÚSQUEDA (POPUP)
+  ========================= */
+  const editarBusqueda = async (busqueda) => {
+    const { value: formValues } = await Swal.fire({
+        title: "Editar búsqueda guardada",
+        html: `
+        <div class="text-start">
+            <label class="form-label fw-semibold">
+            Elegí un nombre para personalizar tu búsqueda
+            </label>
+            <input id="swal-titulo" class="form-control mb-3"
+            value="${busqueda.titulo}" />
+
+            <label class="form-label fw-semibold">Alertas</label>
+            <select id="swal-alerta" class="form-select">
+            <option value="sinalertas">Sin alertas</option>
+            <option value="inmediata">Inmediata</option>
+            <option value="diaria">Diaria</option>
+            </select>
+        </div>
+        `,
+        didOpen: () => {
+        document.getElementById("swal-alerta").value =
+            (busqueda.alerta || "ninguna").toLowerCase();
+        },
+        showCancelButton: true,
+        confirmButtonText: "Guardar cambios",
+        cancelButtonText: "Cancelar",
+        preConfirm: () => {
+        const titulo = document.getElementById("swal-titulo").value.trim();
+        const alerta = document.getElementById("swal-alerta").value;
+
+        if (!titulo) {
+            Swal.showValidationMessage("El título no puede estar vacío");
+            return;
+        }
+
+        return { titulo, alerta };
+        },
+    });
+
+    if (!formValues) return;
+
     try {
-      await axios.put(
-        `${config.apiUrl}api/paginaprincipal/lbusquedas-guardadas/${id}`,
-        { alerta }
-      );
-    } catch (error) {
-      Swal.fire({
+        await axios.put(
+        `${config.apiUrl}api/administracion/abusquedas-guardadas/${busqueda.id}`,
+        formValues
+        );
+
+        setBusquedas((prev) =>
+        prev.map((b) =>
+            b.id === busqueda.id ? { ...b, ...formValues } : b
+        )
+        );
+
+        Swal.fire({
+        icon: "success",
+        title: "Búsqueda actualizada",
+        timer: 1400,
+        showConfirmButton: false,
+        });
+    } catch {
+        Swal.fire({
         icon: "error",
         title: "Error",
-        text: "No se pudo actualizar la alerta",
-      });
+        text: "No se pudo actualizar la búsqueda",
+        });
     }
-  };
+    };
 
+
+  /* =========================
+     RENDER
+  ========================= */
   return (
     <div className="card shadow-sm border-0 rounded-4">
       <div className="card-body p-4">
@@ -95,10 +159,10 @@ const BusquedasAlertas = () => {
         </h4>
 
         {cargando ? (
-            <>
-                <Cargando visible />
-                <CardSkeleton cards={6} />
-            </>
+          <>
+            <Cargando visible />
+            <CardSkeleton cards={5} />
+          </>
         ) : busquedas.length === 0 ? (
           <EmptyState
             image="/assets/images/empty-sinresult.png"
@@ -124,36 +188,29 @@ const BusquedasAlertas = () => {
                     Guardado el{" "}
                     {new Date(b.created_at).toLocaleDateString()}
                   </small>
-
-                  {/* TAGS */}
-                  <div className="d-flex flex-wrap gap-2 mt-2">
-                    {(b.tags || []).map((tag, i) => (
-                      <span key={i} className="badge bg-light text-dark">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
                 </div>
 
                 {/* DERECHA */}
-                <div className="d-flex align-items-center gap-3">
-                  <div className="d-flex align-items-center gap-2">
-                    <span className="fw-semibold">Alertas</span>
-                    <select
-                      className="form-select form-select-sm"
-                      value={b.alerta}
-                      onChange={(e) =>
-                        cambiarAlerta(b.id, e.target.value)
-                      }
-                    >
-                      <option value="inmediata">Inmediata</option>
-                      <option value="diaria">Diaria</option>
-                      <option value="semanal">Semanal</option>
-                      <option value="desactivada">Desactivada</option>
-                    </select>
-                  </div>
+                <div className="d-flex align-items-center gap-2">
+                  <span className="fw-semibold">Alertas</span>
 
-                  <button className="btn btn-outline-success rounded-circle">
+                 <select
+                    className="form-select form-select-sm"
+                    value={(b.alerta || "sinalertas").toLowerCase()}
+                    onChange={(e) =>
+                        editarBusqueda({ ...b, alerta: e.target.value })
+                    }
+                    >
+                    <option value="sinalertas">Sin alertas</option>
+                    <option value="inmediata">Inmediata</option>
+                    <option value="diaria">Diaria</option>
+                </select>
+
+
+                  <button
+                    className="btn btn-outline-success rounded-circle"
+                    onClick={() => editarBusqueda(b)}
+                  >
                     <FaEdit />
                   </button>
 

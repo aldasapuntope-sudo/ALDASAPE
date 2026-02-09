@@ -58,18 +58,42 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
   // 🖼️ IMÁGENES ADICIONALES
   const [imagenesSecundarias, setImagenesSecundarias] = useState([]);
   /*const addImagenSecundaria = () => setImagenesSecundarias([...imagenesSecundarias, null]);*/
-  const addImagenSecundaria = () => 
-  setImagenesSecundarias([...imagenesSecundarias, { id: null, imagen: null }]);
+  /*const addImagenSecundaria = () => 
+  setImagenesSecundarias([...imagenesSecundarias, { id: null, imagen: null }]);*/
+
+  const addImagenSecundaria = () => {
+    setImagenesSecundarias((prev) => [
+      ...prev,
+      { id: null, imagen: null, file: null, preview: null },
+    ]);
+  };
 
   const removeImagenSecundaria = (index) => {
     const updated = imagenesSecundarias.filter((_, i) => i !== index);
     setImagenesSecundarias(updated);
   };
-  const handleImagenSecundariaChange = (e, index) => {
+  /*const handleImagenSecundariaChange = (e, index) => {
     const updated = [...imagenesSecundarias];
     updated[index] = e.target.files[0];
     setImagenesSecundarias(updated);
+  };*/
+
+
+  const handleImagenSecundariaChange = (e, index) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setImagenesSecundarias((prev) => {
+      const updated = [...prev];
+      updated[index] = {
+        ...updated[index],
+        file,
+        preview: URL.createObjectURL(file),
+      };
+      return updated;
+    });
   };
+
 
   // 📐 PLANOS
 
@@ -155,7 +179,9 @@ const NuevoAnuncio = ({ anuncio = null, onClose, onRefresh }) => {
 
     // 6️⃣ Imágenes secundarias
     imagenesSecundarias.forEach((img, index) => {
-      if (img) formData.append(`imagenes_secundarias[${index}]`, img);
+      if (img.file) {
+        formData.append(`imagenes_secundarias[${index}]`, img.file);
+      }
     });
 
     // 7️⃣ Planos (cada plano tiene titulo y archivo)
@@ -760,7 +786,9 @@ useEffect(() => {
                 {imagenesSecundarias.map((img, index) => (
                   <div key={img.id || index} className="col-md-3 mb-3 text-center">
                     <div className="border rounded-3 p-2 shadow-sm">
-                      {img.imagen ? (
+
+                      {/* 📸 IMAGEN EXISTENTE */}
+                      {img.imagen && (
                         <>
                           <img
                             src={
@@ -768,7 +796,6 @@ useEffect(() => {
                                 ? img.imagen
                                 : `${config.urlserver}${img.imagen}`
                             }
-                            alt="Imagen secundaria"
                             className="img-fluid rounded mb-2"
                             style={{ height: "150px", objectFit: "cover" }}
                           />
@@ -780,26 +807,40 @@ useEffect(() => {
                             Eliminar
                           </button>
                         </>
-                      ) : (
-                        <div className="d-flex align-items-center">
-                          <input
-                            type="file"
-                            accept="image/*"
-                            className="form-control"
-                            onChange={(e) => handleImagenSecundariaChange(e, index)}
+                      )}
+
+                      {/* 🆕 IMAGEN NUEVA (PREVIEW) */}
+                      {!img.imagen && img.preview && (
+                        <>
+                          <img
+                            src={img.preview}
+                            className="img-fluid rounded mb-2"
+                            style={{ height: "150px", objectFit: "cover" }}
                           />
                           <button
                             type="button"
-                            className="btn btn-danger btn-sm ms-2"
+                            className="btn btn-danger btn-sm"
                             onClick={() => removeImagenSecundaria(index)}
                           >
-                            Eliminar
+                            Quitar
                           </button>
-                        </div>
+                        </>
                       )}
+
+                      {/* 📂 INPUT */}
+                      {!img.imagen && !img.preview && (
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="form-control"
+                          onChange={(e) => handleImagenSecundariaChange(e, index)}
+                        />
+                      )}
+
                     </div>
                   </div>
                 ))}
+
               </div>
             </div>
           )}

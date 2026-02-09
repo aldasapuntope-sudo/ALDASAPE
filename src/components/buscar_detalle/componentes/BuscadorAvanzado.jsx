@@ -69,7 +69,7 @@ export default function BuscadorAvanzado({
     fetchOperaciones();
   }, []);
 
-  console.log(usuario);
+  
   /* =======================
      2. LEER URL INICIAL
   ======================= */
@@ -169,11 +169,11 @@ export default function BuscadorAvanzado({
   const titulo = generarTitulo(filtros);
 
   try {
-    await axios.post(`${config.apiUrl}api/paginaprincipal/busquedas-guardadas`, {
+    await axios.post(`${config.apiUrl}api/administracion/busquedas-guardadas`, {
       titulo,
       url_filtro: urlFiltro,
       alerta: "inmediata",
-      usuario_id: usuario.id, // 👈 importante
+      usuario_id: usuario.usuarioaldasa.id, // 👈 importante
     });
 
     Swal.fire({
