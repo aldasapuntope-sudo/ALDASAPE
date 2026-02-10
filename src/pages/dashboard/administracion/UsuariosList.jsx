@@ -30,6 +30,7 @@ export default function UsuariosList() {
     }
   };
 
+  
   useEffect(() => {
     fetchData();
   }, []);
@@ -86,9 +87,12 @@ export default function UsuariosList() {
   const columns = [
     { name: "#", selector: (r, i) => i + 1, width: "60px" },
     { name: "Nombre", selector: (r) => `${r.nombre} ${r.apellido}` },
+    { name: "Tipo Usuario", selector: (r) => r.perfil_nombre },
     { name: "Email", selector: (r) => r.email },
+    { name: "Tipo Documento", selector: (r) => r.tipo_documento_nombre },
     { name: "Documento", selector: (r) => `${r.numero_documento}` },
     { name: "Teléfono", selector: (r) => r.telefono_movil },
+    
     {
       name: "Estado",
       selector: (r) => (
