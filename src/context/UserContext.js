@@ -8,7 +8,22 @@ export const UserProvider = ({ children }) => {
     storedUser ? JSON.parse(storedUser) : null
   );
 
-  
+  // ✅ NUEVA FUNCIÓN: actualizar plan activo
+  const actualizarPlanActivo = (planNombre) => {
+    setUsuario((prev) => {
+      if (!prev) return prev;
+
+      const usuarioActualizado = {
+        ...prev,
+        planActivo: planNombre,
+      };
+
+      // 🔥 sincronizar con localStorage
+      localStorage.setItem('usuario', JSON.stringify(usuarioActualizado));
+
+      return usuarioActualizado;
+    });
+  };
 
   // Cerrar sesión
   const logout = () => {
@@ -26,7 +41,14 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ usuario, setUsuario, logout }}>
+    <UserContext.Provider
+      value={{
+        usuario,
+        setUsuario,
+        actualizarPlanActivo, // 👈 exportamos la función
+        logout,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

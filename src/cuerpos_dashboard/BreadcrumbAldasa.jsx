@@ -5,6 +5,7 @@ import { useTheme } from '../context/ThemeContext';
 
 const nombresPersonalizados = {
   'mi-perfil': 'Mi Perfil',
+  'mi-plan': 'Mi Plan',
   'nuevo-anuncio': 'Nuevo Anuncio',
   'anuncios-revision': 'Anuncios en Revisión',
   'anuncios-activos': 'Anuncios Activos',

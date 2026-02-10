@@ -166,7 +166,7 @@ export default function ContactBox({ anuncio }) {
                     ? anuncio.perfilanunciante.imagen.startsWith("http")
                       ? anuncio.perfilanunciante.imagen // 👉 Google u otra URL externa
                       : `${config.urlserver}${anuncio.perfilanunciante.imagen}` // 👉 imagen local
-                    : "/img/default-user.png"
+                    : `${config.urlserver}image/animoji-1.png`
                 }
                 alt={anuncio.perfilanunciante.nombre}
                 width="100"

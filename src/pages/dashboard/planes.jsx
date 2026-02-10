@@ -13,7 +13,7 @@ import AnunciosActivosclub from "../dashboard/aldasa-club/AnunciosActivosclub";
 import { useNavigate } from "react-router-dom";
 
 export default function Planes() {
-  const { usuario } = useUsuario();
+  const { usuario, actualizarPlanActivo } = useUsuario();
   const esAdmin = usuario?.usuarioaldasa?.perfil_id === 1;
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -166,6 +166,9 @@ export default function Planes() {
             text: `Tu ${plan.nombre} fue activado correctamente.`,
             confirmButtonText: "Continuar",
           }).then(() => {
+            // 🔥 GUARDAR PLAN ACTIVO EN CONTEXT + LOCALSTORAGE
+            actualizarPlanActivo(plan.nombre);
+
             navigate("/nuevo-anuncio");
           });
         } catch (error) {

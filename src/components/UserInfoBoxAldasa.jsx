@@ -287,11 +287,54 @@ export default function UserInfoBoxAldasa({ abrirModal }) {
             <div className="fw-semibold">
               {usuario?.usuarioaldasa?.nombre}
             </div>
+
             <div className="text-muted small">
               {usuario?.usuarioaldasa?.email}
             </div>
-            <span style={{ color: 'rgb(255 255 255)', fontSize: '11px', background: 'var(--green)', textAlign: 'center', borderRadius: '100px', padding: '1px 26px' }}>{planactivo}</span>
+
+            {/* FILA PLAN + VER MÁS */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginTop: "6px",
+              }}
+            >
+              <span
+                style={{
+                  color: "#fff",
+                  fontSize: "11px",
+                  background: "var(--green)",
+                  borderRadius: "100px",
+                  padding: "2px 14px",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {planactivo}
+              </span>
+
+              <button
+                onClick={() => navigate("/mi-plan")}
+                style={{
+                  background: "var(--green)",
+                  color: "#fff",
+                  fontSize: "11px",
+                  border: "none",
+                  borderRadius: "100px",
+                  padding: "4px 14px",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                }}
+                onMouseOver={(e) => (e.currentTarget.style.opacity = "0.85")}
+                onMouseOut={(e) => (e.currentTarget.style.opacity = "1")}
+              >
+                Ver Plan
+              </button>
+            </div>
+
           </div>
+
           <Dropdown.Item
             as={Link}
             to="/dashboard"

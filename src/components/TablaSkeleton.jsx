@@ -199,18 +199,42 @@ export const SkeletonTabs = () => {
 // Hero Skeleton
 export const HeroSkeleton = () => {
   return (
-    <section className="hero-section position-relative">
-      {/* Fondo */}
-      <Skeleton height={500} width="100%" />
-
-      {/* Overlay */}
+    <section
+      className="hero-section position-relative"
+      style={{
+        height: 800,
+        backgroundImage:
+          "url('/assets/images/background-dashboard.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        overflow: "hidden",
+      }}
+    >
+      {/* Overlay oscuro */}
       <div
         style={{
           position: "absolute",
           inset: 0,
-          background: "rgba(0,0,0,0.3)",
+          background: "rgba(0,0,0,0.45)",
+          zIndex: 1,
         }}
       />
+
+      {/* Shimmer de carga (NO tapa la imagen) */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 2,
+        }}
+      >
+        <Skeleton
+          height="100%"
+          width="100%"
+          baseColor="transparent"
+          highlightColor="rgba(255,255,255,0.12)"
+        />
+      </div>
 
       {/* Contenido */}
       <div
@@ -218,29 +242,37 @@ export const HeroSkeleton = () => {
         style={{
           position: "absolute",
           inset: 0,
+          zIndex: 3,
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          padding: "20px",
+          padding: 20,
+          textAlign: "center",
         }}
       >
         {/* Título */}
         <Skeleton height={45} width="60%" />
 
         {/* Descripción */}
-        <Skeleton height={20} width="70%" style={{ marginTop: 15 }} />
+        <Skeleton
+          height={20}
+          width="70%"
+          style={{ marginTop: 15 }}
+        />
 
-        {/* Buscador */}
-        <div
+        {/* Buscador centrado */}
+        {/*<div
           style={{
             marginTop: 30,
             width: "100%",
             maxWidth: 900,
+            marginLeft: "auto",
+            marginRight: "auto",
           }}
         >
           <Skeleton height={60} />
-        </div>
+        </div> */}
       </div>
     </section>
   );

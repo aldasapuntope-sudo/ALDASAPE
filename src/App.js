@@ -85,6 +85,7 @@ import LibroReclamaciones from './pages/enlaces/LibroReclamaciones';
 import LibroReclamacionesList from './pages/dashboard/administracion/LibroReclamacionesList';
 import { PublicDataProvider } from './context/PublicDataContext';
 import BusquedasAlertas from './components/Paginasopcionales/componentes/BusquedasAlertas';
+import MiPlan from './pages/dashboard/mi-plan';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -236,6 +237,12 @@ function AppRoutes() {
               path="/mi-perfil"
               element={<RutaProtegida element={MiPerfil} requiereCompletarPerfil />}
             />
+            <Route
+              path="/mi-plan"
+              element={<RutaProtegida element={MiPlan} requiereCompletarPerfil />}
+            />
+
+            
             <Route path="/planes" element={<Planes />} />
             
             <Route
