@@ -23,7 +23,7 @@ export default function SeleccionPerfil() {
       titulo: "Constructora",
       subtitulo: "Desarrolladora",
       icono: <FaBuilding size={40} />,
-      ruta: "/registro/constructora",
+      ruta: "/constructora",
     },
   ];
 

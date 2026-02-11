@@ -86,6 +86,7 @@ import LibroReclamacionesList from './pages/dashboard/administracion/LibroReclam
 import { PublicDataProvider } from './context/PublicDataContext';
 import BusquedasAlertas from './components/Paginasopcionales/componentes/BusquedasAlertas';
 import MiPlan from './pages/dashboard/mi-plan';
+import ConstructoraPage from './components/ConstructoraPage/ConstructoraPage';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -208,7 +209,7 @@ function AppRoutes() {
           <Route path="/buscar" element={<BuscarPage />} />
           <Route path="/publica-tu-anuncio" element={<SeleccionPerfil />} />
           <Route path="/particular" element={<ParticularPage />} />
-          
+          <Route path="/constructora" element={<ConstructoraPage />} />
 
           {!usuario && (
             <>

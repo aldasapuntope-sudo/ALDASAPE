@@ -212,7 +212,13 @@ export default function HeaderAldasa({ abrirModal, abrirLoginModal }) {
                     Inversiones TOP
                   </NavLink>
 
-                  <NavLink to="/publica-tu-anuncio" className="btn-publicar">
+                  <NavLink 
+                    to="/publica-tu-anuncio" 
+                    className="btn-publicar"
+                    onClick={() =>
+                      window.scrollTo({ top: 0, behavior: "smooth" })
+                    }
+                  >
                     <FaPlus /> Publicar Anuncio
                   </NavLink>
 
@@ -242,7 +248,16 @@ export default function HeaderAldasa({ abrirModal, abrirLoginModal }) {
                     Inversiones TOP
                   </NavLink>
 
-                  <NavLink to="/publica-tu-anuncio" className="btn-publicar">
+                  {/*<NavLink to="/publica-tu-anuncio" className="btn-publicar">
+                    <FaPlus /> Publicar Anuncio
+                  </NavLink> */}
+                  <NavLink 
+                    to="/publica-tu-anuncio" 
+                    className="btn-publicar"
+                    onClick={() =>
+                      window.scrollTo({ top: 0, behavior: "smooth" })
+                    }
+                  >
                     <FaPlus /> Publicar Anuncio
                   </NavLink>
                   <UserInfoBoxAldasa abrirModal={abrirModal} />
