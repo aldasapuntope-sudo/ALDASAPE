@@ -9,6 +9,7 @@ import { useTheme } from "../context/ThemeContext";
 import MegaDropdown from "./MegaDropdown";
 import config from "../config";
 import { usePublicData } from "../context/PublicDataContext";
+import TranslateButton from "./TranslateButton";
 
 export default function HeaderAldasa({ abrirModal, abrirLoginModal }) {
   const [user, setUser] = useState(null);
@@ -206,6 +207,7 @@ export default function HeaderAldasa({ abrirModal, abrirLoginModal }) {
 
             {/* ================== LADO DERECHO ================== */}
             <div className="d-flex align-items-center gap-2">
+               <TranslateButton />
               {!user ? (
                 <>
                   <NavLink to="/club" className="btn btn-outline-success">

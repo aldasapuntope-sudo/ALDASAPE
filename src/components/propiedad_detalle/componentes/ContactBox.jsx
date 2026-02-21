@@ -196,10 +196,16 @@ export default function ContactBox({ anuncio }) {
               </a>
             </div>
             <div className="item-mail" style={{width: '240px'}}>{anuncio.perfilanunciante.email}</div>
+            
           </div>
+          
         </div>
 
+        <div className="media-body flex-grow-1" style={{margin: 0, fontSize: '14px', color: '#555', lineHeight: '1.6', textAlign: 'justify'}}>Complete el siguiente formulario para ponerse en contacto con el anunciante. Recibirá una respuesta a la brevedad posible.</div>
+
+        
         <form onSubmit={formik.handleSubmit} className="contact-box rt-contact-form mt-3 floating-form">
+          
         {["email", "nombre", "telefono", "dni", "mensaje"].map((field) => (
             <div className="form-group mb-3" key={field}>
             <div className="form-floating-label">

@@ -87,6 +87,9 @@ import { PublicDataProvider } from './context/PublicDataContext';
 import BusquedasAlertas from './components/Paginasopcionales/componentes/BusquedasAlertas';
 import MiPlan from './pages/dashboard/mi-plan';
 import ConstructoraPage from './components/ConstructoraPage/ConstructoraPage';
+import CookiesBanner from './components/CookiesBanner';
+import ChatConversacionesList from './pages/dashboard/administracion/ChatConversacionesList';
+import ChatRespuestasList from './pages/dashboard/administracion/ChatRespuestasList';
 initializeAxios();
 
 // 🔹 Componente de ruta protegida inteligente
@@ -189,6 +192,8 @@ function AppRoutes() {
 
               <Outlet />
               <Footer />
+
+              {!usuario && <CookiesBanner />}
             </>
           }
         >
@@ -353,6 +358,18 @@ function AppRoutes() {
               path="/adm-bitacora"
               element={<RutaProtegida element={BitacoraList} />}
             />
+
+
+            <Route
+              path="/adm-chatconversaciones"
+              element={<RutaProtegida element={ChatConversacionesList} />}
+            />
+
+            <Route
+              path="/adm-chatbox"
+              element={<RutaProtegida element={ChatRespuestasList} />}
+            />
+
 
             <Route 
               path="/adm-libroreclamaciones"

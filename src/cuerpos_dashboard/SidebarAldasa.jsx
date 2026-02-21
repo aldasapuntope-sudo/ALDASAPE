@@ -208,6 +208,18 @@ const SidebarALDASA = ({ abrirModal, toggleSidebar }) => {
                     </li>
                     
                     <li
+                      className={`submenu-link ${location.pathname.startsWith('/adm-chatconversaciones') ? 'active' : ''}`}
+                    >
+                      <Link to="/adm-chatconversaciones" onClick={toggleSidebar}>Chatbox conversaciones</Link>
+                    </li>
+
+                    <li
+                      className={`submenu-link ${location.pathname.startsWith('/adm-chatbox') ? 'active' : ''}`}
+                    >
+                      <Link to="/adm-chatbox" onClick={toggleSidebar}>Gestionar ChatBox</Link>
+                    </li>
+
+                    <li
                       className={`submenu-link ${location.pathname.startsWith('/adm-bitacora') ? 'active' : ''}`}
                     >
                       <Link to="/adm-bitacora" onClick={toggleSidebar}>Bitácora</Link>

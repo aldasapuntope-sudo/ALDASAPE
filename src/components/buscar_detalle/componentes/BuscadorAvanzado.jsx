@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaSearch, FaTimes } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import config from "../../../config";
 import Swal from "sweetalert2";
@@ -19,6 +20,7 @@ export default function BuscadorAvanzado({
   const [precioMin, setPrecioMin] = useState("");
   const [precioMax, setPrecioMax] = useState("");
   const { usuario } = useUsuario();
+  const navigate = useNavigate();
 
   // MULTI
   const [tiposSeleccionados, setTiposSeleccionados] = useState([]);
@@ -220,7 +222,10 @@ export default function BuscadorAvanzado({
 
     filtros.tipos.forEach((t) => params.append("tipo[]", t));
 
-    window.history.replaceState({}, "", `?${params.toString()}`);
+    navigate({
+      pathname: "/buscar",
+      search: `?${params.toString()}`
+    }, { replace: true });
   };
 
   /* =======================

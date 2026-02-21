@@ -1,0 +1,76 @@
+.translate-dropdown {
+  position: relative;
+}
+
+.translate-btn {
+  background: transparent;
+  border: 1px solid #ddd;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.translate-btn:hover {
+  background: #f2f2f2;
+}
+
+.translate-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 8px 25px rgba(0,0,0,.2);
+  padding: 8px;
+  display: none;
+  min-width: 150px;
+  z-index: 99999;
+}
+
+.translate-dropdown:hover .translate-menu {
+  display: block;
+}
+
+.translate-menu button {
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.translate-menu button:hover {
+  background: #f1f1f1;
+}
+
+
+/* ===== OCULTAR BARRA SUPERIOR DE GOOGLE ===== */
+
+/* iframe superior */
+iframe.skiptranslate {
+  display: none !important;
+}
+
+/* contenedor padre */
+.goog-te-banner-frame {
+  display: none !important;
+}
+
+/* toolbar completa */
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+/* evita que la página baje */
+body {
+  top: 0px !important;
+}
+
+/* a veces google agrega html con top */
+html {
+  top: 0px !important;
+}

@@ -24,6 +24,7 @@ import ContactBox from "./componentes/ContactBox";
 import PropiedadesRelacionadas from "./componentes/PropiedadesRelacionadas";
 import { SkeletonInformacionPropiedaddetalle } from "../TablaSkeleton";
 import { useUsuario } from "../../context/UserContext";
+import NotFoundanuncio from "../NotFoundanuncio";
 
 
 export default function PropertyDetail() {
@@ -71,7 +72,7 @@ export default function PropertyDetail() {
   }
 
   if (!anuncio) {
-    return <NotFound />;
+    return <NotFoundanuncio />;
   }
 
   const imagenes = anuncio.imagenes?.map((img) => ({

@@ -9,51 +9,50 @@ import BreadcrumbALDASA from "../../../cuerpos_dashboard/BreadcrumbAldasa";
 import SinPrivilegios from "../../../components/SinPrivilegios";
 import { useUsuario } from "../../../context/UserContext";
 
-export default function BitacoraList() {
+export default function ChatConversacionesList() {
   const { usuario } = useUsuario();
-  const [bitacora, setBitacora] = useState([]);
+  const [conversaciones, setConversaciones] = useState([]);
   const [cargando, setCargando] = useState(false);
 
-  // 🔹 Cargar registros de la bitácora
-  const fetchBitacora = async () => {
+  const fetchConversaciones = async () => {
     setCargando(true);
     try {
-      const res = await axios.get(`${config.apiUrl}api/administracion/lbitacora`);
-      setBitacora(res.data);
+      const res = await axios.get(`${config.apiUrl}api/administracion/chat/conversaciones`);
+      setConversaciones(res.data);
     } catch (error) {
-      console.error("Error al cargar la bitácora:", error);
-      Swal.fire("Error", "No se pudieron cargar los registros de la bitácora.", "error");
+      console.error(error);
+      Swal.fire("Error", "No se pudieron cargar las conversaciones.", "error");
     } finally {
       setCargando(false);
     }
   };
-  //console.log(bitacora);
 
   useEffect(() => {
-    fetchBitacora();
+    fetchConversaciones();
   }, []);
 
   if (!usuario) return null;
-   const perfil = usuario.usuarioaldasa?.perfil_id;
+  const perfil = usuario.usuarioaldasa?.perfil_id;
 
   if (perfil !== 1) {
     return <SinPrivilegios />;
   }
 
-  // ✅ Columnas del DataTable
   const columns = [
     { name: "#", selector: (row, i) => i + 1, width: "70px", center: true },
-    { name: "Usuario", selector: (row) => row.usuario || "-", sortable: true, center: true },
-    { name: "Acción", selector: (row) => row.accion, sortable: true, center: true },
-    { name: "Tabla afectada", selector: (row) => row.tabla_afectada, sortable: true, center: true },
-    { name: "Registro ID", selector: (row) => row.registro_id, center: true },
+    { name: "Session ID", selector: (row) => row.session_id, sortable: true },
     {
-      name: "Descripción",
-      selector: (row) => (row.descripcion ? row.descripcion.substring(0, 70) + "..." : "-"),
+      name: "Pregunta del Usuario",
+      selector: (row) => row.pregunta,
       sortable: true,
       wrap: true,
     },
-    { name: "IP", selector: (row) => row.ip || "-", center: true },
+    {
+      name: "Respuesta del Bot",
+      selector: (row) => row.respuesta || "Sin respuesta",
+      sortable: true,
+      wrap: true,
+    },
     {
       name: "Fecha",
       selector: (row) =>
@@ -68,15 +67,6 @@ export default function BitacoraList() {
     },
   ];
 
-  // ✅ Acciones (solo botón para refrescar)
-  const actions = () => (
-    <div className="text-center">
-      <button className="btn btn-sm btn-secondary" onClick={fetchBitacora}>
-        <FaSync /> Recargar
-      </button>
-    </div>
-  );
-
   return (
     <>
       <Cargando visible={cargando} />
@@ -84,12 +74,12 @@ export default function BitacoraList() {
         <BreadcrumbALDASA />
         <div className="d-flex justify-content-between align-items-center mb-3 mt-3">
           <h3 className="fw-bold"></h3>
-          <button className="btn btn-outline-primary" onClick={fetchBitacora}>
+          <button className="btn btn-outline-primary" onClick={fetchConversaciones}>
             <FaSync className="me-2" /> Actualizar
           </button>
         </div>
 
-        <DataTableBase title="" columns={columns} data={bitacora} />
+        <DataTableBase title="" columns={columns} data={conversaciones} />
       </div>
     </>
   );

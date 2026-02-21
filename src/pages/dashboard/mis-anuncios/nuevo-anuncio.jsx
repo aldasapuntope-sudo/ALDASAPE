@@ -1111,7 +1111,7 @@ useEffect(() => {
         data-bs-parent="#accordionVideo"
       >
         <div className="accordion-body">
-          
+          <div className="media-body flex-grow-1 mb-1" style={{margin: 0, fontSize: '14px', color: '#555', lineHeight: '1.6', textAlign: 'justify'}}>El Video debe estar subido en su canal de youtube.</div>
           <input
             type="url"
             className="form-control"
